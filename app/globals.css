@@ -1,0 +1,144 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 150 25% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 150 25% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 150 25% 12%;
+    --primary: 158 60% 30%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 45 60% 52%;
+    --secondary-foreground: 150 25% 12%;
+    --muted: 40 30% 96%;
+    --muted-foreground: 150 10% 40%;
+    --accent: 24 90% 52%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 40 20% 90%;
+    --input: 40 20% 90%;
+    --ring: 158 60% 30%;
+    --radius: 0.75rem;
+    --chart-1: 158 60% 30%;
+    --chart-2: 45 60% 52%;
+    --chart-3: 24 90% 52%;
+    --chart-4: 330 80% 60%;
+    --chart-5: 210 80% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+  }
+  .glass-dark {
+    background: rgba(20, 50, 35, 0.55);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .shadow-soft {
+    box-shadow: 0 4px 24px -8px rgba(30, 122, 83, 0.12), 0 2px 8px -4px rgba(0,0,0,0.04);
+  }
+  .shadow-premium {
+    box-shadow: 0 20px 60px -20px rgba(30, 122, 83, 0.25), 0 8px 24px -12px rgba(0,0,0,0.08);
+  }
+  .bg-grid {
+    background-image: radial-gradient(circle, hsl(150 20% 85%) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+}
+
+/* Swiper overrides */
+.swiper-pagination-bullet {
+  background: hsl(var(--primary)) !important;
+  opacity: 0.3 !important;
+}
+.swiper-pagination-bullet-active {
+  opacity: 1 !important;
+  width: 24px !important;
+  border-radius: 4px !important;
+}
+.swiper-button-next, .swiper-button-prev {
+  color: hsl(var(--primary)) !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(40 30% 96%);
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(158 30% 70%);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(158 60% 40%);
+}
+
+/* Marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+/* Float */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Shimmer for skeletons */
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  animation: shimmer 1.6s infinite;
+}
