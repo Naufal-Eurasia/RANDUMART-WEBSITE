@@ -1,0 +1,83 @@
+Panduan Update dan Deploy Website Menggunakan VS Code, GitHub, dan Hostinger :
+
+Langkah 1: Periksa Perubahan Project
+
+Setelah selesai melakukan perubahan pada website di VS Code, buka Terminal dan jalankan perintah berikut untuk melihat file yang telah berubah:
+
+git status
+
+Pastikan semua perubahan yang telah dilakukan muncul pada daftar perubahan Git.
+
+Langkah 2: Build Project
+
+Jika masih berada di dalam folder dist, kembali ke folder utama project terlebih dahulu:
+
+cd ..
+
+Kemudian lakukan proses build untuk menghasilkan file website terbaru:
+
+npm run build
+
+Perintah ini akan membuat atau memperbarui folder dist yang berisi hasil build website siap deploy.
+
+Langkah 3: Masuk ke Folder Build
+
+Setelah proses build selesai, masuk ke folder dist:
+
+cd dist
+
+Periksa kembali status Git:
+
+git status
+Langkah 4: Tambahkan Perubahan ke Git
+
+Tambahkan seluruh file yang telah diperbarui:
+
+git add .
+
+Kemudian buat commit baru dengan pesan yang sesuai:
+
+git commit -m "Update Website"
+
+Pesan commit dapat disesuaikan dengan jenis perubahan yang dilakukan, misalnya:
+
+git commit -m "Perbaikan Tampilan Mobile"
+
+atau
+
+git commit -m "Update Data Program UMKM"
+Langkah 5: Verifikasi Status Git
+
+Periksa kembali status repository:
+
+git status
+
+Jika tidak ada perubahan yang tertinggal, maka repository sudah siap untuk dikirim ke GitHub.
+
+Langkah 6: Push ke GitHub
+
+Kirim seluruh perubahan ke repository GitHub:
+
+Jika menggunakan branch master:
+
+git push origin master
+
+Jika menggunakan branch main:
+
+git push origin main
+
+Pastikan proses push berhasil tanpa error.
+
+Langkah 7: Verifikasi di GitHub
+
+Buka repository GitHub dan lakukan refresh halaman.
+
+Pastikan commit terbaru yang telah dibuat muncul pada daftar commit repository.
+
+Langkah 8: Verifikasi Website di Hostinger
+
+Karena website telah terhubung dengan GitHub melalui proses deployment, lakukan refresh pada website, Pastikan seluruh perubahan yang telah dilakukan di VS Code sudah tampil pada website yang dihosting di Hostinger.
+
+selengkapnya boleh lihat disini :
+https://youtu.be/035atz9K7J4?si=Ec2LaIIqDtac4Fi2
+menit 12.03 sampai 13.28
