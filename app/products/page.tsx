@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { SlidersHorizontal, X, LayoutGrid, List, Star } from 'lucide-react';
@@ -25,7 +25,7 @@ const sortOptions = [
   { value: 'discount', label: 'Diskon Terbesar' },
 ];
 
-export default function ProductsPage() {
+function ProductsContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get('category') || 'all';
   const initialConcern = searchParams.get('concern');
@@ -246,3 +246,5 @@ export default function ProductsPage() {
     </div>
   );
 }
+
+export default function ProductsPage() { return <Suspense fallback={<div>Loading...</div>}><ProductsContent /></Suspense>; }
