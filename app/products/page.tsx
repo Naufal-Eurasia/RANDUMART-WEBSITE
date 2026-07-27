@@ -1,10 +1,9 @@
 'use client';
 
-import { useMemo, useState, Suspense } from 'react';
+import { useMemo, useState, Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { SlidersHorizontal, X, LayoutGrid, List, Star } from 'lucide-react';
-import { products } from '@/lib/products';
 import { categories } from '@/lib/categories';
 import { ProductCard } from '@/components/product/product-card';
 import { Button } from '@/components/ui/button';
@@ -40,14 +39,44 @@ function ProductsContent() {
   const [page, setPage] = useState(1);
   const perPage = 12;
 
+  const [dbProducts, setDbProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchProducts() {
+      setLoading(true);
+      try {
+        const res = await fetch('/api/products');
+        if (res.ok) {
+          const data = await res.json();
+          const mapped = data.map((p: any) => ({
+             ...p,
+             price: Number(p.price),
+             originalPrice: p.originalPrice ? Number(p.originalPrice) : null,
+             categorySlug: p.category?.slug,
+             categoryName: p.category?.name,
+             image: p.images?.find((img: any) => img.isPrimary)?.url || p.images?.[0]?.url || '',
+             shortDescription: p.description
+          }));
+          setDbProducts(mapped);
+        }
+      } catch (err) {
+        console.error("Failed to fetch products", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchProducts();
+  }, []);
+
   const filtered = useMemo(() => {
-    let list = [...products];
+    let list = [...dbProducts];
     if (category !== 'all') list = list.filter((p) => p.categorySlug === category);
     list = list.filter((p) => p.price >= priceRange[0] && p.price <= priceRange[1]);
     if (minRating > 0) list = list.filter((p) => p.rating >= minRating);
     if (inStockOnly) list = list.filter((p) => p.stock > 0);
-    if (bestSellerOnly) list = list.filter((p) => p.bestSeller);
-    if (initialConcern) list = list.filter((p) => p.tags.includes(initialConcern));
+    if (bestSellerOnly) list = list.filter((p) => p.isBestSeller);
+    if (initialConcern) list = list.filter((p) => p.tags && p.tags.includes(initialConcern));
 
     switch (sort) {
       case 'newest': list.sort((a, b) => Number(!!b.isNew) - Number(!!a.isNew)); break;
@@ -58,7 +87,7 @@ function ProductsContent() {
       default: list.sort((a, b) => b.reviewCount - a.reviewCount);
     }
     return list;
-  }, [category, priceRange, minRating, inStockOnly, bestSellerOnly, sort, initialConcern]);
+  }, [dbProducts, category, priceRange, minRating, inStockOnly, bestSellerOnly, sort, initialConcern]);
 
   const totalPages = Math.ceil(filtered.length / perPage);
   const paged = filtered.slice((page - 1) * perPage, page * perPage);
@@ -84,7 +113,6 @@ function ProductsContent() {
               className={cn('flex items-center justify-between w-full text-left px-3 py-2 rounded-xl text-sm transition-colors', category === c.slug ? 'bg-primary text-white font-semibold' : 'hover:bg-muted')}
             >
               <span>{c.emoji} {c.name}</span>
-              <span className={cn('text-xs', category === c.slug ? 'text-white/70' : 'text-muted-foreground')}>{c.productCount}</span>
             </button>
           ))}
         </div>
@@ -138,7 +166,6 @@ function ProductsContent() {
 
   return (
     <div className="pt-24 lg:pt-28 pb-20">
-      {/* Breadcrumb + header */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-6">
         <nav className="text-sm text-muted-foreground mb-3 flex items-center gap-1.5">
           <Link href="/" className="hover:text-primary">Home</Link>
@@ -151,7 +178,7 @@ function ProductsContent() {
             <h1 className="font-display text-2xl sm:text-3xl font-bold">
               {activeCat ? `${activeCat.emoji} ${activeCat.name}` : 'Semua Produk'}
             </h1>
-            <p className="text-muted-foreground text-sm mt-1">{filtered.length} produk ditemukan</p>
+            <p className="text-muted-foreground text-sm mt-1">{loading ? 'Memuat produk...' : `${filtered.length} produk ditemukan`}</p>
           </div>
           <div className="flex items-center gap-2">
             <Select value={sort} onValueChange={setSort}>
@@ -167,14 +194,12 @@ function ProductsContent() {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[260px_1fr] gap-8">
-        {/* Desktop sidebar */}
         <aside className="hidden lg:block">
           <div className="sticky top-28 rounded-3xl bg-white border border-border/60 p-6 shadow-soft">
             <FilterContent />
           </div>
         </aside>
 
-        {/* Mobile filter trigger */}
         <div className="lg:hidden">
           <Sheet>
             <SheetTrigger asChild>
@@ -186,9 +211,12 @@ function ProductsContent() {
           </Sheet>
         </div>
 
-        {/* Products grid */}
         <div>
-          {paged.length === 0 ? (
+          {loading ? (
+             <div className="py-20 text-center">
+               <h3 className="font-display font-semibold text-lg">Memuat Produk...</h3>
+             </div>
+          ) : paged.length === 0 ? (
             <div className="py-20 text-center">
               <div className="grid place-items-center w-20 h-20 rounded-full bg-muted mx-auto mb-4"><X className="w-9 h-9 text-muted-foreground" /></div>
               <h3 className="font-display font-semibold text-lg">Tidak ada produk</h3>
@@ -210,7 +238,7 @@ function ProductsContent() {
                     <div className="flex items-center gap-2 mb-1">
                       <div className="flex items-center gap-0.5"><Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" /><span className="text-xs font-semibold">{p.rating.toFixed(1)}</span></div>
                       <span className="text-xs text-muted-foreground">({p.reviewCount})</span>
-                      <span className="ml-auto text-xs text-muted-foreground">{p.category}</span>
+                      <span className="ml-auto text-xs text-muted-foreground">{p.categoryName}</span>
                     </div>
                     <Link href={`/products/${p.slug}`}><h3 className="font-display font-semibold hover:text-primary line-clamp-1">{p.name}</h3></Link>
                     <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{p.shortDescription}</p>
@@ -227,7 +255,6 @@ function ProductsContent() {
             </div>
           )}
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="mt-10 flex justify-center gap-2">
               {Array.from({ length: totalPages }).map((_, i) => (
