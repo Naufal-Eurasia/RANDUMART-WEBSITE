@@ -96,6 +96,13 @@ export const useStore = create<StoreState>()(
         wishlist: s.wishlist,
         recentlyViewed: s.recentlyViewed,
       }),
+      version: 1,
+      migrate: (persistedState: any, version) => {
+        if (version === 0) {
+          return { ...persistedState, cart: [], wishlist: [], recentlyViewed: [] };
+        }
+        return persistedState;
+      },
     }
   )
 );
