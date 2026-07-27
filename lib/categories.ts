@@ -134,5 +134,7 @@ export const navLinks = [
   { label: 'Contact', href: '/#contact' },
 ];
 
-export const formatRupiah = (n: number) =>
-  'Rp' + n.toLocaleString('id-ID');
+export const formatRupiah = (n: number | string | undefined | null) => {
+  if (n === null || n === undefined || isNaN(Number(n))) return 'Rp0';
+  return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(Number(n));
+};
