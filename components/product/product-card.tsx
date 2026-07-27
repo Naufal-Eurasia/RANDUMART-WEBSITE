@@ -51,7 +51,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
           <Link href={`/products/${product.slug}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={product.image}
+              src={product.image || (product as any).imageGallery?.[0] || '/placeholder.jpg'}
               alt={product.name}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
             />
@@ -64,9 +64,9 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
                 -{product.discount}%
               </span>
             )}
-            {product.badges.slice(0, 2).map((b) => (
-              <span key={b} className={cn('px-2 py-1 rounded-full text-[10px] font-bold shadow-soft', badgeStyles[b])}>
-                {badgeLabels[b]}
+            {(product.badges || product.tags || []).slice(0, 2).map((b) => (
+              <span key={b} className={cn('px-2 py-1 rounded-full text-[10px] font-bold shadow-soft', badgeStyles[b] || 'bg-gray-100 text-gray-800 uppercase')}>
+                {badgeLabels[b] || (typeof b === 'string' ? b.replace('-', ' ') : b)}
               </span>
             ))}
           </div>
@@ -120,7 +120,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
               <span className="text-xs font-semibold">{product.rating.toFixed(1)}</span>
             </div>
             <span className="text-xs text-muted-foreground">({product.reviewCount})</span>
-            <span className="ml-auto text-xs text-muted-foreground">{product.category}</span>
+            <span className="ml-auto text-xs text-muted-foreground">{(product as any).categoryName || product.category}</span>
           </div>
 
           <Link href={`/products/${product.slug}`}>
