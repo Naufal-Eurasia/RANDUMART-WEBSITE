@@ -14,8 +14,10 @@ export function Navbar() {
   const [megaOpen, setMegaOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { cartCount, wishlist, setSearchOpen, setCartOpen, setWishlistOpen, setMobileNavOpen } = useStore();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
@@ -143,7 +145,7 @@ export function Navbar() {
                 className={cn('relative grid place-items-center w-10 h-10 rounded-full transition-colors', scrolled ? 'hover:bg-muted' : 'hover:bg-white/10 text-white')}
               >
                 <Heart className="w-5 h-5" />
-                {wishlist.length > 0 && (
+                {mounted && wishlist.length > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 grid place-items-center min-w-5 h-5 px-1 rounded-full bg-accent text-white text-[10px] font-bold">
                     {wishlist.length}
                   </span>
@@ -155,7 +157,7 @@ export function Navbar() {
                 className={cn('relative grid place-items-center w-10 h-10 rounded-full transition-colors', scrolled ? 'hover:bg-muted' : 'hover:bg-white/10 text-white')}
               >
                 <ShoppingBag className="w-5 h-5" />
-                {cartCount() > 0 && (
+                {mounted && cartCount() > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 grid place-items-center min-w-5 h-5 px-1 rounded-full bg-primary text-white text-[10px] font-bold">
                     {cartCount()}
                   </span>
