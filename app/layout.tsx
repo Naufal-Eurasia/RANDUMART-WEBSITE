@@ -14,12 +14,12 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'sw
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700', '800'], variable: '--font-poppins', display: 'swap' });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://sr12store.id'),
-  title: 'SR12 Official Store — Hidup Sehat dengan Produk Alami Berkualitas',
-  description: 'SR12 Official Store — toko resmi produk herbal, skincare, beauty, personal care, suplemen, dan kebutuhan keluarga di Indonesia. Produk alami, BPOM & Halal.',
-  keywords: ['herbal', 'skincare', 'beauty', 'suplemen', 'madu', 'SR12', 'kesehatan', 'halal', 'BPOM'],
+  metadataBase: new URL('https://randumartherbal.id'),
+  title: 'Randumart Herbal — Hidup Sehat dengan Produk Alami Berkualitas',
+  description: 'Randumart Herbal — toko resmi produk herbal, skincare, beauty, personal care, suplemen, dan kebutuhan keluarga di Indonesia. Produk alami, BPOM & Halal.',
+  keywords: ['herbal', 'skincare', 'beauty', 'suplemen', 'madu', 'Randumart Herbal', 'kesehatan', 'halal', 'BPOM'],
   openGraph: {
-    title: 'SR12 Official Store',
+    title: 'Randumart Herbal',
     description: 'Hidup Sehat Dimulai dari Produk Alami Berkualitas',
     type: 'website',
     locale: 'id_ID',
@@ -31,7 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="id" className={`${inter.variable} ${poppins.variable}`}>
       <body className="font-sans bg-background text-foreground min-h-screen flex flex-col">
         <Navbar />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 pt-20 lg:pt-24">{children}</main>
         <Footer />
         <FloatingActions />
         <MobileNav />

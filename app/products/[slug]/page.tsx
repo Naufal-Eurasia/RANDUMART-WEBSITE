@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, notFound } from 'next/navigation';
+import { useParams, useRouter, notFound } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Star, Heart, ShoppingBag, Minus, Plus, ShieldCheck, BadgeCheck, Truck, RotateCcw, ChevronRight, ZoomIn, Check } from 'lucide-react';
+import { Star, Heart, ShoppingBag, Minus, Plus, ShieldCheck, BadgeCheck, Truck, RotateCcw, ChevronLeft, ChevronRight, ZoomIn, Check } from 'lucide-react';
 import { getProductBySlug, getRelatedProducts, products } from '@/lib/products';
 import { formatRupiah } from '@/lib/categories';
 import { useStore } from '@/lib/store';
@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils';
 
 export default function ProductDetailPage() {
   const { slug } = useParams<{ slug: string }>();
+  const router = useRouter();
   const product = getProductBySlug(slug as string);
   const { addToCart, toggleWishlist, isInWishlist, addRecentlyViewed } = useStore();
   const [qty, setQty] = useState(1);
@@ -40,6 +41,9 @@ export default function ProductDetailPage() {
     <div className="pt-24 lg:pt-28 pb-20">
       {/* Breadcrumb */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-6">
+        <button type="button" onClick={() => router.back()} className="inline-flex items-center gap-2 text-sm font-medium text-brand-emerald hover:text-emerald-700 mb-4">
+          <ChevronLeft className="w-4 h-4" /> Kembali
+        </button>
         <nav className="text-sm text-muted-foreground flex items-center gap-1.5 flex-wrap">
           <Link href="/" className="hover:text-primary">Home</Link><ChevronRight className="w-3.5 h-3.5" />
           <Link href="/products" className="hover:text-primary">Products</Link><ChevronRight className="w-3.5 h-3.5" />

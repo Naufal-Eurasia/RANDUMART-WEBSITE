@@ -16,9 +16,21 @@ export function MobileNav() {
     <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
       <SheetContent side="left" className="w-[88vw] max-w-sm p-0 flex flex-col">
         <SheetHeader className="p-5 border-b border-border">
-          <SheetTitle className="flex items-center gap-2">
-            <div className="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-brand-emerald to-emerald-700 text-white font-display font-bold">SR</div>
-            <span className="font-display font-bold text-brand-emerald">SR12 Official</span>
+          <SheetTitle className="flex items-center gap-3">
+            <div className="relative inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white/90 shadow-soft overflow-hidden">
+              <img
+                src="/images/randumart-logo.jpeg"
+                alt="Randumart Logo"
+                className="w-full h-full object-contain p-1"
+              />
+            </div>
+            <div>
+              <div className="font-display font-bold text-base text-foreground">
+                <span className="text-brand-emerald">Randum</span>
+                <span className="text-brand-red">mart</span>
+              </div>
+              <div className="text-[10px] uppercase tracking-[0.2em] font-medium text-brand-blue">Herbal & Souvenir Umrah</div>
+            </div>
           </SheetTitle>
         </SheetHeader>
 

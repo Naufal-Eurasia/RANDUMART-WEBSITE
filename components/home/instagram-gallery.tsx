@@ -25,7 +25,7 @@ export function InstagramGallery() {
           className="text-center max-w-2xl mx-auto mb-10"
         >
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-fuchsia-500 to-pink-500 text-white text-sm font-semibold mb-3">
-            <Instagram className="w-4 h-4" /> @sr12official
+            <Instagram className="w-4 h-4" /> @randumartherbal
           </span>
           <h2 className="font-display text-3xl sm:text-4xl font-bold">Ikuti Kami di Instagram</h2>
           <p className="mt-2 text-muted-foreground">Inspo gaya hidup sehat & kecantikan alami.</p>

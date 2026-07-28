@@ -19,7 +19,7 @@ export function WhyChoose() {
           <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-3">
             Keunggulan Kami
           </span>
-          <h2 className="font-display text-3xl sm:text-4xl font-bold">Mengapa Memilih SR12?</h2>
+          <h2 className="font-display text-3xl sm:text-4xl font-bold">Mengapa Memilih Randumart Herbal?</h2>
           <p className="mt-2 text-muted-foreground">Komitmen kami untuk produk alami berkualitas tinggi.</p>
         </motion.div>
 

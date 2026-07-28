@@ -5,13 +5,20 @@ import { useStore } from '@/lib/store';
 import { products } from '@/lib/products';
 import { Heart, Trash2, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { formatRupiah } from '@/lib/categories';
 import { toast } from 'sonner';
 
 export function WishlistDrawer() {
+  const router = useRouter();
   const { wishlistOpen, setWishlistOpen, wishlist, toggleWishlist, addToCart } = useStore();
   const items = products.filter((p) => wishlist.includes(p.id));
+
+  const handleBrowseProducts = () => {
+    setWishlistOpen(false);
+    router.push('/products');
+  };
 
   return (
     <Sheet open={wishlistOpen} onOpenChange={setWishlistOpen}>
@@ -32,7 +39,7 @@ export function WishlistDrawer() {
               <h3 className="font-display font-semibold text-lg">Wishlist Kosong</h3>
               <p className="text-sm text-muted-foreground mt-1">Simpan produk favorit Anda di sini.</p>
             </div>
-            <Button onClick={() => setWishlistOpen(false)} className="bg-brand-emerald hover:bg-emerald-700 rounded-full">
+            <Button onClick={handleBrowseProducts} className="bg-brand-emerald hover:bg-emerald-700 rounded-full">
               Jelajahi Produk
             </Button>
           </div>

@@ -58,7 +58,7 @@ export function BrandAmbassador() {
             </h2>
             <p className="mt-2 text-brand-gold font-semibold">Pakar Herbal &amp; Kesehatan Holistik</p>
             <p className="mt-5 text-white/85 leading-relaxed max-w-lg">
-              Dengan pengalaman lebih dari 15 tahun di bidang herbal dan kesehatan alami, Dr. Aisyah mempercayai SR12 sebagai mitra untuk menghadarkan produk alami berkualitas kepada keluarga Indonesia. Bersama, kami membangun gaya hidup sehat yang berkelanjutan.
+              Dengan pengalaman lebih dari 15 tahun di bidang herbal dan kesehatan alami, Dr. Aisyah mempercayai Randumart Herbal sebagai mitra untuk menghadirkan produk alami berkualitas kepada keluarga Indonesia. Bersama, kami membangun gaya hidup sehat yang berkelanjutan.
             </p>
 
             <div className="mt-6 grid grid-cols-3 gap-4 max-w-md">

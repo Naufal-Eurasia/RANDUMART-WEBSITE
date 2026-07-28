@@ -20,7 +20,7 @@ export function Testimonials() {
             Testimoni
           </span>
           <h2 className="font-display text-3xl sm:text-4xl font-bold">Apa Kata Pelanggan Kami</h2>
-          <p className="mt-2 text-muted-foreground">Ribuan pelanggan puas dengan produk SR12.</p>
+          <p className="mt-2 text-muted-foreground">Ribuan pelanggan puas dengan produk Randumart Herbal.</p>
         </motion.div>
 
         <Swiper

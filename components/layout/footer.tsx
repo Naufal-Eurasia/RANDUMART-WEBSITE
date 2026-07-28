@@ -14,7 +14,7 @@ export function Footer() {
   const subscribe = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    toast.success('Berhasil berlangganan newsletter SR12!');
+    toast.success('Berhasil berlangganan newsletter Randumart Herbal!');
     setEmail('');
   };
 
@@ -49,15 +49,24 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
         {/* About */}
         <div className="col-span-2 lg:col-span-2">
-          <Link href="/" className="flex items-center gap-2 mb-4">
-            <div className="grid place-items-center w-10 h-10 rounded-xl bg-gradient-to-br from-brand-emerald to-emerald-700 text-white font-display font-bold text-lg">SR</div>
+          <Link href="/" className="flex items-center gap-3 mb-4">
+            <div className="relative inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white/90 shadow-soft overflow-hidden">
+              <img
+                src="/images/randumart-logo.jpeg"
+                alt="Randumart Logo"
+                className="w-full h-full object-contain p-1"
+              />
+            </div>
             <div className="leading-none">
-              <div className="font-display font-bold text-lg text-brand-emerald">SR12</div>
-              <div className="text-[10px] uppercase tracking-[0.2em] font-medium text-muted-foreground">Official Store</div>
+              <div className="font-display font-bold text-lg text-brand-emerald">
+                <span className="text-brand-emerald">Randum</span>
+                <span className="text-brand-red">mart</span>
+              </div>
+              <div className="text-[10px] uppercase tracking-[0.2em] font-medium text-brand-blue">Herbal & Souvenir Umrah</div>
             </div>
           </Link>
           <p className="text-sm text-muted-foreground leading-relaxed mb-4 max-w-sm">
-            SR12 Official Store adalah toko resmi produk herbal, skincare, beauty, personal care, dan suplemen alami berkualitas untuk keluarga Indonesia.
+            Randumart Herbal adalah toko resmi produk herbal, skincare, beauty, personal care, dan suplemen alami berkualitas untuk keluarga Indonesia.
           </p>
           <div className="flex gap-2">
             {[Instagram, Facebook, Youtube].map((Icon, i) => (
@@ -110,7 +119,7 @@ export function Footer() {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
-        <p>© 2024 SR12 Official Store. All rights reserved.</p>
+        <p>© 2024 Randumart Herbal. All rights reserved.</p>
         <div className="flex gap-4">
           <Link href="#" className="hover:text-brand-emerald">Privacy Policy</Link>
           <Link href="#" className="hover:text-brand-emerald">Terms</Link>

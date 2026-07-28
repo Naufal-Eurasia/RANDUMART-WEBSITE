@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState, useTransition } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { SlidersHorizontal, X, LayoutGrid, List, Star } from 'lucide-react';
 import { products } from '@/lib/products';
@@ -27,11 +27,15 @@ const sortOptions = [
 
 export default function ProductsPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const initialCategory = searchParams.get('category') || 'all';
   const initialConcern = searchParams.get('concern');
 
   const [category, setCategory] = useState(initialCategory);
-  const [priceRange, setPriceRange] = useState<number[]>([0, 500000]);
+  const PRICE_STEP = 500;
+  const PRICE_MAX = 500000;
+  const [priceRange, setPriceRange] = useState<number[]>([0, PRICE_MAX]);
+  const [livePriceRange, setLivePriceRange] = useState<number[]>([0, PRICE_MAX]);
   const [minRating, setMinRating] = useState(0);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [bestSellerOnly, setBestSellerOnly] = useState(false);
@@ -39,6 +43,14 @@ export default function ProductsPage() {
   const [view, setView] = useState<'grid' | 'list'>('grid');
   const [page, setPage] = useState(1);
   const perPage = 12;
+
+  useEffect(() => {
+    setCategory(initialCategory);
+  }, [initialCategory]);
+
+  useEffect(() => {
+    setLivePriceRange(priceRange);
+  }, [priceRange]);
 
   const filtered = useMemo(() => {
     let list = [...products];
@@ -63,7 +75,79 @@ export default function ProductsPage() {
   const totalPages = Math.ceil(filtered.length / perPage);
   const paged = filtered.slice((page - 1) * perPage, page * perPage);
 
+  const gridItems = useMemo(() => paged.map((p, i) => <ProductCard key={p.id} product={p} index={i} />), [paged]);
+
+  const listItems = useMemo(() => paged.map((p, i) => (
+    <motion.div key={p.id} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.03 }} className="flex gap-4 rounded-3xl bg-white border border-border/60 p-3 shadow-soft hover:shadow-premium transition-shadow">
+      <Link href={`/products/${p.slug}`} className="shrink-0">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={p.image} alt={p.name} className="w-28 h-36 sm:w-36 sm:h-44 rounded-2xl object-cover" />
+      </Link>
+      <div className="flex-1 min-w-0 flex flex-col">
+        <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center gap-0.5"><Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" /><span className="text-xs font-semibold">{p.rating.toFixed(1)}</span></div>
+          <span className="text-xs text-muted-foreground">({p.reviewCount})</span>
+          <span className="ml-auto text-xs text-muted-foreground">{p.category}</span>
+        </div>
+        <Link href={`/products/${p.slug}`}><h3 className="font-display font-semibold hover:text-primary line-clamp-1">{p.name}</h3></Link>
+        <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{p.shortDescription}</p>
+        <div className="mt-2 flex items-end gap-2">
+          <span className="font-display font-bold text-brand-emerald">{formatRupiah(p.price)}</span>
+          {p.originalPrice && <span className="text-xs text-muted-foreground line-through">{formatRupiah(p.originalPrice)}</span>}
+        </div>
+        <div className="mt-auto pt-3 flex gap-2">
+          <Link href={`/products/${p.slug}`} className="flex-1 text-center py-2 rounded-full bg-brand-emerald text-white text-sm font-semibold">Buy Now</Link>
+        </div>
+      </div>
+    </motion.div>
+  )), [paged]);
+
+  const [isPending, startTransition] = useTransition();
   const activeCat = categories.find((c) => c.slug === category);
+
+  const handlePriceCommit = useCallback((value: number[]) => {
+    // snap to min/max when close to edges to ensure thumb can reach exact corners
+    const snapTolerance = PRICE_STEP * 2; // within two steps
+    let [minV, maxV] = value;
+    if (minV <= snapTolerance) minV = 0;
+    if (PRICE_MAX - maxV <= snapTolerance) maxV = PRICE_MAX;
+
+    // normalize to step
+    minV = Math.round(minV / PRICE_STEP) * PRICE_STEP;
+    maxV = Math.round(maxV / PRICE_STEP) * PRICE_STEP;
+
+    // enforce bounds
+    minV = Math.max(0, Math.min(minV, PRICE_MAX));
+    maxV = Math.max(0, Math.min(maxV, PRICE_MAX));
+
+    startTransition(() => {
+      setPriceRange([minV, maxV]);
+      setLivePriceRange([minV, maxV]);
+      setPage(1);
+    });
+  }, []);
+
+  const handleLivePriceChange = useCallback((value: number[]) => {
+    let [minV, maxV] = value;
+    // if the thumb is near the right edge, snap live to the exact max for immediate feedback
+    const liveSnapTolerance = PRICE_STEP * 2; // match commit tolerance
+    if (PRICE_MAX - maxV <= liveSnapTolerance) {
+      maxV = PRICE_MAX;
+    }
+    setLivePriceRange([minV, maxV]);
+  }, [PRICE_MAX, PRICE_STEP]);
+
+  const updateCategory = (slug: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (slug === 'all') {
+      params.delete('category');
+    } else {
+      params.set('category', slug);
+    }
+    router.push(`/products${params.toString() ? `?${params.toString()}` : ''}`);
+    setCategory(slug);
+    setPage(1);
+  };
 
   const FilterContent = () => (
     <div className="space-y-6">
@@ -72,7 +156,7 @@ export default function ProductsPage() {
         <h4 className="font-display font-semibold text-sm mb-3">Kategori</h4>
         <div className="space-y-2">
           <button
-            onClick={() => { setCategory('all'); setPage(1); }}
+            onClick={() => updateCategory('all')}
             className={cn('block w-full text-left px-3 py-2 rounded-xl text-sm transition-colors', category === 'all' ? 'bg-primary text-white font-semibold' : 'hover:bg-muted')}
           >
             Semua Kategori
@@ -80,7 +164,7 @@ export default function ProductsPage() {
           {categories.map((c) => (
             <button
               key={c.slug}
-              onClick={() => { setCategory(c.slug); setPage(1); }}
+              onClick={() => updateCategory(c.slug)}
               className={cn('flex items-center justify-between w-full text-left px-3 py-2 rounded-xl text-sm transition-colors', category === c.slug ? 'bg-primary text-white font-semibold' : 'hover:bg-muted')}
             >
               <span>{c.emoji} {c.name}</span>
@@ -94,16 +178,17 @@ export default function ProductsPage() {
       <div>
         <h4 className="font-display font-semibold text-sm mb-3">Rentang Harga</h4>
         <Slider
-          value={priceRange}
-          onValueChange={setPriceRange}
+          value={livePriceRange}
+          onValueChange={handleLivePriceChange}
+          onValueCommit={handlePriceCommit}
           min={0}
           max={500000}
-          step={10000}
+          step={500}
           className="my-4"
         />
         <div className="flex items-center justify-between text-sm">
-          <span className="font-medium">{formatRupiah(priceRange[0])}</span>
-          <span className="font-medium">{formatRupiah(priceRange[1])}</span>
+          <span className="font-medium">{formatRupiah(livePriceRange[0])}</span>
+          <span className="font-medium">{formatRupiah(livePriceRange[1])}</span>
         </div>
       </div>
 
@@ -196,34 +281,11 @@ export default function ProductsPage() {
             </div>
           ) : view === 'grid' ? (
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-              {paged.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
+              {gridItems}
             </div>
           ) : (
             <div className="space-y-4">
-              {paged.map((p, i) => (
-                <motion.div key={p.id} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.03 }} className="flex gap-4 rounded-3xl bg-white border border-border/60 p-3 shadow-soft hover:shadow-premium transition-shadow">
-                  <Link href={`/products/${p.slug}`} className="shrink-0">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={p.image} alt={p.name} className="w-28 h-36 sm:w-36 sm:h-44 rounded-2xl object-cover" />
-                  </Link>
-                  <div className="flex-1 min-w-0 flex flex-col">
-                    <div className="flex items-center gap-2 mb-1">
-                      <div className="flex items-center gap-0.5"><Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" /><span className="text-xs font-semibold">{p.rating.toFixed(1)}</span></div>
-                      <span className="text-xs text-muted-foreground">({p.reviewCount})</span>
-                      <span className="ml-auto text-xs text-muted-foreground">{p.category}</span>
-                    </div>
-                    <Link href={`/products/${p.slug}`}><h3 className="font-display font-semibold hover:text-primary line-clamp-1">{p.name}</h3></Link>
-                    <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{p.shortDescription}</p>
-                    <div className="mt-2 flex items-end gap-2">
-                      <span className="font-display font-bold text-brand-emerald">{formatRupiah(p.price)}</span>
-                      {p.originalPrice && <span className="text-xs text-muted-foreground line-through">{formatRupiah(p.originalPrice)}</span>}
-                    </div>
-                    <div className="mt-auto pt-3 flex gap-2">
-                      <Link href={`/products/${p.slug}`} className="flex-1 text-center py-2 rounded-full bg-brand-emerald text-white text-sm font-semibold">Buy Now</Link>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+              {listItems}
             </div>
           )}
 

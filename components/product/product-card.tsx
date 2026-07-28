@@ -8,7 +8,7 @@ import { useStore } from '@/lib/store';
 import { formatRupiah } from '@/lib/categories';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { QuickView } from './quick-view';
 
 const badgeStyles: Record<string, string> = {
@@ -31,7 +31,7 @@ const badgeLabels: Record<string, string> = {
   'out-of-stock': 'Stok Habis',
 };
 
-export function ProductCard({ product, index = 0 }: { product: Product; index?: number }) {
+function ProductCardImpl({ product, index = 0 }: { product: Product; index?: number }) {
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
   const [quickOpen, setQuickOpen] = useState(false);
   const inWish = isInWishlist(product.id);
@@ -170,3 +170,8 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
     </>
   );
 }
+
+const ProductCard = React.memo(ProductCardImpl, (prev, next) => prev.product.id === next.product.id && prev.index === next.index);
+ProductCard.displayName = 'ProductCard';
+
+export { ProductCard };
