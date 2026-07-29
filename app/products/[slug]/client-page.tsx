@@ -115,7 +115,7 @@ export default function ProductDetailClient({ product, related }: { product: any
                 className="flex-1 rounded-full h-12 text-base font-semibold"
                 disabled={product.stock === 0}
                 onClick={() => {
-                  addToCart(product.id, qty);
+                  addToCart(product, qty);
                   toast.success(`Ditambahkan ke keranjang`, { description: `${qty}x ${product.name}` });
                 }}
               >
