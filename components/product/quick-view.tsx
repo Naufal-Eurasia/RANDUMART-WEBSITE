@@ -16,6 +16,14 @@ export function QuickView({ product, open, onOpenChange }: { product: Product; o
   const [activeImg, setActiveImg] = useState(0);
   const inWish = isInWishlist(product.id);
 
+  const images = (product as any).images?.length
+    ? (product as any).images
+    : ((product as any).imageGallery?.length
+        ? (product as any).imageGallery
+        : [(product as any).image || '/placeholder.jpg']);
+
+  const categoryLabel = (product as any).categoryName || (typeof product.category === 'string' ? product.category : (product.category as any)?.name) || 'Kategori';
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl p-0 overflow-hidden rounded-3xl">
@@ -24,7 +32,7 @@ export function QuickView({ product, open, onOpenChange }: { product: Product; o
           {/* Gallery */}
           <div className="relative bg-muted">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={product.images[activeImg]} alt={product.name} className="w-full h-full object-cover aspect-square md:aspect-auto" />
+            <img src={images[activeImg]?.url || images[activeImg]} alt={product.name} className="w-full h-full object-cover aspect-square md:aspect-auto" />
             {product.discount && (
               <span className="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-accent text-white text-xs font-bold">-{product.discount}%</span>
             )}
@@ -37,7 +45,7 @@ export function QuickView({ product, open, onOpenChange }: { product: Product; o
                 <span className="text-sm font-semibold">{product.rating.toFixed(1)}</span>
               </div>
               <span className="text-sm text-muted-foreground">({product.reviewCount} ulasan)</span>
-              <span className="ml-auto text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground">{product.category}</span>
+              <span className="ml-auto text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground">{categoryLabel}</span>
             </div>
 
             <h2 className="font-display text-xl sm:text-2xl font-bold leading-tight">{product.name}</h2>
@@ -57,14 +65,14 @@ export function QuickView({ product, open, onOpenChange }: { product: Product; o
 
             {/* Thumbnails */}
             <div className="mt-4 flex gap-2">
-              {product.images.map((img, i) => (
+              {images.map((img: any, i: number) => (
                 <button
                   key={i}
                   onClick={() => setActiveImg(i)}
                   className={cn('w-14 h-14 rounded-xl overflow-hidden border-2 transition-colors', activeImg === i ? 'border-brand-emerald' : 'border-border')}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  <img src={img?.url || img} alt="" className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>
