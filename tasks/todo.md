@@ -14,5 +14,6 @@
 - [ ] Fase 8: Halaman Akun Customer (Register UI, Riwayat Order untuk customer yang login) - ditunda
 
 ## Item optimasi (tidak blocking)
+- [ ] Ganti logout admin (1-klik): Ubah Link SignOut di `app/admin/layout.tsx` menjadi client component button yang memanggil `signOut()` dari `next-auth/react`.
 - [ ] Optimasi Wishlist Fetch: ganti fetch semua produk menjadi endpoint khusus ?ids=a,b,c ketika katalog sudah besar
 - [ ] Ganti `ProductData = any` menjadi `Prisma.ProductGetPayload` di app/products/page.tsx
