@@ -5,21 +5,25 @@ import { CheckCircle2, Clock, MapPin, Package, AlertCircle, XCircle } from 'luci
 import Link from 'next/link';
 
 export default async function OrderConfirmationPage({ params }: { params: { id: string } }) {
-  const order = await prisma.order.findUnique({
-    where: { id: params.id },
-    include: {
-      items: {
-        include: {
-          product: true
+  const [order, storeSetting] = await Promise.all([
+    prisma.order.findUnique({
+      where: { id: params.id },
+      include: {
+        items: {
+          include: {
+            product: true
+          }
         }
       }
-    }
-  });
+    }),
+    prisma.storeSetting.findUnique({ where: { id: 'singleton' } })
+  ]);
 
   if (!order) {
     notFound();
   }
 
+  const waNumber = storeSetting?.whatsappNumber || '6281234567890';
   const isPending = order.status === 'PENDING';
   const isPaid = order.status === 'PAID' || order.status === 'COMPLETED' || order.status === 'SHIPPED' || order.status === 'PROCESSING';
   const isExpired = order.status === 'EXPIRED';
@@ -77,9 +81,21 @@ export default async function OrderConfirmationPage({ params }: { params: { id: 
                <p className="text-sm text-muted-foreground">Total Pembayaran</p>
                <p className="font-display font-bold text-2xl text-brand-emerald">{formatRupiah(Number(order.totalAmount))}</p>
              </div>
-             <button disabled className="px-8 py-3 rounded-full bg-brand-emerald text-white font-semibold shadow-soft opacity-50 cursor-not-allowed">
-               Bayar Sekarang (Fase 5)
-             </button>
+                          {/* Integrasi WhatsApp (Fase 6) */}
+             <a
+               href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Halo Admin SR12, saya ingin konfirmasi pembayaran untuk pesanan:
+Order ID: ${order.id}
+Midtrans ID: ${order.midtransOrderId}
+Nama: ${order.guestName}
+Total: ${formatRupiah(Number(order.totalAmount))}
+
+Mohon instruksi pembayarannya. Terima kasih!`)}`}
+               target="_blank"
+               rel="noopener noreferrer"
+               className="inline-flex items-center justify-center px-8 py-3 rounded-full bg-[#25D366] hover:bg-[#1DA851] text-white font-semibold shadow-soft transition-colors"
+             >
+               Konfirmasi via WhatsApp
+             </a>
           </div>
         )}
 

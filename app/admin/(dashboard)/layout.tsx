@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
-import { Package, LayoutDashboard, Tags, ShoppingCart, LogOut } from 'lucide-react';
+import { Package, LayoutDashboard, Tags, ShoppingCart, LogOut, Settings } from 'lucide-react';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
@@ -33,6 +33,9 @@ export default async function AdminLayout({ children }: { children: ReactNode })
           </Link>
           <Link href="/admin/orders" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-muted text-foreground transition-colors">
             <ShoppingCart className="w-4 h-4 text-muted-foreground" /> Pesanan
+          </Link>
+          <Link href="/admin/settings" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-muted text-foreground transition-colors">
+            <Settings className="w-4 h-4 text-muted-foreground" /> Pengaturan
           </Link>
         </nav>
         <div className="p-4 border-t border-border/60">
