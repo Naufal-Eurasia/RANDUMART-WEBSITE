@@ -1,12 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-
-async function checkAdminAuth() {
-  const session = await getServerSession(authOptions);
-  return session?.user?.role === 'ADMIN';
-}
+import { checkAdminAuth } from '@/lib/auth-utils';
 
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
   if (!(await checkAdminAuth())) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });

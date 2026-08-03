@@ -1,14 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-
-// Helper untuk proteksi API
-async function checkAdminAuth() {
-  const session = await getServerSession(authOptions);
-  if (!session || session.user.role !== 'ADMIN') return false;
-  return true;
-}
+import { checkAdminAuth } from '@/lib/auth-utils';
 
 export async function GET() {
   if (!(await checkAdminAuth())) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
