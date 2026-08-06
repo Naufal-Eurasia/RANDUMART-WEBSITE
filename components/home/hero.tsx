@@ -1,5 +1,8 @@
 'use client';
 
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/effect-fade';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, EffectFade } from 'swiper/modules';
 import { motion } from 'framer-motion';
@@ -12,7 +15,7 @@ const slides = [
     image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=2000&auto=format&fit=crop',
     eyebrow: 'Herbal Alami',
     title: 'Hidup Sehat Dimulai dari Produk Alami Berkualitas',
-    subtitle: 'Temukan berbagai produk herbal, skincare, beauty, personal care, hingga kebutuhan keluarga dari SR12.',
+    subtitle: 'Temukan berbagai produk herbal, skincare, beauty, personal care, hingga kebutuhan keluarga di Randumart Herbal.',
   },
   {
     image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=2000&auto=format&fit=crop',
@@ -44,8 +47,8 @@ export function Hero() {
             <div className="relative h-full w-full">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={s.image} alt={s.eyebrow} className="absolute inset-0 w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-emerald-950/60 to-black/80" />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/70 via-emerald-900/40 to-emerald-950/60" />
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/70 via-transparent to-transparent" />
 
               <div className="relative h-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center">
                 <motion.div
@@ -68,7 +71,7 @@ export function Hero() {
                       </Button>
                     </Link>
                     <Link href="/#categories">
-                      <Button size="lg" variant="outline" className="rounded-full bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white px-7 h-12 text-base backdrop-blur">
+                      <Button size="lg" variant="outline" className="rounded-full bg-white/10 border-brand-gold/30 text-white hover:bg-white/20 hover:text-white px-7 h-12 text-base backdrop-blur">
                         Lihat Katalog
                       </Button>
                     </Link>
@@ -91,7 +94,7 @@ export function Hero() {
               { icon: ShieldCheck, title: 'Pembayaran Aman', desc: '100% terpercaya' },
             ].map((t, i) => (
               <div key={i} className="flex items-center gap-3">
-                <div className="grid place-items-center w-11 h-11 rounded-2xl bg-primary/10 text-primary shrink-0">
+                <div className="grid place-items-center w-11 h-11 rounded-2xl bg-brand-gold/15 text-brand-gold shrink-0">
                   <t.icon className="w-5 h-5" />
                 </div>
                 <div>
