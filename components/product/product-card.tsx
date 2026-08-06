@@ -130,38 +130,41 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
           </Link>
           <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{product.shortDescription}</p>
 
-          <div className="mt-3 flex items-end gap-2">
-            <span className="font-display font-bold text-base text-brand-emerald">{formatRupiah(product.price)}</span>
-            {product.originalPrice && (
-              <span className="text-xs text-muted-foreground line-through">{formatRupiah(product.originalPrice)}</span>
-            )}
-          </div>
+          {/* Pricing wrapper shifted to bottom */}
+          <div className="mt-auto pt-3">
+            <div className="flex items-end gap-2">
+              <span className="font-display font-bold text-base text-brand-emerald">{formatRupiah(product.price)}</span>
+              {product.originalPrice && (
+                <span className="text-xs text-muted-foreground line-through">{formatRupiah(product.originalPrice)}</span>
+              )}
+            </div>
 
-          <div className="mt-2 flex items-center gap-1.5 text-xs">
-            <span className={cn('inline-block w-2 h-2 rounded-full', outOfStock ? 'bg-gray-400' : 'bg-emerald-500')} />
-            <span className={outOfStock ? 'text-muted-foreground' : 'text-emerald-600 font-medium'}>
-              {outOfStock ? 'Stok habis' : `Stok ${product.stock}`}
-            </span>
-          </div>
+            <div className="mt-2 flex items-center gap-1.5 text-xs">
+              <span className={cn('inline-block w-2 h-2 rounded-full', outOfStock ? 'bg-gray-400' : 'bg-emerald-500')} />
+              <span className={outOfStock ? 'text-muted-foreground' : 'text-emerald-600 font-medium'}>
+                {outOfStock ? 'Stok habis' : `Stok ${product.stock}`}
+              </span>
+            </div>
 
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            <button
-              onClick={() => {
-                if (outOfStock) return;
-                addToCart(product);
-                toast.success('Ditambahkan ke keranjang');
-              }}
-              disabled={outOfStock}
-              className="flex items-center justify-center gap-1.5 py-2.5 rounded-full border border-border text-xs font-semibold hover:bg-muted transition-colors disabled:opacity-50"
-            >
-              <ShoppingBag className="w-3.5 h-3.5" /> Cart
-            </button>
-            <Link
-              href={`/products/${product.slug}`}
-              className="flex items-center justify-center py-2.5 rounded-full bg-brand-emerald text-white text-xs font-semibold hover:bg-emerald-700 transition-colors"
-            >
-              Buy Now
-            </Link>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <button
+                onClick={() => {
+                  if (outOfStock) return;
+                  addToCart(product);
+                  toast.success('Ditambahkan ke keranjang');
+                }}
+                disabled={outOfStock}
+                className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-border text-xs font-semibold hover:bg-muted active:scale-[0.98] transition-all disabled:opacity-50"
+              >
+                <ShoppingBag className="w-3.5 h-3.5" /> Cart
+              </button>
+              <Link
+                href={`/products/${product.slug}`}
+                className="flex items-center justify-center py-2.5 rounded-xl bg-brand-emerald text-white text-xs font-semibold hover:bg-emerald-700 active:scale-[0.98] transition-all"
+              >
+                Buy Now
+              </Link>
+            </div>
           </div>
         </div>
       </motion.div>

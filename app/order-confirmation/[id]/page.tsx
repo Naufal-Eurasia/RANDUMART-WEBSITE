@@ -76,26 +76,37 @@ export default async function OrderConfirmationPage({ params }: { params: { id: 
 
         {/* Action Button */}
         {isPending && (
-          <div className="bg-white p-6 rounded-3xl border border-border/60 shadow-soft mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-             <div>
-               <p className="text-sm text-muted-foreground">Total Pembayaran</p>
-               <p className="font-display font-bold text-2xl text-brand-emerald">{formatRupiah(Number(order.totalAmount))}</p>
+          <div className="bg-white p-6 rounded-[2rem] border border-border/40 shadow-sm mb-8">
+             <div className="text-center mb-6">
+               <p className="text-sm font-semibold text-amber-600 bg-amber-50 inline-block px-4 py-1.5 rounded-full mb-3">Langkah Terakhir</p>
+               <h3 className="font-display font-bold text-2xl">Konfirmasi via WhatsApp</h3>
+               <p className="text-muted-foreground text-sm mt-2 max-w-md mx-auto">Pesanan Anda telah tercatat. Klik tombol di bawah ini dalam waktu 1x24 jam untuk mendapatkan informasi nomor rekening dan menyelesaikan pembayaran Anda.</p>
              </div>
-                          {/* Integrasi WhatsApp (Fase 6) */}
-             <a
-               href={`https://wa.me/${waNumber}?text=${encodeURIComponent(`Halo Admin SR12, saya ingin konfirmasi pembayaran untuk pesanan:
-Order ID: ${order.id}
-Midtrans ID: ${order.midtransOrderId}
-Nama: ${order.guestName}
-Total: ${formatRupiah(Number(order.totalAmount))}
 
-Mohon instruksi pembayarannya. Terima kasih!`)}`}
-               target="_blank"
-               rel="noopener noreferrer"
-               className="inline-flex items-center justify-center px-8 py-3 rounded-full bg-[#25D366] hover:bg-[#1DA851] text-white font-semibold shadow-soft transition-colors"
-             >
-               Konfirmasi via WhatsApp
-             </a>
+             <div className="flex flex-col items-center justify-center">
+               <a
+                 href={`https://wa.me/${waNumber}?text=${encodeURIComponent(
+                   `Halo Admin *SR12 Official Store*, saya ingin mengkonfirmasi pesanan saya.\n\n` +
+                   `*DETAIL PESANAN*\n` +
+                   `🏷️ Order ID: *${order.id}*\n` +
+                   `👤 Nama: ${order.guestName}\n` +
+                   `📞 No. WA: ${order.guestPhone}\n\n` +
+                   `*RINGKASAN BELANJA*\n` +
+                   order.items.map(i => `${i.quantity}x ${i.product.name} - ${formatRupiah(Number(i.priceAtPurchase) * i.quantity)}`).join('\n') +
+                   `\n-----------------------------------\n` +
+                   `💰 *TOTAL TAGIHAN: ${formatRupiah(Number(order.totalAmount))}*\n` +
+                   `*(Belum termasuk ongkir. Ongkir akan diinfokan admin)*\n\n` +
+                   `*ALAMAT PENGIRIMAN*\n` +
+                   `${order.shippingAddress}\n\n` +
+                   `Mohon informasi nomor rekening untuk proses transfer. Terima kasih! 🙏`
+                 )}`}
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="flex w-full sm:w-auto items-center justify-center gap-2 px-10 py-4 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-semibold shadow-soft active:scale-[0.98] transition-all"
+               >
+                 Kirim Konfirmasi ke WhatsApp Admin
+               </a>
+             </div>
           </div>
         )}
 
@@ -124,7 +135,7 @@ Mohon instruksi pembayarannya. Terima kasih!`)}`}
                </div>
                <div className="flex justify-between text-sm">
                  <span className="text-muted-foreground">Biaya Kirim</span>
-                 <span className="font-medium text-emerald-600">{Number(order.shippingCost) === 0 ? 'Gratis' : formatRupiah(Number(order.shippingCost))}</span>
+                 <span className="font-medium text-amber-600">Dihitung Admin via WA</span>
                </div>
                <div className="flex justify-between text-base font-bold pt-2">
                  <span>Total Akhir</span>

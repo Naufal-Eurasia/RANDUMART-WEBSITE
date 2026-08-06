@@ -8,7 +8,7 @@ const icons = { Leaf, ShieldCheck, BadgeCheck, FlaskConical, Users, Sparkles, Tr
 
 export function WhyChoose() {
   return (
-    <section id="about" className="py-20 lg:py-24 bg-background">
+    <section id="about" className="py-12 lg:py-16 bg-muted/50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

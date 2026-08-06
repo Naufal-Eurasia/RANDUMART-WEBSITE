@@ -7,6 +7,8 @@ export default withAuth(
   {
     callbacks: {
       authorized: ({ req, token }) => {
+        if (token?.error === "UserDeleted") return false;
+
         // Hanya wajibkan token/role khusus untuk path /admin/*
         if (req.nextUrl.pathname.startsWith('/admin')) {
           return token?.role === 'ADMIN';

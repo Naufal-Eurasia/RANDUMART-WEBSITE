@@ -12,7 +12,7 @@ export function BrandAmbassador() {
       <div className="absolute inset-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="https://images.pexels.com/photos/3784371/pexels-photo-3784371.jpeg?auto=compress&cs=tinysrgb&w=1600"
+          src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop"
           alt=""
           className="w-full h-full object-cover"
         />
@@ -31,7 +31,7 @@ export function BrandAmbassador() {
             <div className="relative rounded-3xl overflow-hidden shadow-premium aspect-[4/5] max-w-md mx-auto">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=900"
+                src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop"
                 alt="Brand Ambassador"
                 className="w-full h-full object-cover"
               />

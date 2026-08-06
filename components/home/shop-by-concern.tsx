@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export function ShopByConcern() {
   return (
-    <section className="py-20 lg:py-24 bg-gradient-to-b from-brand-cream/40 to-background">
+    <section className="py-12 lg:py-16 bg-brand-emerald/5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

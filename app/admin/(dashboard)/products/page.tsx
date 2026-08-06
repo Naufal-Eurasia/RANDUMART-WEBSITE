@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -199,7 +200,7 @@ export default function ProductsAdminPage() {
                   <tr key={p.id} className="hover:bg-muted/30">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        {p.images?.[0] ? <img src={p.images[0].url} alt={p.name} className="w-10 h-10 rounded-lg object-cover" /> : <div className="w-10 h-10 bg-muted rounded-lg" />}
+                        {p.images?.[0] ? <Image src={p.images[0].url} alt={p.name} width={40} height={40} className="w-10 h-10 rounded-lg object-cover" /> : <div className="w-10 h-10 bg-muted rounded-lg" />}
                         <div>
                           <p className="font-semibold">{p.name}</p>
                           <p className="text-xs text-muted-foreground">{p.category?.name}</p>
@@ -271,13 +272,13 @@ export default function ProductsAdminPage() {
               <div className="flex flex-wrap gap-3">
                 {uploadedImages.map((img, i) => (
                   <div key={img.id} className="relative w-20 h-20 border rounded-xl overflow-hidden">
-                    <img src={img.url} className="w-full h-full object-cover" />
+                    <Image src={img.url} alt="Uploaded product image" width={80} height={80} className="w-full h-full object-cover" />
                     <button type="button" onClick={() => removeUploaded(i)} className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-0.5"><X className="w-3 h-3"/></button>
                   </div>
                 ))}
                 {imageFiles.map((f, i) => (
                   <div key={i} className="relative w-20 h-20 border rounded-xl overflow-hidden">
-                    <img src={URL.createObjectURL(f)} className="w-full h-full object-cover" />
+                    <Image src={URL.createObjectURL(f)} alt="Local product image preview" width={80} height={80} className="w-full h-full object-cover" />
                     <button type="button" onClick={() => removeFile(i)} className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-0.5"><X className="w-3 h-3"/></button>
                   </div>
                 ))}

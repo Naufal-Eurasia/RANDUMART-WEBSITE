@@ -1,9 +1,10 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
-import { Package, LayoutDashboard, Tags, ShoppingCart, LogOut, Settings } from 'lucide-react';
+import { Package, LayoutDashboard, Tags, ShoppingCart, Settings } from 'lucide-react';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
+import { LogoutButton } from '@/components/auth/logout-button';
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   const session = await getServerSession(authOptions);
@@ -39,9 +40,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
           </Link>
         </nav>
         <div className="p-4 border-t border-border/60">
-          <Link href="/api/auth/signout?callbackUrl=/" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-red-50 text-red-600 transition-colors">
-            <LogOut className="w-4 h-4" /> Keluar
-          </Link>
+          <LogoutButton className="flex w-full items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-red-50 text-red-600 transition-colors" />
         </div>
       </aside>
 

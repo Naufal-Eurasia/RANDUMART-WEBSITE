@@ -45,3 +45,16 @@ docs/
 scripts/
 .claude/
 CLAUDE.md
+
+graphify-out/
+
+.claude/
+
+.mcp.json
+
+# Claude Code & Agents
+.claude/
+.agents/
+skills-lock.json
+.mcp.json
+.playwright-mcp/

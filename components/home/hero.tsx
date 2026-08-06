@@ -9,19 +9,19 @@ import { Button } from '@/components/ui/button';
 
 const slides = [
   {
-    image: 'https://images.pexels.com/photos/4753990/pexels-photo-4753990.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=2000&auto=format&fit=crop',
     eyebrow: 'Herbal Alami',
     title: 'Hidup Sehat Dimulai dari Produk Alami Berkualitas',
     subtitle: 'Temukan berbagai produk herbal, skincare, beauty, personal care, hingga kebutuhan keluarga dari SR12.',
   },
   {
-    image: 'https://images.pexels.com/photos/2533266/pexels-photo-2533266.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=2000&auto=format&fit=crop',
     eyebrow: 'Beauty & Skincare',
     title: 'Wajah Cerah, Kulit Sehat, Tampil Percaya Diri',
     subtitle: 'Rangkaian skincare premium dengan bahan alami teruji dermatologis untuk semua jenis kulit.',
   },
   {
-    image: 'https://images.pexels.com/photos/3933254/pexels-photo-3933254.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=2000&auto=format&fit=crop',
     eyebrow: 'Keluarga Sehat',
     title: 'Perawatan Aman untuk Si Kecil dan Seluruh Keluarga',
     subtitle: 'Produk lembut, halal, dan BPOM terdaftar untuk kesehatan dan kebahagiaan keluarga.',
@@ -30,7 +30,7 @@ const slides = [
 
 export function Hero() {
   return (
-    <section className="relative -mt-[4.5rem] lg:-mt-[6.5rem]">
+    <section className="relative -mt-16 lg:-mt-20">
       <Swiper
         modules={[Autoplay, Pagination, EffectFade]}
         autoplay={{ delay: 5500, disableOnInteraction: false }}
@@ -44,8 +44,8 @@ export function Hero() {
             <div className="relative h-full w-full">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={s.image} alt={s.eyebrow} className="absolute inset-0 w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/70 via-emerald-900/40 to-emerald-950/60" />
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/70 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-emerald-950/60 to-black/80" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
 
               <div className="relative h-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center">
                 <motion.div

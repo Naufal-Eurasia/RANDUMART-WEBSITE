@@ -1,10 +1,12 @@
+import Image from 'next/image';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 import { formatRupiah } from '@/lib/categories';
-import { Package, LogOut, ChevronRight } from 'lucide-react';
+import { Package, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { LogoutButton } from '@/components/auth/logout-button';
 
 export default async function AccountPage() {
   const session = await getServerSession(authOptions);
@@ -30,7 +32,7 @@ export default async function AccountPage() {
         <div className="bg-white p-6 rounded-3xl shadow-soft border border-border/60 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div className="flex items-center gap-4">
             {session.user.image ? (
-               <img src={session.user.image} alt={session.user.name || 'User'} className="w-16 h-16 rounded-full object-cover border" />
+               <Image src={session.user.image} alt={session.user.name || 'User'} width={64} height={64} className="w-16 h-16 rounded-full object-cover border" />
             ) : (
                <div className="w-16 h-16 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-display text-2xl font-bold">
                  {session.user.name?.charAt(0) || 'U'}
@@ -41,9 +43,7 @@ export default async function AccountPage() {
               <p className="text-muted-foreground text-sm">{session.user.email}</p>
             </div>
           </div>
-          <Link href="/api/auth/signout?callbackUrl=/" className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 font-semibold text-sm transition-colors">
-            <LogOut className="w-4 h-4" /> Keluar
-          </Link>
+          <LogoutButton className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 font-semibold text-sm transition-colors" />
         </div>
 
         <h2 className="text-xl font-display font-bold mb-4 flex items-center gap-2">
@@ -73,7 +73,7 @@ export default async function AccountPage() {
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <img src={order.items[0]?.product?.images?.[0]?.url || '/placeholder.jpg'} alt="Product" className="w-16 h-16 rounded-xl object-cover bg-muted" />
+                  <Image src={order.items[0]?.product?.images?.[0]?.url || '/placeholder.jpg'} alt={order.items[0]?.product?.name || "Product"} width={64} height={64} className="w-16 h-16 rounded-xl object-cover bg-muted" />
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-sm line-clamp-1">{order.items[0]?.product?.name || 'Produk'}</p>
                     <p className="text-xs text-muted-foreground">{order.items[0]?.quantity} barang x {formatRupiah(Number(order.items[0]?.priceAtPurchase))}</p>

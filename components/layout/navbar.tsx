@@ -9,7 +9,14 @@ import { useStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
+import { useSession } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
+
 export function Navbar() {
+  const { data: session, status } = useSession();
+  const pathname = usePathname();
+  const isHome = pathname === '/';
+
   const [scrolled, setScrolled] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -42,8 +49,8 @@ export function Navbar() {
 
       <header
         className={cn(
-          'sticky top-0 z-50 transition-all duration-500',
-          scrolled ? 'glass shadow-soft' : 'bg-transparent'
+          'sticky top-0 z-50 transition-all duration-300',
+          scrolled || !isHome ? 'bg-background/80 backdrop-blur-xl shadow-sm border-b border-border/60' : 'bg-transparent'
         )}
       >
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -54,10 +61,10 @@ export function Navbar() {
                 SR
               </div>
               <div className="hidden sm:block leading-none">
-                <div className={cn('font-display font-bold text-lg tracking-tight', scrolled ? 'text-brand-emerald' : 'text-white')}>
+                <div className={cn('font-display font-bold text-lg tracking-tight', scrolled || !isHome ? 'text-brand-emerald' : 'text-white')}>
                   SR12
                 </div>
-                <div className={cn('text-[10px] uppercase tracking-[0.2em] font-medium', scrolled ? 'text-muted-foreground' : 'text-white/70')}>
+                <div className={cn('text-[10px] uppercase tracking-[0.2em] font-medium', scrolled || !isHome ? 'text-muted-foreground' : 'text-white/70')}>
                   Official Store
                 </div>
               </div>
@@ -76,7 +83,7 @@ export function Navbar() {
                     <button
                       className={cn(
                         'inline-flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg transition-colors',
-                        scrolled ? 'text-foreground hover:bg-muted' : 'text-white hover:bg-white/10'
+                        scrolled || !isHome ? 'text-foreground hover:bg-muted' : 'text-white hover:bg-white/10'
                       )}
                     >
                       {link.label}
@@ -121,7 +128,7 @@ export function Navbar() {
                     href={link.href}
                     className={cn(
                       'px-3 py-2 text-sm font-medium rounded-lg transition-colors',
-                      scrolled ? 'text-foreground hover:bg-muted' : 'text-white hover:bg-white/10'
+                      scrolled || !isHome ? 'text-foreground hover:bg-muted' : 'text-white hover:bg-white/10'
                     )}
                   >
                     {link.label}
@@ -135,14 +142,14 @@ export function Navbar() {
               <button
                 onClick={() => setSearchOpen(true)}
                 aria-label="Search"
-                className={cn('grid place-items-center w-10 h-10 rounded-full transition-colors', scrolled ? 'hover:bg-muted' : 'hover:bg-white/10 text-white')}
+                className={cn('grid place-items-center w-10 h-10 rounded-full transition-colors', scrolled || !isHome ? 'hover:bg-muted text-foreground' : 'hover:bg-white/10 text-white')}
               >
                 <Search className="w-5 h-5" />
               </button>
               <button
                 onClick={() => setWishlistOpen(true)}
                 aria-label="Wishlist"
-                className={cn('relative grid place-items-center w-10 h-10 rounded-full transition-colors', scrolled ? 'hover:bg-muted' : 'hover:bg-white/10 text-white')}
+                className={cn('relative grid place-items-center w-10 h-10 rounded-full transition-colors', scrolled || !isHome ? 'hover:bg-muted text-foreground' : 'hover:bg-white/10 text-white')}
               >
                 <Heart className="w-5 h-5" />
                 {mounted && wishlist.length > 0 && (
@@ -154,7 +161,7 @@ export function Navbar() {
               <button
                 onClick={() => setCartOpen(true)}
                 aria-label="Cart"
-                className={cn('relative grid place-items-center w-10 h-10 rounded-full transition-colors', scrolled ? 'hover:bg-muted' : 'hover:bg-white/10 text-white')}
+                className={cn('relative grid place-items-center w-10 h-10 rounded-full transition-colors', scrolled || !isHome ? 'hover:bg-muted text-foreground' : 'hover:bg-white/10 text-white')}
               >
                 <ShoppingBag className="w-5 h-5" />
                 {mounted && cartCount() > 0 && (
@@ -165,18 +172,34 @@ export function Navbar() {
               </button>
 
               <div className="hidden sm:flex items-center gap-1 ml-1">
-                <Button variant="ghost" size="sm" className={scrolled ? '' : 'text-white hover:bg-white/10'}>
-                  <User className="w-4 h-4 mr-1" /> Login
-                </Button>
-                <Button size="sm" className="bg-brand-emerald hover:bg-emerald-700 text-white">
-                  Register
-                </Button>
+                {status === 'loading' ? (
+                  <div className="w-[150px] h-9 rounded-md bg-muted/20 animate-pulse"></div>
+                ) : status === 'authenticated' ? (
+                  <Link href={session?.user?.role === 'ADMIN' ? '/admin' : '/account'}>
+                    <Button size="sm" className="bg-brand-emerald hover:bg-emerald-700 text-white">
+                      <User className="w-4 h-4 mr-1" /> Akun Saya
+                    </Button>
+                  </Link>
+                ) : (
+                  <>
+                    <Link href="/login">
+                      <Button variant="ghost" size="sm" className={cn(scrolled || !isHome ? 'hover:bg-muted text-foreground' : 'text-white hover:bg-white/10')}>
+                        <User className="w-4 h-4 mr-1" /> Login
+                      </Button>
+                    </Link>
+                    <Link href="/register">
+                      <Button size="sm" className="bg-brand-emerald hover:bg-emerald-700 text-white">
+                        Register
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </div>
 
               <button
                 onClick={() => setMobileNavOpen(true)}
                 aria-label="Menu"
-                className={cn('lg:hidden grid place-items-center w-10 h-10 rounded-full transition-colors', scrolled ? 'hover:bg-muted' : 'hover:bg-white/10 text-white')}
+                className={cn('lg:hidden grid place-items-center w-10 h-10 rounded-full transition-colors', scrolled || !isHome ? 'hover:bg-muted text-foreground' : 'hover:bg-white/10 text-white')}
               >
                 <Menu className="w-5 h-5" />
               </button>

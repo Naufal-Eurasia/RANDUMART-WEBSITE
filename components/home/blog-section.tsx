@@ -8,7 +8,7 @@ import { blogPosts } from '@/lib/products';
 
 export function BlogSection() {
   return (
-    <section id="blog" className="py-20 lg:py-24 bg-background">
+    <section id="blog" className="py-12 lg:py-16 bg-muted/50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between mb-10 gap-4">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>

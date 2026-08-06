@@ -1,18 +1,12 @@
 import { NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { checkAdminAuth } from '@/lib/auth-utils';
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-
-async function checkAdminAuth() {
-  const session = await getServerSession(authOptions);
-  return session?.user?.role === 'ADMIN';
-}
 
 export async function POST(req: Request) {
   if (!(await checkAdminAuth())) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });

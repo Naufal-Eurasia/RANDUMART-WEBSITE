@@ -81,7 +81,7 @@ export default function SettingsAdminPage() {
               />
               <p className="text-xs text-muted-foreground">
                 Gunakan format internasional tanpa tanda plus (+). Contoh: 6281234567890.<br/>
-                Nomor ini akan digunakan sebagai tujuan tombol "Konfirmasi Pembayaran" oleh pelanggan.
+                Nomor ini akan digunakan sebagai tujuan tombol &quot;Konfirmasi Pembayaran&quot; oleh pelanggan.
               </p>
             </div>
 

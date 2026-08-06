@@ -7,7 +7,7 @@ import { categories } from '@/lib/categories';
 
 export function CategoryShowcase() {
   return (
-    <section id="categories" className="py-20 lg:py-28 bg-background">
+    <section id="categories" className="py-12 lg:py-16 bg-muted/50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

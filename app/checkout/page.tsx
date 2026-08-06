@@ -9,8 +9,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
-import { ArrowLeft, Loader2, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Loader2, CheckCircle2, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -78,17 +79,33 @@ export default function CheckoutPage() {
 
   // Render Skeleton saat mounted belum terjadi untuk bypass hydration mismatch
   if (!mounted) {
-    return <div className="min-h-screen pt-28 pb-20 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-brand-emerald" /></div>;
+    return (
+      <div className="min-h-screen pt-24 lg:pt-28 pb-20 bg-muted/30">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="w-32 h-4 bg-muted-foreground/20 rounded animate-pulse mb-6"></div>
+          <div className="w-48 h-8 bg-muted-foreground/20 rounded animate-pulse mb-8"></div>
+          <div className="grid lg:grid-cols-[1fr_400px] gap-8 items-start">
+            <div className="bg-white p-6 rounded-3xl border border-border/60 shadow-soft h-[500px] animate-pulse"></div>
+            <div className="bg-white p-6 rounded-3xl border border-border/60 shadow-soft h-[400px] animate-pulse"></div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   // Jika keranjang kosong
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen pt-28 pb-20 max-w-3xl mx-auto px-4 text-center">
-        <h1 className="text-2xl font-bold font-display mb-4">Keranjang Anda Kosong</h1>
-        <p className="text-muted-foreground mb-8">Tambahkan produk sebelum melakukan checkout.</p>
+      <div className="min-h-screen pt-28 pb-20 max-w-2xl mx-auto px-4 flex flex-col items-center justify-center text-center">
+        <div className="w-24 h-24 bg-brand-emerald/10 text-brand-emerald rounded-full grid place-items-center mb-6">
+          <ShoppingBag className="w-10 h-10" />
+        </div>
+        <h1 className="text-3xl font-bold font-display mb-3 tracking-tight">Keranjang Kosong</h1>
+        <p className="text-muted-foreground mb-10 max-w-sm leading-relaxed">Sepertinya Anda belum memilih produk apapun. Temukan produk herbal & skincare terbaik kami.</p>
         <Link href="/products">
-          <Button className="rounded-full bg-brand-emerald">Jelajahi Produk</Button>
+          <Button className="rounded-xl h-12 px-8 bg-brand-emerald hover:bg-emerald-700 text-white font-medium active:scale-[0.98] transition-transform">
+            Jelajahi Produk
+          </Button>
         </Link>
       </div>
     );
@@ -105,9 +122,9 @@ export default function CheckoutPage() {
 
         <div className="grid lg:grid-cols-[1fr_400px] gap-8 items-start">
           {/* Bagian Kiri: Form Identitas */}
-          <div className="bg-white p-6 rounded-3xl border border-border/60 shadow-soft">
-            <h2 className="font-display text-lg font-bold mb-5 flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-brand-emerald/10 text-brand-emerald grid place-items-center text-xs">1</span>
+          <div className="bg-white p-6 sm:p-8 rounded-[2rem] border border-border/40 shadow-sm">
+            <h2 className="font-display text-lg font-bold mb-6 flex items-center gap-3">
+              <span className="w-8 h-8 rounded-full bg-brand-emerald/10 text-brand-emerald grid place-items-center text-sm font-semibold">1</span>
               Informasi Pengiriman
             </h2>
 
@@ -136,16 +153,16 @@ export default function CheckoutPage() {
           </div>
 
           {/* Bagian Kanan: Ringkasan Order */}
-          <div className="bg-white p-6 rounded-3xl border border-border/60 shadow-soft sticky top-28">
-             <h2 className="font-display text-lg font-bold mb-5 flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-brand-emerald/10 text-brand-emerald grid place-items-center text-xs">2</span>
+          <div className="bg-white p-6 sm:p-8 rounded-[2rem] border border-border/40 shadow-sm sticky top-28">
+             <h2 className="font-display text-lg font-bold mb-6 flex items-center gap-3">
+              <span className="w-8 h-8 rounded-full bg-brand-emerald/10 text-brand-emerald grid place-items-center text-sm font-semibold">2</span>
               Ringkasan Pesanan
             </h2>
 
             <div className="space-y-4 max-h-[40vh] overflow-y-auto pr-2 no-scrollbar mb-6">
               {cart.map((item) => (
                 <div key={item.product.id} className="flex items-start gap-3">
-                  <img src={item.product.image || (item.product as any).imageGallery?.[0] || '/placeholder.jpg'} alt={item.product.name} className="w-16 h-16 rounded-lg object-cover bg-muted shrink-0" />
+                  <Image src={item.product.image || (item.product as any).imageGallery?.[0] || '/placeholder.jpg'} alt={item.product.name} width={64} height={64} className="w-16 h-16 rounded-lg object-cover bg-muted shrink-0" />
                   <div className="flex-1 min-w-0">
                     <h4 className="text-sm font-medium line-clamp-2">{item.product.name}</h4>
                     <p className="text-xs text-muted-foreground mt-0.5">{item.quantity} x {formatRupiah(item.product.price)}</p>
@@ -174,9 +191,9 @@ export default function CheckoutPage() {
               type="submit"
               form="checkout-form"
               disabled={loading}
-              className="w-full h-12 rounded-full mt-6 bg-brand-emerald hover:bg-emerald-700 text-white font-semibold text-base shadow-soft"
+              className="w-full h-14 rounded-2xl mt-8 bg-brand-emerald hover:bg-emerald-700 text-white font-semibold text-base shadow-md hover:shadow-lg active:scale-[0.98] transition-all"
             >
-              {loading ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : 'Buat Pesanan (PENDING)'}
+              {loading ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : 'Buat Pesanan Sekarang'}
             </Button>
 
             <p className="text-center text-xs text-muted-foreground mt-4 flex items-center justify-center gap-1.5">
