@@ -1,4 +1,7 @@
 import './globals.css';
+import 'swiper/css';
+import 'swiper/css/effect-fade';
+import 'swiper/css/pagination';
 import type { Metadata } from 'next';
 import { Inter, Poppins } from 'next/font/google';
 import { Navbar } from '@/components/layout/navbar';
@@ -16,12 +19,12 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'sw
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700', '800'], variable: '--font-poppins', display: 'swap' });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://randumartherbal.id'),
-  title: 'Randumart Herbal — Hidup Sehat dengan Produk Alami Berkualitas',
-  description: 'Randumart Herbal — toko resmi produk herbal, skincare, beauty, personal care, suplemen, dan kebutuhan keluarga di Indonesia. Produk alami, BPOM & Halal.',
-  keywords: ['herbal', 'skincare', 'beauty', 'suplemen', 'madu', 'Randumart Herbal', 'kesehatan', 'halal', 'BPOM'],
+  metadataBase: new URL('https://sr12store.id'),
+  title: 'SR12 Official Store — Hidup Sehat dengan Produk Alami Berkualitas',
+  description: 'SR12 Official Store — toko resmi produk herbal, skincare, beauty, personal care, suplemen, dan kebutuhan keluarga di Indonesia. Produk alami, BPOM & Halal.',
+  keywords: ['herbal', 'skincare', 'beauty', 'suplemen', 'madu', 'SR12', 'kesehatan', 'halal', 'BPOM'],
   openGraph: {
-    title: 'Randumart Herbal',
+    title: 'SR12 Official Store',
     description: 'Hidup Sehat Dimulai dari Produk Alami Berkualitas',
     type: 'website',
     locale: 'id_ID',
@@ -34,16 +37,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="font-sans bg-background text-foreground min-h-screen flex flex-col">
         <Providers>
           <CartSync />
-        <Navbar />
-        <main className="flex-1 pt-20 lg:pt-24">{children}</main>
-        <Footer />
-        <FloatingActions />
-        <MobileNav />
-        <BottomNav />
-        <CartDrawer />
-        <WishlistDrawer />
-        <SearchDialog />
-        <Toaster position="top-center" richColors />
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <FloatingActions />
+          <MobileNav />
+          <BottomNav />
+          <CartDrawer />
+          <WishlistDrawer />
+          <SearchDialog />
+          <Toaster position="top-center" richColors />
+        </Providers>
       </body>
     </html>
   );
