@@ -72,7 +72,7 @@ export function Navbar() {
             </Link>
 
             {/* Desktop nav */}
-            <div className="hidden lg:flex items-center gap-1">
+            <div className="hidden xl:flex items-center gap-0.5">
               {navLinks.map((link) =>
                 link.mega ? (
                   <div
@@ -83,7 +83,7 @@ export function Navbar() {
                   >
                     <button
                       className={cn(
-                        'inline-flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg transition-colors',
+                        'inline-flex items-center gap-1 px-2 py-2 text-sm font-medium rounded-lg transition-colors',
                         'text-foreground hover:bg-muted'
                       )}
                     >
@@ -128,7 +128,7 @@ export function Navbar() {
                     key={link.label}
                     href={link.href}
                     className={cn(
-                      'px-3 py-2 text-sm font-medium rounded-lg transition-colors',
+                      'px-2 py-2 text-sm font-medium rounded-lg transition-colors',
                       'text-foreground hover:bg-muted'
                     )}
                   >
@@ -184,7 +184,7 @@ export function Navbar() {
               <button
                 onClick={() => setMobileNavOpen(true)}
                 aria-label="Menu"
-                className={cn('lg:hidden grid place-items-center w-10 h-10 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
+                className={cn('xl:hidden grid place-items-center w-10 h-10 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
               >
                 <Menu className="w-5 h-5" />
               </button>
