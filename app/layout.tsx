@@ -4,13 +4,6 @@ import 'swiper/css/effect-fade';
 import 'swiper/css/pagination';
 import type { Metadata } from 'next';
 import { Inter, Poppins } from 'next/font/google';
-import { Navbar } from '@/components/layout/navbar';
-import { Footer } from '@/components/layout/footer';
-import { FloatingActions } from '@/components/layout/floating-actions';
-import { MobileNav, BottomNav } from '@/components/layout/mobile-nav';
-import { CartDrawer } from '@/components/cart/cart-drawer';
-import { WishlistDrawer } from '@/components/wishlist/wishlist-drawer';
-import { SearchDialog } from '@/components/search/search-dialog';
 import { Providers } from '@/components/providers';
 import { CartSync } from '@/components/cart/cart-sync';
 import { Toaster } from '@/components/ui/sonner';
@@ -37,15 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="font-sans bg-background text-foreground min-h-screen flex flex-col">
         <Providers>
           <CartSync />
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <FloatingActions />
-          <MobileNav />
-          <BottomNav />
-          <CartDrawer />
-          <WishlistDrawer />
-          <SearchDialog />
+          {children}
           <Toaster position="top-center" richColors />
         </Providers>
       </body>
