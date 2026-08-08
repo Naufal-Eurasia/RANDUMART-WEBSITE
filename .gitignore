@@ -58,3 +58,4 @@ graphify-out/
 skills-lock.json
 .mcp.json
 .playwright-mcp/
+*.orig
