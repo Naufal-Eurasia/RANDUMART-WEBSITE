@@ -173,12 +173,16 @@ export function Navbar() {
               </button>
 
               <div className="hidden sm:flex items-center gap-1 ml-1">
-                <Button variant="ghost" size="sm" className="text-foreground hover:bg-muted">
-                  <User className="w-4 h-4 mr-1" /> Login
-                </Button>
-                <Button size="sm" className="bg-brand-emerald hover:bg-emerald-700 text-white">
-                  Register
-                </Button>
+                <Link href="/login" passHref legacyBehavior>
+                  <Button variant="ghost" size="sm" className="text-foreground hover:bg-muted">
+                    <User className="w-4 h-4 mr-1" /> Login
+                  </Button>
+                </Link>
+                <Link href="/register" passHref legacyBehavior>
+                  <Button size="sm" className="bg-brand-emerald hover:bg-emerald-700 text-white">
+                    Register
+                  </Button>
+                </Link>
               </div>
 
               <button

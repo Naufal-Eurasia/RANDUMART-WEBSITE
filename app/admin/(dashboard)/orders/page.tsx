@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Loader2, Eye, MapPin, Package, Check, X } from 'lucide-react';
+import { Loader2, Eye, MapPin, Package, Check, X, MessageCircle } from 'lucide-react';
 import { formatRupiah } from '@/lib/categories';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
@@ -29,6 +29,7 @@ export default function OrdersAdminPage() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
+  const [activeTab, setActiveTab] = useState('ALL');
 
   // Detail Modal State
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
@@ -74,10 +75,32 @@ export default function OrdersAdminPage() {
     }
   };
 
+  const filteredOrders = activeTab === 'ALL' ? orders : orders.filter(o => o.status === activeTab);
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-display font-bold">Data Pesanan</h1>
+      </div>
+
+      <div className="flex gap-2 overflow-x-auto pb-2 hide-scrollbar">
+        {['ALL', 'PENDING', 'PAID', 'PROCESSING', 'SHIPPED', 'COMPLETED'].map(tab => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-colors ${
+              activeTab === tab
+                ? 'bg-brand-emerald text-white shadow-sm'
+                : 'bg-white border border-border/60 text-muted-foreground hover:bg-muted'
+            }`}
+          >
+            {tab === 'ALL' ? 'Semua' :
+             tab === 'PENDING' ? 'Belum Bayar' :
+             tab === 'PAID' ? 'Perlu Dikirim' :
+             tab === 'PROCESSING' ? 'Diproses' :
+             tab === 'SHIPPED' ? 'Dikirim' : 'Selesai'}
+          </button>
+        ))}
       </div>
 
       <div className="bg-white rounded-3xl border border-border/60 shadow-soft overflow-hidden">
@@ -90,13 +113,13 @@ export default function OrdersAdminPage() {
                 <th className="px-6 py-4 font-semibold">Pelanggan</th>
                 <th className="px-6 py-4 font-semibold">Total Pembayaran</th>
                 <th className="px-6 py-4 font-semibold text-center">Status</th>
-                <th className="px-6 py-4 font-semibold text-right">Ubah Status</th>
+                <th className="px-6 py-4 font-semibold text-right">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60">
               {loading ? <tr><td colSpan={6} className="px-6 py-12 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto" /></td></tr> :
-                orders.length === 0 ? <tr><td colSpan={6} className="px-6 py-12 text-center text-muted-foreground">Belum ada pesanan</td></tr> :
-                orders.map((o) => (
+                filteredOrders.length === 0 ? <tr><td colSpan={6} className="px-6 py-12 text-center text-muted-foreground">Belum ada pesanan di kategori ini</td></tr> :
+                filteredOrders.map((o) => (
                   <tr key={o.id} className="hover:bg-muted/30">
                     <td className="px-6 py-4">
                       <button onClick={() => openDetail(o)} className="font-semibold text-brand-emerald hover:underline flex items-center gap-1.5">
@@ -115,33 +138,46 @@ export default function OrdersAdminPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="outline" size="sm" disabled={updating} className="h-8 rounded-lg text-xs">
-                            Aksi
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-40 rounded-2xl">
-                          <DropdownMenuLabel className="text-xs text-muted-foreground">Update Status</DropdownMenuLabel>
-                          <DropdownMenuSeparator />
-                          {o.status === 'PENDING' ? (
-                            <>
-                              <DropdownMenuItem onClick={() => handleUpdateStatus(o.id, 'PAID')} className="text-emerald-600 focus:bg-emerald-50 focus:text-emerald-700 cursor-pointer font-medium">
-                                <Check className="w-4 h-4 mr-2" /> Validasi PAID
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleUpdateStatus(o.id, 'CANCELLED')} className="text-red-600 focus:bg-red-50 focus:text-red-700 cursor-pointer font-medium">
-                                <X className="w-4 h-4 mr-2" /> Batalkan
-                              </DropdownMenuItem>
-                            </>
-                          ) : (
-                            ['PROCESSING', 'SHIPPED', 'COMPLETED'].map(st => (
-                               <DropdownMenuItem key={st} onClick={() => handleUpdateStatus(o.id, st)} disabled={o.status === st || ['CANCELLED', 'EXPIRED'].includes(o.status)} className="cursor-pointer">
-                                  Tandai {st}
-                               </DropdownMenuItem>
-                            ))
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <div className="flex justify-end items-center gap-2">
+                        {o.status === 'PENDING' && (
+                          <a
+                            href={`https://wa.me/${o.guestPhone?.replace(/^0/, '62').replace(/\D/g, '')}?text=Halo%20Kak%20${encodeURIComponent(o.guestName)},%20pesanan%20dengan%20ID%20${o.id.slice(-8)}%20belum%20dibayar.%20Silakan%20lakukan%20pembayaran%20agar%20segera%20diproses.`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center justify-center h-8 w-8 rounded-lg bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20 transition-colors"
+                            title="Follow up WhatsApp"
+                          >
+                            <MessageCircle className="w-4 h-4" />
+                          </a>
+                        )}
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="outline" size="sm" disabled={updating} className="h-8 rounded-lg text-xs">
+                              Ubah Status
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-40 rounded-2xl">
+                            <DropdownMenuLabel className="text-xs text-muted-foreground">Update Status</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            {o.status === 'PENDING' ? (
+                              <>
+                                <DropdownMenuItem onClick={() => handleUpdateStatus(o.id, 'PAID')} className="text-emerald-600 focus:bg-emerald-50 focus:text-emerald-700 cursor-pointer font-medium">
+                                  <Check className="w-4 h-4 mr-2" /> Validasi PAID
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleUpdateStatus(o.id, 'CANCELLED')} className="text-red-600 focus:bg-red-50 focus:text-red-700 cursor-pointer font-medium">
+                                  <X className="w-4 h-4 mr-2" /> Batalkan
+                                </DropdownMenuItem>
+                              </>
+                            ) : (
+                              ['PROCESSING', 'SHIPPED', 'COMPLETED'].map(st => (
+                                 <DropdownMenuItem key={st} onClick={() => handleUpdateStatus(o.id, st)} disabled={o.status === st || ['CANCELLED', 'EXPIRED'].includes(o.status)} className="cursor-pointer">
+                                    Tandai {st}
+                                 </DropdownMenuItem>
+                              ))
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
                     </td>
                   </tr>
                 ))
