@@ -53,13 +53,6 @@ export function Navbar() {
           <div className="flex h-16 lg:h-20 items-center justify-between gap-4">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 shrink-0">
-              <div className="relative inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white/90 shadow-soft overflow-hidden">
-                <img
-                  src="/images/randumart-logo.jpeg"
-                  alt="Randumart Logo"
-                  className="w-full h-full object-contain p-1"
-                />
-              </div>
               <div className="hidden sm:block leading-none">
                 <div className="font-display font-bold text-lg tracking-tight text-foreground">
                   <span className="text-brand-emerald">Randum</span>
