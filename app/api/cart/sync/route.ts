@@ -11,11 +11,19 @@ export async function POST(req: Request) {
     }
 
     const { localCart } = await req.json();
-    if (!Array.isArray(localCart) || localCart.length === 0) {
-      return NextResponse.json({ message: 'No items to sync' }, { status: 200 });
-    }
-
     const userId = (session.user as any).id;
+
+    if (!Array.isArray(localCart) || localCart.length === 0) {
+      const finalDbCart = await prisma.cartItem.findMany({
+        where: { userId },
+        include: {
+          product: {
+            select: { id: true, name: true, price: true, image: true, stock: true }
+          }
+        }
+      });
+      return NextResponse.json(finalDbCart);
+    }
 
     // Ambil semua isi cart database saat ini
     const dbCartItems = await prisma.cartItem.findMany({
