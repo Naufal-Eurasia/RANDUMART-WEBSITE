@@ -173,16 +173,16 @@ export function Navbar() {
               </button>
 
               <div className="hidden sm:flex items-center gap-1 ml-1">
-                <Link href="/login" passHref legacyBehavior>
-                  <Button variant="ghost" size="sm" className="text-foreground hover:bg-muted">
+                <Button variant="ghost" size="sm" className="text-foreground hover:bg-muted" asChild>
+                  <Link href="/login">
                     <User className="w-4 h-4 mr-1" /> Login
-                  </Button>
-                </Link>
-                <Link href="/register" passHref legacyBehavior>
-                  <Button size="sm" className="bg-brand-emerald hover:bg-emerald-700 text-white">
+                  </Link>
+                </Button>
+                <Button size="sm" className="bg-brand-emerald hover:bg-emerald-700 text-white" asChild>
+                  <Link href="/register">
                     Register
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
 
               <button
