@@ -168,16 +168,28 @@ export function Navbar() {
               </button>
 
               <div className="hidden sm:flex items-center gap-1 ml-1">
-                <Button variant="ghost" size="sm" className="text-foreground hover:bg-muted" asChild>
-                  <Link href="/login">
-                    <User className="w-4 h-4 mr-1" /> Login
-                  </Link>
-                </Button>
-                <Button size="sm" className="bg-brand-emerald hover:bg-emerald-700 text-white" asChild>
-                  <Link href="/register">
-                    Register
-                  </Link>
-                </Button>
+                {status === 'loading' ? (
+                  <div className="w-[150px] h-9 rounded-md bg-muted/20 animate-pulse"></div>
+                ) : status === 'authenticated' ? (
+                  <Button size="sm" className="bg-brand-emerald hover:bg-emerald-700 text-white" asChild>
+                    <Link href={session?.user?.role === 'ADMIN' ? '/admin' : '/account'}>
+                      <User className="w-4 h-4 mr-1" /> Akun Saya
+                    </Link>
+                  </Button>
+                ) : (
+                  <>
+                    <Button variant="ghost" size="sm" className="text-foreground hover:bg-muted" asChild>
+                      <Link href="/login">
+                        <User className="w-4 h-4 mr-1" /> Login
+                      </Link>
+                    </Button>
+                    <Button size="sm" className="bg-brand-emerald hover:bg-emerald-700 text-white" asChild>
+                      <Link href="/register">
+                        Register
+                      </Link>
+                    </Button>
+                  </>
+                )}
               </div>
 
               <button
