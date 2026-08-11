@@ -18,7 +18,7 @@ export async function POST(req: Request) {
         where: { userId },
         include: {
           product: {
-            select: { id: true, name: true, price: true, image: true, stock: true }
+            select: { id: true, name: true, price: true, images: { select: { url: true }, where: { isPrimary: true }, take: 1 }, stock: true }
           }
         }
       });
@@ -81,7 +81,7 @@ export async function POST(req: Request) {
             originalPrice: true,
             discount: true,
             stock: true,
-            images: { take: 1 }
+            images: { select: { url: true }, where: { isPrimary: true }, take: 1 }
           }
         }
       }

@@ -16,7 +16,7 @@ export async function GET() {
         product: {
           select: {
             id: true, name: true, price: true, originalPrice: true, discount: true, stock: true,
-            images: { where: { isPrimary: true }, take: 1 }
+            images: { select: { url: true }, where: { isPrimary: true }, take: 1 }
           }
         }
       }

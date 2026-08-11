@@ -122,7 +122,7 @@ export const products: Product[] = seeds.map((s, i) => {
     originalPrice,
     discount: s.discount || undefined,
     image: img(s.imageId, 800),
-    images: s.galleryIds.map((id) => img(id, 1200)),
+    images: s.galleryIds.map((id) => ({ url: img(id, 1200) })),
     rating: 4 + ((i % 10) / 10),
     reviewCount: 24 + (i * 7) % 180,
     description: s.desc,

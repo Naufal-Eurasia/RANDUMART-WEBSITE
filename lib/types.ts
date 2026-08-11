@@ -31,7 +31,7 @@ export interface Product {
   originalPrice?: number;
   discount?: number;
   image: string;
-  images: string[];
+  images: { url: string }[];
   rating: number;
   reviewCount: number;
   description: string;
