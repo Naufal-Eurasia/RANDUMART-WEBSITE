@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/product/product-card';
-import { products } from '@/lib/products';
+import { Product } from '@/lib/types';
 
-export function FeaturedProducts() {
-  const featured = products.filter((p) => p.bestSeller || p.isNew).slice(0, 8);
+export function FeaturedProducts({ products }: { products: Product[] }) {
+  const featured = products;
 
   return (
     <section className="py-12 lg:py-16 bg-background">
