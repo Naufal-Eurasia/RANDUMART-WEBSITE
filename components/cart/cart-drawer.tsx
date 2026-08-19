@@ -31,9 +31,11 @@ export function CartDrawer() {
               <h3 className="font-display font-semibold text-lg">Keranjang Kosong</h3>
               <p className="text-sm text-muted-foreground mt-1">Belum ada produk di keranjang Anda.</p>
             </div>
-            <Button onClick={() => setCartOpen(false)} className="bg-brand-emerald hover:bg-emerald-700 rounded-full">
-              Mulai Belanja
-            </Button>
+            <Link href="/products" onClick={() => setCartOpen(false)} className="w-full">
+              <Button className="w-full bg-brand-emerald hover:bg-emerald-700 rounded-full">
+                Mulai Belanja
+              </Button>
+            </Link>
           </div>
         ) : (
           <>

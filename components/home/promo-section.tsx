@@ -61,19 +61,23 @@ export function PromoSection() {
         {/* Flash sale banner */}
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-brand-emerald to-emerald-700 p-8 sm:p-10 mb-8 text-white">
           <div className="absolute -right-12 -top-12 w-56 h-56 rounded-full bg-brand-gold/20 blur-3xl" />
-          <div className="relative grid lg:grid-cols-2 gap-6 items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent text-white text-sm font-bold mb-4">
-                <Zap className="w-4 h-4" /> FLASH SALE
+          <div className="relative">
+            <div className="grid gap-8 lg:grid-cols-[1.7fr_1fr] items-end">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent text-white text-sm font-bold mb-4">
+                  <Zap className="w-4 h-4" /> FLASH SALE
+                </div>
+                <h3 className="font-display text-2xl sm:text-3xl font-bold mb-3">Diskon Hingga 50% Hari Ini!</h3>
+                <p className="text-white/80 mb-4">Berakhir dalam:</p>
+                <Countdown />
               </div>
-              <h3 className="font-display text-2xl sm:text-3xl font-bold mb-2">Diskon Hingga 50% Hari Ini!</h3>
-              <p className="text-white/80 mb-5">Berakhir dalam:</p>
-              <Countdown />
-              <Link href="/products" className="inline-block mt-6">
-                <Button className="bg-white text-brand-emerald hover:bg-brand-cream rounded-full px-6">Belanja Sekarang</Button>
-              </Link>
+              <div className="flex flex-col items-start justify-end">
+                <Link href="/products" className="inline-flex mt-auto">
+                  <Button className="bg-white text-brand-emerald hover:bg-brand-cream rounded-full px-6 py-3">Belanja Sekarang</Button>
+                </Link>
+              </div>
             </div>
-            <div className="hidden lg:grid grid-cols-2 gap-3">
+            <div className="mt-8 hidden lg:grid grid-cols-2 gap-3">
               {['Vitamin C Serum', 'Habbatussauda', 'Lipstick Matte', 'Body Lotion'].map((n, i) => (
                 <div key={n} className="rounded-2xl bg-white/10 backdrop-blur p-4 border border-white/20">
                   <div className="aspect-square rounded-xl bg-white/20 mb-2" />

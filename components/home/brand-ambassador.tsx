@@ -1,9 +1,8 @@
-'use client';
+"use client";
 
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { Play, Award, Heart, Star } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Award, Heart, Star } from 'lucide-react';
 
 export function BrandAmbassador() {
   return (
@@ -28,18 +27,21 @@ export function BrandAmbassador() {
             viewport={{ once: true }}
             className="relative order-2 lg:order-1"
           >
-            <div className="relative rounded-3xl overflow-hidden shadow-premium aspect-[4/5] max-w-md mx-auto">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=900"
-                alt="Brand Ambassador"
-                className="w-full h-full object-cover"
-              />
-              <button className="absolute inset-0 grid place-items-center bg-black/20 hover:bg-black/30 transition-colors group">
-                <span className="grid place-items-center w-16 h-16 rounded-full glass shadow-premium group-hover:scale-110 transition-transform">
-                  <Play className="w-7 h-7 text-white fill-white ml-0.5" />
-                </span>
-              </button>
+            <div className="relative mx-auto w-full max-w-[1080px] md:max-w-[1250px]">
+              <div className="rounded-[28px] bg-white p-3 sm:p-4 md:p-6 shadow-[0_20px_60px_-20px_rgba(2,6,23,0.35)] overflow-hidden">
+                <div className="relative w-full bg-white rounded-[20px] overflow-hidden">
+                  <Image
+                    src="/images/brand-ambassador/nagita-slavina.png"
+                    alt="Brand Ambassador"
+                    width={1300}
+                    height={910}
+                    priority
+                    quality={95}
+                    className="w-full h-auto object-cover rounded-[16px] scale-[1.04] md:scale-[1.08]"
+                  />
+                </div>
+
+              </div>
             </div>
           </motion.div>
 
@@ -54,12 +56,8 @@ export function BrandAmbassador() {
               <Star className="w-4 h-4 text-brand-gold" /> Brand Ambassador
             </span>
             <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
-              Dr. Aisyah Rahman, PhD
+              Nagita Slavina
             </h2>
-            <p className="mt-2 text-brand-gold font-semibold">Pakar Herbal &amp; Kesehatan Holistik</p>
-            <p className="mt-5 text-white/85 leading-relaxed max-w-lg">
-              Dengan pengalaman lebih dari 15 tahun di bidang herbal dan kesehatan alami, Dr. Aisyah mempercayai Randumart Herbal sebagai mitra untuk menghadirkan produk alami berkualitas kepada keluarga Indonesia. Bersama, kami membangun gaya hidup sehat yang berkelanjutan.
-            </p>
 
             <div className="mt-6 grid grid-cols-3 gap-4 max-w-md">
               {[
@@ -75,11 +73,6 @@ export function BrandAmbassador() {
               ))}
             </div>
 
-            <Link href="#" className="inline-block mt-8">
-              <Button className="rounded-full bg-white text-brand-emerald hover:bg-brand-cream px-6">
-                Lihat Cerita Selengkapnya
-              </Button>
-            </Link>
           </motion.div>
         </div>
       </div>

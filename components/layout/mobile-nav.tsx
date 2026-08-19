@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 
 export function MobileNav() {
-  const { mobileNavOpen, setMobileNavOpen, setSearchOpen, setCartOpen, setWishlistOpen, cartCount, wishlist } = useStore();
+  const { mobileNavOpen, setMobileNavOpen, setSearchOpen, setCartOpen, setWishlistOpen, cartCount, wishlist, user, logout } = useStore();
   const [catOpen, setCatOpen] = useState(false);
 
   return (
@@ -76,12 +76,32 @@ export function MobileNav() {
 
         <div className="p-5 border-t border-border space-y-3">
           <div className="grid grid-cols-2 gap-2">
-            <Link href="#" onClick={() => setMobileNavOpen(false)} className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border font-medium text-sm hover:bg-muted">
-              <User className="w-4 h-4" /> Login
-            </Link>
-            <Link href="#" onClick={() => setMobileNavOpen(false)} className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-brand-emerald text-white font-medium text-sm">
-              Register
-            </Link>
+            {user ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    logout();
+                    setMobileNavOpen(false);
+                  }}
+                  className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border bg-white font-medium text-sm text-foreground hover:bg-muted"
+                >
+                  Logout
+                </button>
+                <span className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border bg-white font-medium text-sm text-foreground">
+                  <User className="w-4 h-4 text-brand-emerald" /> Hi, {user.name}
+                </span>
+              </>
+            ) : (
+              <>
+                <Link href="/login" onClick={() => setMobileNavOpen(false)} className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border font-medium text-sm hover:bg-muted">
+                  <User className="w-4 h-4" /> Login
+                </Link>
+                <Link href="/register" onClick={() => setMobileNavOpen(false)} className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-brand-emerald text-white font-medium text-sm">
+                  Register
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </SheetContent>

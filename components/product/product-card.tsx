@@ -31,11 +31,12 @@ const badgeLabels: Record<string, string> = {
   'out-of-stock': 'Stok Habis',
 };
 
-function ProductCardImpl({ product, index = 0 }: { product: Product; index?: number }) {
+function ProductCardImpl({ product, index = 0, imageSrc }: { product: Product; index?: number; imageSrc?: string }) {
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
   const [quickOpen, setQuickOpen] = useState(false);
   const inWish = isInWishlist(product.id);
   const outOfStock = product.stock === 0;
+  const displayImage = imageSrc || product.image;
 
   return (
     <>
@@ -51,7 +52,7 @@ function ProductCardImpl({ product, index = 0 }: { product: Product; index?: num
           <Link href={`/products/${product.slug}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={product.image}
+              src={displayImage}
               alt={product.name}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
             />

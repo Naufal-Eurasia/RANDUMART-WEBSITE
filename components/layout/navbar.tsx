@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Heart, ShoppingBag, Menu, X, ChevronDown, User } from 'lucide-react';
 import { navLinks, categories } from '@/lib/categories';
@@ -10,10 +11,12 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 export function Navbar() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { cartCount, wishlist, setSearchOpen, setCartOpen, setWishlistOpen, setMobileNavOpen } = useStore();
+  const [activeAuth, setActiveAuth] = useState<'login' | 'register'>('login');
+  const { cartCount, wishlist, setSearchOpen, setCartOpen, setWishlistOpen, setMobileNavOpen, user, logout } = useStore();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -167,13 +170,46 @@ export function Navbar() {
                 )}
               </button>
 
-              <div className="hidden sm:flex items-center gap-1 ml-1">
-                <Button variant="ghost" size="sm" className="text-foreground hover:bg-muted">
-                  <User className="w-4 h-4 mr-1" /> Login
-                </Button>
-                <Button size="sm" className="bg-brand-emerald hover:bg-emerald-700 text-white">
-                  Register
-                </Button>
+              <div className="hidden sm:flex items-center gap-2 ml-1">
+                {user ? (
+                  <>
+                    <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-foreground">
+                      <User className="w-4 h-4 text-brand-emerald" /> Hi, {user.name}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={logout}
+                      className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-foreground hover:bg-slate-50"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href="/login"
+                      className={cn(
+                        'inline-flex items-center gap-1 rounded-full border px-4 py-2 text-sm font-medium transition-all',
+                        pathname === '/login'
+                          ? 'bg-emerald-500 text-white border-emerald-500 shadow-lg shadow-emerald-500/20'
+                          : 'bg-white text-foreground border-slate-200 hover:bg-slate-50'
+                      )}
+                    >
+                      <User className="w-4 h-4" /> Login
+                    </Link>
+                    <Link
+                      href="/register"
+                      className={cn(
+                        'inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium transition-all',
+                        pathname === '/register'
+                          ? 'bg-emerald-500 text-white border-emerald-500 shadow-lg shadow-emerald-500/20'
+                          : 'bg-white text-foreground border border-slate-200 hover:bg-slate-50'
+                      )}
+                    >
+                      Register
+                    </Link>
+                  </>
+                )}
               </div>
 
               <button

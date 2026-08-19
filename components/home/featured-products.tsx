@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
@@ -7,8 +8,37 @@ import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/product/product-card';
 import { products } from '@/lib/products';
 
+const showcaseImages = [
+  '/images/katalog%20produk/foto_laku_estetik_20260730_152140_3.png',
+  '/images/katalog%20produk/foto_laku_estetik_20260730_152350_2.png',
+  '/images/katalog%20produk/foto_laku_estetik_20260730_155439_3.png',
+  '/images/katalog%20produk/foto_laku_estetik_20260730_155519_3.png',
+  '/images/katalog%20produk/foto_laku_estetik_20260730_160612_1.png',
+  '/images/katalog%20produk/foto_laku_estetik_20260730_161146_4.png',
+  '/images/katalog%20produk/foto_laku_estetik_20260730_161248_2.png',
+  '/images/katalog%20produk/foto_laku_estetik_20260730_161502_2.png',
+  '/images/katalog%20produk/foto_laku_estetik_20260730_161614_4.png',
+  '/images/katalog%20produk/foto_laku_estetik_20260730_161820_1.png',
+  '/images/katalog%20produk/foto_laku_estetik_20260731_102747_3.png',
+  '/images/katalog%20produk/foto_laku_estetik_20260731_104332_1.png',
+];
+
+function shuffleImages(items: string[]) {
+  const next = [...items];
+  for (let i = next.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [next[i], next[j]] = [next[j], next[i]];
+  }
+  return next;
+}
+
 export function FeaturedProducts() {
   const featured = products.filter((p) => p.bestSeller || p.isNew).slice(0, 8);
+  const [displayImages, setDisplayImages] = useState(showcaseImages.slice(0, featured.length));
+
+  useEffect(() => {
+    setDisplayImages(shuffleImages(showcaseImages).slice(0, featured.length));
+  }, [featured.length]);
 
   return (
     <section className="py-20 lg:py-24 bg-brand-cream/50">
@@ -30,7 +60,7 @@ export function FeaturedProducts() {
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {featured.map((p, i) => (
-            <ProductCard key={p.id} product={p} index={i} />
+            <ProductCard key={p.id} product={p} index={i} imageSrc={showcaseImages[i % showcaseImages.length]} />
           ))}
         </div>
 

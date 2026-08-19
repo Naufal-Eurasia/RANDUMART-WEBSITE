@@ -17,6 +17,7 @@ interface StoreState {
   wishlistOpen: boolean;
   searchOpen: boolean;
   mobileNavOpen: boolean;
+  user: { email: string; name: string } | null;
   addToCart: (product: Product, qty?: number) => void;
   removeFromCart: (id: string) => void;
   updateQty: (id: string, qty: number) => void;
@@ -28,6 +29,9 @@ interface StoreState {
   setWishlistOpen: (v: boolean) => void;
   setSearchOpen: (v: boolean) => void;
   setMobileNavOpen: (v: boolean) => void;
+  login: (user: { email: string; name: string }) => void;
+  register: (user: { email: string; name: string }) => void;
+  logout: () => void;
   cartCount: () => number;
   cartTotal: () => number;
 }
@@ -42,6 +46,7 @@ export const useStore = create<StoreState>()(
       wishlistOpen: false,
       searchOpen: false,
       mobileNavOpen: false,
+      user: null,
       addToCart: (product, qty = 1) =>
         set((s) => {
           const existing = s.cart.find((c) => c.product.id === product.id);
@@ -84,6 +89,9 @@ export const useStore = create<StoreState>()(
       setWishlistOpen: (v) => set({ wishlistOpen: v }),
       setSearchOpen: (v) => set({ searchOpen: v }),
       setMobileNavOpen: (v) => set({ mobileNavOpen: v }),
+      login: (user) => set({ user }),
+      register: (user) => set({ user }),
+      logout: () => set({ user: null }),
       cartCount: () => get().cart.reduce((n, c) => n + c.quantity, 0),
       cartTotal: () =>
         get().cart.reduce((n, c) => n + c.product.price * c.quantity, 0),
@@ -95,6 +103,7 @@ export const useStore = create<StoreState>()(
         cart: s.cart,
         wishlist: s.wishlist,
         recentlyViewed: s.recentlyViewed,
+        user: s.user,
       }),
     }
   )
