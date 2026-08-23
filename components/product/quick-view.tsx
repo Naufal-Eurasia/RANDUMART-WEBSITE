@@ -14,6 +14,8 @@ export function QuickView({ product, open, onOpenChange }: { product: Product; o
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
   const [qty, setQty] = useState(1);
   const [activeImg, setActiveImg] = useState(0);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const MAX_DESC_LENGTH = 150;
   const inWish = isInWishlist(product.id);
 
   const images = (product as any).images?.length
@@ -49,19 +51,31 @@ export function QuickView({ product, open, onOpenChange }: { product: Product; o
             </div>
 
             <h2 className="font-display text-xl sm:text-2xl font-bold leading-tight">{product.name}</h2>
-            <p className="text-sm text-muted-foreground mt-2">{product.shortDescription}</p>
 
             <div className="mt-4 flex items-end gap-2">
               <span className="font-display text-2xl font-bold text-brand-emerald">{formatRupiah(product.price)}</span>
               {product.originalPrice && <span className="text-sm text-muted-foreground line-through">{formatRupiah(product.originalPrice)}</span>}
             </div>
 
-            <div className="mt-4 flex flex-wrap gap-2">
+            <div className="mt-3 flex flex-wrap gap-2">
               {product.bpom && <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-teal-50 text-teal-700 font-medium"><ShieldCheck className="w-3.5 h-3.5" /> {product.bpom}</span>}
               {product.halal && <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-medium"><BadgeCheck className="w-3.5 h-3.5" /> Halal MUI</span>}
             </div>
 
-            <p className="text-sm text-muted-foreground mt-4 line-clamp-3">{product.description}</p>
+            {/* Description - single block with expand/collapse */}
+            <div className="mt-4">
+              <p className={cn('text-sm text-muted-foreground', !isExpanded && product.description?.length > MAX_DESC_LENGTH ? 'line-clamp-3' : '')}>
+                {product.description}
+              </p>
+              {product.description?.length > MAX_DESC_LENGTH && (
+                <button
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="mt-1 text-sm font-semibold text-brand-emerald hover:underline focus:outline-none"
+                >
+                  {isExpanded ? 'Lihat lebih sedikit ↑' : 'Lihat selengkapnya ↓'}
+                </button>
+              )}
+            </div>
 
             {/* Thumbnails */}
             <div className="mt-4 flex gap-2">

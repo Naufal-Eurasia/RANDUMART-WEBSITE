@@ -72,7 +72,10 @@ export default function ProductsAdminPage() {
   const openEditModal = (p: any) => {
     setModalMode('edit');
     setFormData({
-      id: p.id, name: p.name, slug: p.slug, description: p.description, price: p.price, originalPrice: p.originalPrice || '', discount: p.discount || '',
+      id: p.id, name: p.name, slug: p.slug, description: p.description,
+      price: String(Math.round(Number(p.price))),
+      originalPrice: p.originalPrice ? String(Math.round(Number(p.originalPrice))) : '',
+      discount: p.discount || '',
       stock: p.stock, categoryId: p.categoryId, isBestSeller: p.isBestSeller, isNew: p.isNew, isPublished: p.isPublished, tagsStr: p.tags?.join(', ') || ''
     });
     setImageFiles([]);
@@ -319,10 +322,10 @@ export default function ProductsAdminPage() {
             <div className="space-y-2"><Label>Deskripsi *</Label><Textarea required value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="min-h-[100px]" /></div>
 
             <div className="grid sm:grid-cols-3 gap-4">
-              <div className="space-y-2"><Label>Harga Akhir (Rp) *</Label><Input type="number" required value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} /></div>
+              <div className="space-y-2"><Label>Harga Akhir (Rp) *</Label><Input type="number" required min="0" step="1" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} /></div>
               <div className="space-y-2">
                 <Label>Harga Coret</Label>
-                <Input type="number" value={formData.originalPrice} onChange={e => setFormData({...formData, originalPrice: e.target.value})} placeholder="Opsional" />
+                <Input type="number" min="0" step="1" value={formData.originalPrice} onChange={e => setFormData({...formData, originalPrice: e.target.value})} placeholder="Opsional" />
                 {previewDiscount > 0 && (
                   <p className="text-[10px] text-[#B8791F] font-medium mt-1">
                     Diskon {previewDiscount}% (Tampil: {formatRupiah(Number(formData.price))} <span className="line-through opacity-60">{formatRupiah(Number(formData.originalPrice))}</span>)
