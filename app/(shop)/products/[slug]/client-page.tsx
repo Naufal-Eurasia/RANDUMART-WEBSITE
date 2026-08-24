@@ -47,7 +47,7 @@ export default function ProductDetailClient({ product, related }: { product: any
             className="relative aspect-square rounded-3xl overflow-hidden bg-muted group cursor-zoom-in"
             onClick={() => setZoom(!zoom)}
           >
-            <Image src={images[activeImg]} alt={product.name || "Product Image"} fill className={cn('object-cover transition-transform duration-500', zoom ? 'scale-150' : 'group-hover:scale-110')} />
+            <Image src={images[activeImg]} alt={product.name || "Product Image"} fill quality={90} className={cn('object-contain bg-[#FBF8F2] transition-transform duration-500', zoom ? 'scale-150' : 'group-hover:scale-110')} />
             <button className="absolute top-4 right-4 grid place-items-center w-10 h-10 rounded-full glass shadow-soft"><ZoomIn className="w-5 h-5" /></button>
             {product.discount > 0 && <span className="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-accent text-white text-xs font-bold">-{product.discount}%</span>}
           </div>
@@ -55,7 +55,7 @@ export default function ProductDetailClient({ product, related }: { product: any
             <div className="flex gap-2 overflow-x-auto no-scrollbar">
               {images.map((img: string, i: number) => (
                 <button key={i} onClick={() => setActiveImg(i)} className={cn('relative shrink-0 w-20 h-20 rounded-2xl overflow-hidden border-2 transition-colors', activeImg === i ? 'border-brand-emerald' : 'border-border')}>
-                  <Image src={img} alt={`Thumbnail ${i + 1}`} fill className="object-cover" />
+                  <Image src={img} alt={`Thumbnail ${i + 1}`} fill className="object-contain bg-[#FBF8F2]" />
                 </button>
               ))}
             </div>
