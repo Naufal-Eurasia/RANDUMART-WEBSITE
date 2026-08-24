@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { mapPrismaProducts } from '@/lib/product-mapper';
 import { Hero } from '@/components/home/hero';
+import { PromoBanner } from '@/components/home/promo-banner';
 import { CategoryShowcase } from '@/components/home/category-showcase';
 import { FeaturedProducts } from '@/components/home/featured-products';
 import { ProductCatalog } from '@/components/home/product-catalog';
@@ -39,7 +40,9 @@ export default async function Home() {
       <Hero />
       <CategoryShowcase />
       <FeaturedProducts products={featured} />
-      <PromoSection />
+      <PromoSection>
+        <PromoBanner />
+      </PromoSection>
       <ProductCatalog products={catalog} />
       <BrandAmbassador />
       <WhyChoose />

@@ -9,11 +9,15 @@ export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
     const body = await req.json();
-    const { name, email, phone, address, items } = body;
+    const { name, phone, address, items } = body;
 
-    // 1. Validasi Input Dasar
-    if (!name || !email || !phone || !address || !items || !Array.isArray(items) || items.length === 0) {
-      return NextResponse.json({ message: 'Semua field dan minimal 1 produk wajib diisi' }, { status: 400 });
+    // Normalisasi email: string kosong ("") → null agar tersimpan sebagai NULL di DB
+    // Kolom guestEmail di schema.prisma bertipe String? (nullable), sehingga ini aman.
+    const email: string | null = body.email?.trim() || null;
+
+    // 1. Validasi Input Dasar (email opsional — kolom guestEmail di DB bertipe String?)
+    if (!name || !phone || !address || !items || !Array.isArray(items) || items.length === 0) {
+      return NextResponse.json({ message: 'Nama, nomor telepon, alamat, dan minimal 1 produk wajib diisi' }, { status: 400 });
     }
 
     // 2. Gabungkan quantity per productId untuk mencegah bypass stok lewat duplikat id

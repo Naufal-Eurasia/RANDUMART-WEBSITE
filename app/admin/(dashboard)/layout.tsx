@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
-import { Package, LayoutDashboard, Tags, ShoppingCart, Settings, Menu, X, ChevronRight, Store, Gift } from 'lucide-react';
+import { Package, LayoutDashboard, Tags, ShoppingCart, Settings, Menu, X, ChevronRight, Store, Gift, GalleryHorizontal } from 'lucide-react';
 import { LogoutButton } from '@/components/auth/logout-button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import {
@@ -22,6 +22,7 @@ const navItems = [
   { href: '/admin/categories', label: 'Kategori', icon: Tags },
   { href: '/admin/orders', label: 'Pesanan', icon: ShoppingCart },
   { href: '/admin/bundles', label: 'Bundling', icon: Gift },
+  { href: '/admin/promos', label: 'Banner Promo', icon: GalleryHorizontal },
   { href: '/admin/settings', label: 'Pengaturan', icon: Settings },
 ];
 
@@ -55,6 +56,7 @@ function Breadcrumb({ pathname }: { pathname: string }) {
   const labels: Record<string, string> = {
     admin: 'Dashboard', products: 'Produk', categories: 'Kategori',
     orders: 'Pesanan', settings: 'Pengaturan', bundles: 'Bundling',
+    promos: 'Banner Promo',
   };
 
   return (

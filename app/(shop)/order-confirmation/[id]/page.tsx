@@ -86,7 +86,7 @@ export default async function OrderConfirmationPage({ params }: { params: { id: 
              <div className="flex flex-col items-center justify-center">
                <a
                  href={`https://wa.me/${waNumber}?text=${encodeURIComponent(
-                   `Halo Admin *SR12 Official Store*, saya ingin mengkonfirmasi pesanan saya.\n\n` +
+                   `Halo Admin *Randumart*, saya ingin mengkonfirmasi pesanan saya.\n\n` +
                    `*DETAIL PESANAN*\n` +
                    `🏷️ Order ID: *${order.id}*\n` +
                    `👤 Nama: ${order.guestName}\n` +

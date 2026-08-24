@@ -1,0 +1,38 @@
+import Image from 'next/image';
+import Link from 'next/link';
+import { prisma } from '@/lib/prisma';
+
+export async function PromoBanner() {
+  const banners = await prisma.promoBanner.findMany({
+    where: { isActive: true },
+    orderBy: [{ position: 'asc' }, { createdAt: 'desc' }],
+  });
+
+  if (banners.length === 0) return null;
+
+  return (
+    <div className="space-y-4 mb-8">
+      {banners.map((banner) => {
+        const image = (
+          <div className="relative w-full aspect-[16/5] min-h-[120px] rounded-3xl overflow-hidden bg-muted">
+            <Image
+              src={banner.imageUrl}
+              alt={banner.title}
+              fill
+              className="object-cover"
+              priority={banner.position === 0}
+            />
+          </div>
+        );
+
+        return banner.linkUrl ? (
+          <Link key={banner.id} href={banner.linkUrl} className="block">
+            {image}
+          </Link>
+        ) : (
+          <div key={banner.id}>{image}</div>
+        );
+      })}
+    </div>
+  );
+}

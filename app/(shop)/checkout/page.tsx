@@ -41,6 +41,11 @@ export default function CheckoutPage() {
     e.preventDefault();
     if (cart.length === 0) return toast.error('Keranjang kosong!');
 
+    // Validasi frontend: hanya Nama, Telepon, dan Alamat yang wajib diisi
+    if (!formData.name.trim()) return toast.error('Nama Lengkap wajib diisi');
+    if (!formData.phone.trim()) return toast.error('Nomor Telepon (WA) wajib diisi');
+    if (!formData.address.trim()) return toast.error('Alamat Pengiriman wajib diisi');
+
     setLoading(true);
 
     try {
@@ -50,6 +55,8 @@ export default function CheckoutPage() {
         quantity: c.quantity
       }));
 
+      // Email opsional — dikirim apa adanya (string kosong jika tidak diisi).
+      // Kolom guestEmail di DB bertipe String? sehingga aman menerima nilai kosong/null.
       const res = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -140,10 +147,8 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <Label htmlFor="email">Alamat Email</Label>
-                <Input id="email" name="email" type="email" required value={formData.email} onChange={handleChange} placeholder="budi@example.com" className="rounded-xl" />
-              </div>
+              {/* Field email disembunyikan — tidak wajib diisi pelanggan */}
+              <input type="hidden" name="email" value={formData.email} />
 
               <div className="space-y-1.5">
                 <Label htmlFor="address">Alamat Pengiriman Lengkap</Label>

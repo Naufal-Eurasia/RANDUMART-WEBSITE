@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Instagram, Facebook, Youtube, Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Instagram, Facebook, Youtube, Phone, MapPin, Send } from 'lucide-react';
 import { categories } from '@/lib/categories';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,7 +14,7 @@ export function Footer() {
   const subscribe = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    toast.success('Berhasil berlangganan newsletter SR12!');
+    toast.success('Berhasil berlangganan newsletter Randumart!');
     setEmail('');
   };
 
@@ -50,14 +50,14 @@ export function Footer() {
         {/* About */}
         <div className="col-span-2 lg:col-span-2">
           <Link href="/" className="flex items-center gap-2 mb-4">
-            <div className="grid place-items-center w-10 h-10 rounded-xl bg-gradient-to-br from-brand-emerald to-emerald-700 text-white font-display font-bold text-lg">SR</div>
+            <div className="grid place-items-center w-10 h-10 rounded-xl bg-gradient-to-br from-brand-emerald to-emerald-700 text-white font-display font-bold text-lg">RM</div>
             <div className="leading-none">
-              <div className="font-display font-bold text-lg text-brand-emerald">SR12</div>
+              <div className="font-display font-bold text-lg text-brand-emerald">Randumart</div>
               <div className="text-[10px] uppercase tracking-[0.2em] font-medium text-muted-foreground">Official Store</div>
             </div>
           </Link>
           <p className="text-sm text-muted-foreground leading-relaxed mb-4 max-w-sm">
-            SR12 Official Store adalah toko resmi produk herbal, skincare, beauty, personal care, dan suplemen alami berkualitas untuk keluarga Indonesia.
+            Randumart adalah toko resmi produk herbal, skincare, beauty, personal care, dan suplemen alami berkualitas untuk keluarga Indonesia.
           </p>
           <div className="flex gap-2">
             {[Instagram, Facebook, Youtube].map((Icon, i) => (
@@ -97,9 +97,11 @@ export function Footer() {
         <div>
           <h4 className="font-display font-semibold mb-4 text-foreground">Customer Service</h4>
           <ul className="space-y-3 text-sm text-muted-foreground">
-            <li className="flex items-start gap-2"><Phone className="w-4 h-4 mt-0.5 text-brand-emerald shrink-0" /> +62 812 3456 7890</li>
-            <li className="flex items-start gap-2"><Mail className="w-4 h-4 mt-0.5 text-brand-emerald shrink-0" /> hello@sr12store.id</li>
-            <li className="flex items-start gap-2"><MapPin className="w-4 h-4 mt-0.5 text-brand-emerald shrink-0" /> Jakarta, Indonesia</li>
+            <li className="flex items-start gap-2">
+              <Phone className="w-4 h-4 mt-0.5 text-brand-emerald shrink-0" />
+              <span>+62 812 3456 7890 <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 ml-1">WhatsApp Only</span></span>
+            </li>
+            <li className="flex items-start gap-2"><MapPin className="w-4 h-4 mt-0.5 text-brand-emerald shrink-0" /> Sidoarjo, Indonesia</li>
           </ul>
           <div className="mt-4 flex gap-2 flex-wrap">
             <span className="text-[10px] font-semibold px-2 py-1 rounded-full bg-primary/10 text-primary">BPOM</span>
@@ -110,7 +112,7 @@ export function Footer() {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
-        <p>© 2024 SR12 Official Store. All rights reserved.</p>
+        <p>© 2024 Randumart. All rights reserved.</p>
         <div className="flex gap-4">
           <Link href="#" className="hover:text-brand-emerald">Privacy Policy</Link>
           <Link href="#" className="hover:text-brand-emerald">Terms</Link>

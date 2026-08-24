@@ -17,8 +17,8 @@ export function MobileNav() {
       <SheetContent side="left" className="w-[88vw] max-w-sm p-0 flex flex-col">
         <SheetHeader className="p-5 border-b border-border">
           <SheetTitle className="flex items-center gap-2">
-            <div className="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-brand-emerald to-emerald-700 text-white font-display font-bold">SR</div>
-            <span className="font-display font-bold text-brand-emerald">SR12 Official</span>
+            <div className="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-brand-emerald to-emerald-700 text-white font-display font-bold">RM</div>
+            <span className="font-display font-bold text-brand-emerald">Randumart</span>
           </SheetTitle>
         </SheetHeader>
 

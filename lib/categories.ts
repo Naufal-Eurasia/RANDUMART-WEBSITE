@@ -58,9 +58,9 @@ export const categories: Category[] = [
   },
   {
     slug: 'baby-kids',
-    name: 'Baby & Kids',
-    emoji: '👶',
-    description: 'Perawatan lembut untuk si kecil yang aman dan sehat.',
+    name: 'Oleh-oleh Umrah Haji dan Souvenir',
+    emoji: '🕌',
+    description: 'Oleh-oleh khas Tanah Suci dan souvenir pilihan untuk keluarga.',
     productCount: 32,
     image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
     color: '#2563EB',
