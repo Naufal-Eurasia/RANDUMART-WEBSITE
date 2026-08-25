@@ -63,3 +63,5 @@ skills-lock.json
 # artefak verifikasi visual (screenshot)
 .verify-shots/
 /*.png
+
+MASTER_PROMPT.md
