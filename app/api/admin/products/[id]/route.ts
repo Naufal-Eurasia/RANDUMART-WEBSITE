@@ -83,8 +83,21 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
     });
 
     if (orderItemsCount > 0) {
-      return NextResponse.json({ 
-        message: "Produk ini punya riwayat transaksi, gunakan 'Nonaktifkan' alih-alih hapus" 
+      return NextResponse.json({
+        message: "Produk ini punya riwayat transaksi, gunakan 'Nonaktifkan' alih-alih hapus"
+      }, { status: 400 });
+    }
+
+    // FK BundleItem.product = Restrict, jadi delete akan gagal jadi 500 mentah tanpa cek ini
+    const bundleItems = await prisma.bundleItem.findMany({
+      where: { productId: params.id },
+      select: { bundle: { select: { name: true } } },
+    });
+
+    if (bundleItems.length > 0) {
+      const names = [...new Set(bundleItems.map((b) => b.bundle.name))].join(', ');
+      return NextResponse.json({
+        message: `Produk ini bagian dari bundle: ${names}. Keluarkan dari bundle dulu sebelum menghapus.`
       }, { status: 400 });
     }
 
