@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Star, Heart, ShoppingBag, Minus, Plus, ShieldCheck, BadgeCheck, Truck, RotateCcw, ChevronRight, ZoomIn, Check } from 'lucide-react';
+import { Star, Heart, ShoppingBag, Minus, Plus, ShieldCheck, BadgeCheck, Truck, ChevronRight, ZoomIn, Check } from 'lucide-react';
 import { formatRupiah } from '@/lib/categories';
 import { useStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
@@ -89,11 +89,10 @@ export default function ProductDetailClient({ product, related }: { product: any
 
           <p className="text-muted-foreground leading-relaxed">{product.description}</p>
 
-          <div className="grid grid-cols-2 gap-3 py-4 border-y border-border/60">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 py-4 border-y border-border/60">
             <div className="flex items-center gap-3"><div className="grid place-items-center w-10 h-10 rounded-full bg-primary/10 text-primary"><ShieldCheck className="w-5 h-5" /></div><span className="text-sm font-medium">Garansi 100% Original</span></div>
             <div className="flex items-center gap-3"><div className="grid place-items-center w-10 h-10 rounded-full bg-primary/10 text-primary"><BadgeCheck className="w-5 h-5" /></div><span className="text-sm font-medium">BPOM Certified</span></div>
             <div className="flex items-center gap-3"><div className="grid place-items-center w-10 h-10 rounded-full bg-primary/10 text-primary"><Truck className="w-5 h-5" /></div><span className="text-sm font-medium">Pengiriman Aman</span></div>
-            <div className="flex items-center gap-3"><div className="grid place-items-center w-10 h-10 rounded-full bg-primary/10 text-primary"><RotateCcw className="w-5 h-5" /></div><span className="text-sm font-medium">Retur Mudah 7 Hari</span></div>
           </div>
 
           <div className="space-y-4 pt-2">

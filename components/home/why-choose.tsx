@@ -1,10 +1,10 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Leaf, ShieldCheck, BadgeCheck, FlaskConical, Users, Sparkles, Truck, Store } from 'lucide-react';
+import { Leaf, ShieldCheck, BadgeCheck, Users, Sparkles, Truck } from 'lucide-react';
 import { whyChoose } from '@/lib/products';
 
-const icons = { Leaf, ShieldCheck, BadgeCheck, FlaskConical, Users, Sparkles, Truck, Store } as const;
+const icons = { Leaf, ShieldCheck, BadgeCheck, Users, Sparkles, Truck } as const;
 
 export function WhyChoose() {
   return (
@@ -23,7 +23,7 @@ export function WhyChoose() {
           <p className="mt-2 text-muted-foreground">Komitmen kami untuk produk alami berkualitas tinggi.</p>
         </motion.div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {whyChoose.map((w, i) => {
             const Icon = icons[w.icon as keyof typeof icons];
             return (
@@ -32,7 +32,7 @@ export function WhyChoose() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.4, delay: (i % 4) * 0.06 }}
+                transition={{ duration: 0.4, delay: (i % 3) * 0.06 }}
                 className="group rounded-3xl bg-white border border-border/60 p-5 sm:p-6 shadow-soft hover:shadow-premium hover:-translate-y-1 transition-all duration-300"
               >
                 <div className="grid place-items-center w-12 h-12 rounded-2xl bg-primary/10 text-primary mb-4 group-hover:bg-primary group-hover:text-white transition-colors">
