@@ -1,6 +1,7 @@
 export type Badge = 'best-seller' | 'new-arrival' | 'limited' | 'official' | 'bpom' | 'halal' | 'out-of-stock';
 
 export interface Category {
+  id: string;
   slug: string;
   name: string;
   emoji: string;

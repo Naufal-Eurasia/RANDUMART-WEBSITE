@@ -1,117 +1,28 @@
-import { Category, Concern } from './types';
+import { Concern } from './types';
 
-export const categories: Category[] = [
-  {
-    slug: 'herbal',
-    name: 'Herbal',
-    emoji: '🌿',
-    description: 'Produk herbal alami untuk menjaga kesehatan keluarga.',
-    productCount: 85,
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
-    color: '#1E7A53',
-    gradient: 'from-emerald-900/90 via-emerald-800/40 to-transparent',
-    accent: 'emerald',
-  },
-  {
-    slug: 'beauty',
-    name: 'Beauty',
-    emoji: '💄',
-    description: 'Makeup mewah untuk tampil memukau setiap hari.',
-    productCount: 64,
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
-    color: '#DB2777',
-    gradient: 'from-pink-900/90 via-pink-700/40 to-transparent',
-    accent: 'pink',
-  },
-  {
-    slug: 'face-care',
-    name: 'Face Care',
-    emoji: '✨',
-    description: 'Skincare premium untuk wajah bersih, cerah, dan sehat.',
-    productCount: 52,
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
-    color: '#7C3AED',
-    gradient: 'from-violet-900/90 via-violet-700/40 to-transparent',
-    accent: 'violet',
-  },
-  {
-    slug: 'body-care',
-    name: 'Body Care',
-    emoji: '🧴',
-    description: 'Body lotion dan perawatan tubuh sensasi spa di rumah.',
-    productCount: 48,
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
-    color: '#D97706',
-    gradient: 'from-amber-900/90 via-amber-700/40 to-transparent',
-    accent: 'amber',
-  },
-  {
-    slug: 'personal-care',
-    name: 'Personal Care',
-    emoji: '🧼',
-    description: 'Kebersihan diri harian dengan bahan lembut dan aman.',
-    productCount: 40,
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
-    color: '#0891B2',
-    gradient: 'from-cyan-900/90 via-cyan-700/40 to-transparent',
-    accent: 'cyan',
-  },
-  {
-    slug: 'baby-kids',
-    name: 'Oleh-oleh Umrah Haji dan Souvenir',
-    emoji: '🕌',
-    description: 'Oleh-oleh khas Tanah Suci dan souvenir pilihan untuk keluarga.',
-    productCount: 32,
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
-    color: '#2563EB',
-    gradient: 'from-blue-900/90 via-blue-700/40 to-transparent',
-    accent: 'blue',
-  },
-  {
-    slug: 'supplements',
-    name: 'Supplements',
-    emoji: '💊',
-    description: 'Suplemen multivitamin untuk imun tubuh lebih kuat.',
-    productCount: 45,
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
-    color: '#059669',
-    gradient: 'from-teal-900/90 via-teal-700/40 to-transparent',
-    accent: 'teal',
-  },
-  {
-    slug: 'healthy-food',
-    name: 'Healthy Food',
-    emoji: '🍯',
-    description: 'Madu, kurma, dan camilan sehat untuk gaya hidup fit.',
-    productCount: 28,
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
-    color: '#EA580C',
-    gradient: 'from-orange-900/90 via-orange-700/40 to-transparent',
-    accent: 'orange',
-  },
-  {
-    slug: 'home-care',
-    name: 'Home Care',
-    emoji: '🏠',
-    description: 'Pembersih rumah aman biodegradable untuk keluarga.',
-    productCount: 22,
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
-    color: '#0D9488',
-    gradient: 'from-teal-900/90 via-teal-700/40 to-transparent',
-    accent: 'teal',
-  },
-  {
-    slug: 'gift-package',
-    name: 'Gift Package',
-    emoji: '🎁',
-    description: 'Paket hadiah eksklusif untuk orang tercinta.',
-    productCount: 18,
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
-    color: '#9333EA',
-    gradient: 'from-fuchsia-900/90 via-fuchsia-700/40 to-transparent',
-    accent: 'fuchsia',
-  },
+// Categories now come from the database (see app/api/categories/route.ts and
+// hooks/use-categories.ts) — this file only keeps decorative fallbacks for
+// visual fields (image/color/gradient/accent) that don't exist on the
+// Category model, since the DB category list can grow/change at any time.
+const defaultCategoryImage =
+  'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop';
+
+const visualPalette = [
+  { color: '#1E7A53', gradient: 'from-emerald-900/90 via-emerald-800/40 to-transparent', accent: 'emerald' },
+  { color: '#DB2777', gradient: 'from-pink-900/90 via-pink-700/40 to-transparent', accent: 'pink' },
+  { color: '#7C3AED', gradient: 'from-violet-900/90 via-violet-700/40 to-transparent', accent: 'violet' },
+  { color: '#D97706', gradient: 'from-amber-900/90 via-amber-700/40 to-transparent', accent: 'amber' },
+  { color: '#0891B2', gradient: 'from-cyan-900/90 via-cyan-700/40 to-transparent', accent: 'cyan' },
+  { color: '#2563EB', gradient: 'from-blue-900/90 via-blue-700/40 to-transparent', accent: 'blue' },
+  { color: '#059669', gradient: 'from-teal-900/90 via-teal-700/40 to-transparent', accent: 'teal' },
+  { color: '#EA580C', gradient: 'from-orange-900/90 via-orange-700/40 to-transparent', accent: 'orange' },
+  { color: '#9333EA', gradient: 'from-fuchsia-900/90 via-fuchsia-700/40 to-transparent', accent: 'fuchsia' },
 ];
+
+export function getCategoryVisual(index: number) {
+  const palette = visualPalette[index % visualPalette.length];
+  return { image: defaultCategoryImage, ...palette };
+}
 
 export const concerns: Concern[] = [
   { slug: 'acne', name: 'Acne', emoji: '🎯', color: 'from-rose-500 to-pink-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },

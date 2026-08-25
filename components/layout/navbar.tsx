@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Heart, ShoppingBag, Menu, X, ChevronDown, User } from 'lucide-react';
-import { navLinks, categories } from '@/lib/categories';
+import { navLinks } from '@/lib/categories';
+import { useCategories } from '@/hooks/use-categories';
 import { useStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
 import { useSession } from 'next-auth/react';
@@ -19,6 +20,7 @@ export function Navbar() {
   const [megaOpen, setMegaOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { cartCount, wishlist, setSearchOpen, setCartOpen, setWishlistOpen, setMobileNavOpen } = useStore();
+  const { categories } = useCategories();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

@@ -2,7 +2,8 @@
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useStore } from '@/lib/store';
-import { navLinks, categories } from '@/lib/categories';
+import { navLinks } from '@/lib/categories';
+import { useCategories } from '@/hooks/use-categories';
 import Link from 'next/link';
 import { ChevronDown, User, Home, Search, Heart, ShoppingBag } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -10,6 +11,7 @@ import { cn } from '@/lib/utils';
 
 export function MobileNav() {
   const { mobileNavOpen, setMobileNavOpen, setSearchOpen, setCartOpen, setWishlistOpen, cartCount, wishlist } = useStore();
+  const { categories } = useCategories();
   const [catOpen, setCatOpen] = useState(false);
 
   return (

@@ -4,7 +4,7 @@ import { useMemo, useState, Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { SlidersHorizontal, X, LayoutGrid, List, Star } from 'lucide-react';
-import { categories } from '@/lib/categories';
+import { useCategories } from '@/hooks/use-categories';
 import { ProductCard } from '@/components/product/product-card';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
@@ -41,6 +41,7 @@ function ProductsContent() {
 
   const [dbProducts, setDbProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const { categories } = useCategories();
 
   useEffect(() => {
     async function fetchProducts() {

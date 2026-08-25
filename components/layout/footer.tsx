@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Instagram, Facebook, Youtube, Phone, MapPin, Send } from 'lucide-react';
-import { categories } from '@/lib/categories';
+import { useCategories } from '@/hooks/use-categories';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 
 export function Footer() {
   const [email, setEmail] = useState('');
+  const { categories } = useCategories();
 
   const subscribe = (e: React.FormEvent) => {
     e.preventDefault();

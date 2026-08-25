@@ -3,9 +3,11 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { categories } from '@/lib/categories';
+import { useCategories } from '@/hooks/use-categories';
 
 export function CategoryShowcase() {
+  const { categories } = useCategories();
+
   return (
     <section id="categories" className="py-12 lg:py-16 bg-muted/50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
