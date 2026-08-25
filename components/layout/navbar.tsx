@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Heart, ShoppingBag, Menu, X, ChevronDown, User } from 'lucide-react';
 import { navLinks } from '@/lib/categories';
@@ -56,10 +57,18 @@ export function Navbar() {
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 lg:h-20 items-center justify-between gap-4">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 shrink-0">
+            <Link href="/" className="flex items-center gap-2.5 shrink-0">
+              <Image
+                src="/logo.jpg"
+                alt="Randumart"
+                width={44}
+                height={44}
+                priority
+                className="w-10 h-10 lg:w-11 lg:h-11 rounded-full object-cover"
+              />
               <div className="hidden sm:block leading-none">
                 <div className="font-display font-bold text-lg tracking-tight text-foreground">
-                  <span className="text-brand-emerald">Randum</span>
+                  <span className="text-brand-emerald">Randu</span>
                   <span className="text-brand-red">mart</span>
                 </div>
                 <div className="text-[10px] uppercase tracking-[0.2em] font-medium text-brand-blue">
