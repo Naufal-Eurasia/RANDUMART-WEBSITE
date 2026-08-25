@@ -31,6 +31,8 @@ const badgeLabels: Record<string, string> = {
   'out-of-stock': 'Stok Habis',
 };
 
+//menambahkan produk randumart dengan lengkap
+
 export function ProductCard({ product, index = 0 }: { product: Product; index?: number }) {
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
   const [quickOpen, setQuickOpen] = useState(false);
