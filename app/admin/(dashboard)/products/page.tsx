@@ -8,7 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
-import { Loader2, Plus, Edit2, Trash2, PowerOff, Image as ImageIcon, X, Search, Filter } from 'lucide-react';
+import { Loader2, Plus, Edit2, Trash2, PowerOff, Image as ImageIcon, X, Search, Filter, Eye } from 'lucide-react';
+import Link from 'next/link';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { formatRupiah } from '@/lib/categories';
@@ -253,7 +254,7 @@ export default function ProductsAdminPage() {
                   <tr key={p.id} className="hover:bg-muted/30 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        {p.images?.[0] ? <Image src={p.images[0].url} alt={p.name} width={40} height={40} className="w-10 h-10 rounded-lg object-cover border border-border/50" /> : <div className="w-10 h-10 bg-muted rounded-lg border border-border/50 flex items-center justify-center"><ImageIcon className="w-4 h-4 text-muted-foreground/50"/></div>}
+                        {p.images?.[0] ? <Image src={p.images[0].url} alt={p.name} width={40} height={40} className="w-10 h-10 rounded-lg object-contain bg-[#FBF8F2] border border-border/50" /> : <div className="w-10 h-10 bg-muted rounded-lg border border-border/50 flex items-center justify-center"><ImageIcon className="w-4 h-4 text-muted-foreground/50"/></div>}
                         <div>
                           <p className="font-semibold text-[#28331F] flex items-center gap-2">
                             {p.name}
@@ -292,6 +293,11 @@ export default function ProductsAdminPage() {
                       <div className="flex justify-end gap-2">
                         <Button variant="outline" size="sm" onClick={() => handleTogglePublish(p)} disabled={submitting} title={p.isPublished ? 'Nonaktifkan' : 'Aktifkan'} className="h-8 w-8 p-0 rounded-lg">
                           <PowerOff className={`w-3.5 h-3.5 ${p.isPublished ? 'text-amber-600' : 'text-emerald-600'}`} />
+                        </Button>
+                        <Button asChild variant="outline" size="sm" className="h-8 w-8 p-0 rounded-lg text-[#28331F] hover:bg-[#E7DCC3]/50 border-border/50" title="Lihat Detail">
+                          <Link href={`/admin/products/${p.id}`}>
+                            <Eye className="w-3.5 h-3.5" />
+                          </Link>
                         </Button>
                         <Button variant="outline" size="sm" onClick={() => openEditModal(p)} className="h-8 w-8 p-0 rounded-lg text-blue-600 hover:text-blue-700 hover:bg-blue-50 border-blue-200">
                           <Edit2 className="w-3.5 h-3.5" />
@@ -357,13 +363,13 @@ export default function ProductsAdminPage() {
               <div className="flex flex-wrap gap-3">
                 {uploadedImages.map((img, i) => (
                   <div key={img.id} className="relative w-20 h-20 border rounded-xl overflow-hidden group">
-                    <Image src={img.url} alt="Uploaded product image" width={80} height={80} className="w-full h-full object-cover" />
+                    <Image src={img.url} alt="Uploaded product image" width={80} height={80} className="w-full h-full object-contain bg-[#FBF8F2]" />
                     <button type="button" onClick={() => removeUploaded(i)} className="absolute top-1 right-1 bg-red-500/90 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"><X className="w-3 h-3"/></button>
                   </div>
                 ))}
                 {imageFiles.map((f, i) => (
                   <div key={i} className="relative w-20 h-20 border rounded-xl overflow-hidden group">
-                    <Image src={URL.createObjectURL(f)} alt="Local product image preview" width={80} height={80} className="w-full h-full object-cover" />
+                    <Image src={URL.createObjectURL(f)} alt="Local product image preview" width={80} height={80} className="w-full h-full object-contain bg-[#FBF8F2]" />
                     <button type="button" onClick={() => removeFile(i)} className="absolute top-1 right-1 bg-red-500/90 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"><X className="w-3 h-3"/></button>
                   </div>
                 ))}

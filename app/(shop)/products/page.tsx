@@ -99,7 +99,7 @@ function ProductsContent() {
       {/* Category */}
       <div>
         <h4 className="font-display font-semibold text-sm mb-3">Kategori</h4>
-        <div className="space-y-2">
+        <div className="space-y-2 max-h-[240px] overflow-y-auto pr-2 custom-scrollbar">
           <button
             onClick={() => { setCategory('all'); setPage(1); }}
             className={cn('block w-full text-left px-3 py-2 rounded-xl text-sm transition-colors', category === 'all' ? 'bg-primary text-white font-semibold' : 'hover:bg-muted')}
@@ -195,7 +195,7 @@ function ProductsContent() {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid lg:grid-cols-[260px_1fr] gap-8">
         <aside className="hidden lg:block">
-          <div className="sticky top-28 rounded-3xl bg-white border border-border/60 p-6 shadow-soft">
+          <div className="sticky top-28 rounded-3xl bg-white border border-border/60 p-6 shadow-soft max-h-[calc(100vh-8rem)] overflow-y-auto">
             <FilterContent />
           </div>
         </aside>
@@ -232,7 +232,7 @@ function ProductsContent() {
                 <motion.div key={p.id} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.03 }} className="flex gap-4 rounded-3xl bg-white border border-border/60 p-3 shadow-soft hover:shadow-premium transition-shadow">
                   <Link href={`/products/${p.slug}`} className="shrink-0">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={p.image} alt={p.name} className="w-28 h-36 sm:w-36 sm:h-44 rounded-2xl object-cover" />
+                    <img src={p.image} alt={p.name} className="w-28 h-36 sm:w-36 sm:h-44 rounded-2xl object-contain bg-[#FBF8F2]" />
                   </Link>
                   <div className="flex-1 min-w-0 flex flex-col">
                     <div className="flex items-center gap-2 mb-1">

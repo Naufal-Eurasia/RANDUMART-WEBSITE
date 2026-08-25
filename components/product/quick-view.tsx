@@ -34,7 +34,7 @@ export function QuickView({ product, open, onOpenChange }: { product: Product; o
           {/* Gallery */}
           <div className="relative bg-muted">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={images[activeImg]?.url || images[activeImg]} alt={product.name} className="w-full h-full object-cover aspect-square md:aspect-auto" />
+            <img src={images[activeImg]?.url || images[activeImg]} alt={product.name} className="w-full h-full object-contain bg-[#FBF8F2] aspect-square md:aspect-auto" />
             {product.discount && (
               <span className="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-accent text-white text-xs font-bold">-{product.discount}%</span>
             )}
@@ -86,7 +86,7 @@ export function QuickView({ product, open, onOpenChange }: { product: Product; o
                   className={cn('w-14 h-14 rounded-xl overflow-hidden border-2 transition-colors', activeImg === i ? 'border-brand-emerald' : 'border-border')}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={img?.url || img} alt="" className="w-full h-full object-cover" />
+                  <img src={img?.url || img} alt="" className="w-full h-full object-contain bg-[#FBF8F2]" />
                 </button>
               ))}
             </div>
