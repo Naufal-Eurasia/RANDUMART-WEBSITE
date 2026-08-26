@@ -78,7 +78,7 @@ export function Navbar() {
             </Link>
 
             {/* Desktop nav */}
-            <div className="hidden xl:flex items-center gap-0.5">
+            <div className="hidden xl:flex items-center">
               {navLinks.map((link) =>
                 link.mega ? (
                   <div
@@ -89,7 +89,7 @@ export function Navbar() {
                   >
                     <button
                       className={cn(
-                        'inline-flex items-center gap-1 px-2 py-2 text-sm font-medium rounded-lg transition-colors',
+                        'inline-flex items-center gap-1 whitespace-nowrap px-1.5 py-2 text-[13px] font-medium rounded-lg transition-colors',
                         'text-foreground hover:bg-muted'
                       )}
                     >
@@ -134,7 +134,7 @@ export function Navbar() {
                     key={link.label}
                     href={link.href}
                     className={cn(
-                      'px-2 py-2 text-sm font-medium rounded-lg transition-colors',
+                      'whitespace-nowrap px-1.5 py-2 text-[13px] font-medium rounded-lg transition-colors',
                       'text-foreground hover:bg-muted'
                     )}
                   >
