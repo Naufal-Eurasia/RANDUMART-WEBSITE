@@ -68,7 +68,7 @@ export default async function AdminProductDetailPage({ params }: { params: { id:
               <p className="text-sm text-muted-foreground mb-1">Harga Final</p>
               <div className="flex items-end gap-3">
                 <span className="text-2xl font-bold text-brand-green">{formatRupiah(Number(product.price))}</span>
-                {product.originalPrice && product.originalPrice > product.price && (
+                {product.originalPrice && Number(product.originalPrice) > Number(product.price) && (
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-sm line-through text-muted-foreground">{formatRupiah(Number(product.originalPrice))}</span>
                     <Badge variant="destructive" className="h-5 px-1.5 text-[10px] bg-red-100 text-red-700 hover:bg-red-100 border-none">-{product.discount}%</Badge>
