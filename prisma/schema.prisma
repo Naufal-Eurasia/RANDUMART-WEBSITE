@@ -21,6 +21,11 @@ enum OrderStatus {
   EXPIRED
 }
 
+enum BundleType {
+  BUNDLING
+  PARSEL
+}
+
 model User {
   id        String   @id @default(cuid())
   name      String
@@ -173,7 +178,14 @@ model WishlistItem {
 model Bundle {
   id          String       @id @default(cuid())
   name        String       // Nama Parselnya
+  type        BundleType   @default(BUNDLING)
+  imageUrl    String?
+  description String?
+  price       Decimal      @db.Decimal(12, 2)
+  details     String?      // Isi paket dalam bentuk teks (khusus Parsel, opsional untuk Bundling)
   items       BundleItem[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model BundleItem {
