@@ -9,7 +9,7 @@ import { Loader2, Plus, Edit2, Trash2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
-interface Category { id: string; name: string; slug: string; emoji: string | null; _count?: { products: number }; }
+interface Category { id: string; name: string; slug: string; _count?: { products: number }; }
 
 export default function CategoriesAdminPage() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -19,7 +19,7 @@ export default function CategoriesAdminPage() {
   const [submitting, setSubmitting] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [catToDelete, setCatToDelete] = useState<Category | null>(null);
-  const [formData, setFormData] = useState({ id: '', name: '', slug: '', emoji: '' });
+  const [formData, setFormData] = useState({ id: '', name: '', slug: '' });
 
   const fetchCategories = async () => {
     setLoading(true);
@@ -44,13 +44,13 @@ export default function CategoriesAdminPage() {
 
   const openCreateModal = () => {
     setModalMode('create');
-    setFormData({ id: '', name: '', slug: '', emoji: '' });
+    setFormData({ id: '', name: '', slug: '' });
     setIsModalOpen(true);
   };
 
   const openEditModal = (cat: Category) => {
     setModalMode('edit');
-    setFormData({ id: cat.id, name: cat.name, slug: cat.slug, emoji: cat.emoji || '' });
+    setFormData({ id: cat.id, name: cat.name, slug: cat.slug });
     setIsModalOpen(true);
   };
 
@@ -69,7 +69,9 @@ export default function CategoriesAdminPage() {
     try {
       const res = await fetch(url, {
         method, headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: formData.name, slug: formData.slug, emoji: formData.emoji || null }),
+        // emoji sengaja tidak dikirim: field-nya sudah dihapus dari form, jadi
+        // mengirim null akan menghapus data lama di DB tiap kali edit
+        body: JSON.stringify({ name: formData.name, slug: formData.slug }),
       });
       const data = await res.json();
       if (!res.ok) toast.error(data.message || 'Gagal menyimpan kategori');
@@ -127,7 +129,7 @@ export default function CategoriesAdminPage() {
                   <tr key={cat.id} className="hover:bg-muted/30 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center text-lg">{cat.emoji || '📁'}</div>
+                        <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center text-sm font-semibold text-muted-foreground">{cat.name.charAt(0).toUpperCase()}</div>
                         <span className="font-semibold text-foreground">{cat.name}</span>
                       </div>
                     </td>
@@ -155,7 +157,6 @@ export default function CategoriesAdminPage() {
           <form onSubmit={handleSubmit} className="space-y-4 py-4">
             <div className="space-y-2"><Label htmlFor="name">Nama Kategori</Label><Input id="name" required value={formData.name} onChange={(e) => handleNameChange(e.target.value)} className="rounded-xl" placeholder="Contoh: Bodycare" /></div>
             <div className="space-y-2"><Label htmlFor="slug">Slug (URL)</Label><Input id="slug" required value={formData.slug} onChange={(e) => setFormData({...formData, slug: e.target.value})} className="rounded-xl" placeholder="contoh: bodycare" /><p className="text-[10px] text-muted-foreground">Otomatis digenerate dari nama, tapi bisa diedit manual. Harus unik.</p></div>
-            <div className="space-y-2"><Label htmlFor="emoji">Emoji (Opsional)</Label><Input id="emoji" value={formData.emoji} onChange={(e) => setFormData({...formData, emoji: e.target.value})} className="rounded-xl" placeholder="Contoh: ✨" /></div>
             <DialogFooter className="pt-4"><Button type="button" variant="outline" onClick={() => setIsModalOpen(false)} className="rounded-xl">Batal</Button><Button type="submit" disabled={submitting} className="rounded-xl bg-brand-emerald hover:bg-emerald-700 text-white">{submitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}Simpan Kategori</Button></DialogFooter>
           </form>
         </DialogContent>

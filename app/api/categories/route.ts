@@ -11,7 +11,6 @@ export async function GET() {
     id: c.id,
     slug: c.slug,
     name: c.name,
-    emoji: c.emoji || '🛍️',
     productCount: c._count.products,
   }));
 

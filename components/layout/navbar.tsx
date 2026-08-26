@@ -118,7 +118,7 @@ export function Navbar() {
                                     <img src={c.image} alt={c.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                   </div>
                                   <div>
-                                    <div className="text-sm font-semibold text-foreground">{c.emoji} {c.name}</div>
+                                    <div className="text-sm font-semibold text-foreground">{c.name}</div>
                                     <div className="text-xs text-muted-foreground">{c.productCount} produk</div>
                                   </div>
                                 </Link>

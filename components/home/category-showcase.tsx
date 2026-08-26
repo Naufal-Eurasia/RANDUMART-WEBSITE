@@ -53,7 +53,6 @@ export function CategoryShowcase() {
                 <div className="absolute inset-x-3 bottom-3">
                   <div className="glass rounded-2xl p-4 group-hover:translate-y-0 transition-transform">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xl">{cat.emoji}</span>
                       <h3 className="font-display font-bold text-lg text-foreground">{cat.name}</h3>
                     </div>
                     <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{cat.description}</p>

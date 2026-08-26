@@ -44,7 +44,6 @@ export function MobileNav() {
                         onClick={() => setMobileNavOpen(false)}
                         className="flex items-center gap-2 p-2 rounded-lg hover:bg-muted text-sm"
                       >
-                        <span className="text-lg">{c.emoji}</span>
                         <span className="font-medium">{c.name}</span>
                       </Link>
                     ))}

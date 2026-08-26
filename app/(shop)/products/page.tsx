@@ -113,7 +113,7 @@ function ProductsContent() {
               onClick={() => { setCategory(c.slug); setPage(1); }}
               className={cn('flex items-center justify-between w-full text-left px-3 py-2 rounded-xl text-sm transition-colors', category === c.slug ? 'bg-primary text-white font-semibold' : 'hover:bg-muted')}
             >
-              <span>{c.emoji} {c.name}</span>
+              <span>{c.name}</span>
               <span className={cn('text-xs tabular-nums', category === c.slug ? 'text-white/70' : 'text-muted-foreground')}>
                 {c.productCount}
               </span>
@@ -180,7 +180,7 @@ function ProductsContent() {
         <div className="flex items-end justify-between gap-4 flex-wrap">
           <div>
             <h1 className="font-display text-2xl sm:text-3xl font-bold">
-              {activeCat ? `${activeCat.emoji} ${activeCat.name}` : 'Semua Produk'}
+              {activeCat ? activeCat.name : 'Semua Produk'}
             </h1>
             <p className="text-muted-foreground text-sm mt-1">{loading ? 'Memuat produk...' : `${filtered.length} produk ditemukan`}</p>
           </div>

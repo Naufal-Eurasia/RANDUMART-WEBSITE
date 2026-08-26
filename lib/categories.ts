@@ -25,12 +25,12 @@ export function getCategoryVisual(index: number) {
 }
 
 export const concerns: Concern[] = [
-  { slug: 'acne', name: 'Acne', emoji: '🎯', color: 'from-rose-500 to-pink-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },
-  { slug: 'brightening', name: 'Brightening', emoji: '✨', color: 'from-amber-400 to-yellow-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },
-  { slug: 'anti-aging', name: 'Anti Aging', emoji: '⏳', color: 'from-violet-500 to-purple-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },
-  { slug: 'hair-care', name: 'Hair Care', emoji: '💇‍♀️', color: 'from-cyan-500 to-blue-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },
-  { slug: 'immunity', name: 'Immunity', emoji: '🛡️', color: 'from-emerald-500 to-green-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },
-  { slug: 'weight-management', name: 'Weight Management', emoji: '⚖️', color: 'from-teal-500 to-cyan-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },
+  { slug: 'acne', name: 'Acne', color: 'from-rose-500 to-pink-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },
+  { slug: 'brightening', name: 'Brightening', color: 'from-amber-400 to-yellow-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },
+  { slug: 'anti-aging', name: 'Anti Aging', color: 'from-violet-500 to-purple-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },
+  { slug: 'hair-care', name: 'Hair Care', color: 'from-cyan-500 to-blue-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },
+  { slug: 'immunity', name: 'Immunity', color: 'from-emerald-500 to-green-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },
+  { slug: 'weight-management', name: 'Weight Management', color: 'from-teal-500 to-cyan-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },
 ];
 
 export const navLinks = [
