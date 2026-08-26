@@ -8,7 +8,7 @@ const defaultCategoryImage =
   'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop';
 
 const visualPalette = [
-  { color: '#1E7A53', gradient: 'from-emerald-900/90 via-emerald-800/40 to-transparent', accent: 'emerald' },
+  { color: '#1a4c1b', gradient: 'from-green-900/90 via-green-800/40 to-transparent', accent: 'green' },
   { color: '#DB2777', gradient: 'from-pink-900/90 via-pink-700/40 to-transparent', accent: 'pink' },
   { color: '#7C3AED', gradient: 'from-violet-900/90 via-violet-700/40 to-transparent', accent: 'violet' },
   { color: '#D97706', gradient: 'from-amber-900/90 via-amber-700/40 to-transparent', accent: 'amber' },

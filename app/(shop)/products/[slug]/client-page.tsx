@@ -54,7 +54,7 @@ export default function ProductDetailClient({ product, related }: { product: any
           {images.length > 1 && (
             <div className="flex gap-2 overflow-x-auto no-scrollbar">
               {images.map((img: string, i: number) => (
-                <button key={i} onClick={() => setActiveImg(i)} className={cn('relative shrink-0 w-20 h-20 rounded-2xl overflow-hidden border-2 transition-colors', activeImg === i ? 'border-brand-emerald' : 'border-border')}>
+                <button key={i} onClick={() => setActiveImg(i)} className={cn('relative shrink-0 w-20 h-20 rounded-2xl overflow-hidden border-2 transition-colors', activeImg === i ? 'border-brand-green' : 'border-border')}>
                   <Image src={img} alt={`Thumbnail ${i + 1}`} fill className="object-contain bg-[#FBF8F2]" />
                 </button>
               ))}
@@ -78,12 +78,12 @@ export default function ProductDetailClient({ product, related }: { product: any
               </div>
               <span className="text-muted-foreground text-sm">({product.reviewCount} ulasan)</span>
               <span className="w-1 h-1 rounded-full bg-border"></span>
-              <span className="text-sm font-medium text-brand-emerald">Terjual {product.reviewCount * 3}+</span>
+              <span className="text-sm font-medium text-brand-green">Terjual {product.reviewCount * 3}+</span>
             </div>
           </div>
 
           <div className="flex items-end gap-3">
-            <span className="font-display text-3xl font-bold text-brand-emerald">{formatRupiah(product.price)}</span>
+            <span className="font-display text-3xl font-bold text-brand-green">{formatRupiah(product.price)}</span>
             {product.originalPrice && <span className="text-lg text-muted-foreground line-through mb-1">{formatRupiah(product.originalPrice)}</span>}
           </div>
 

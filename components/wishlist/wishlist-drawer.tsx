@@ -66,7 +66,7 @@ export function WishlistDrawer() {
               <h3 className="font-display font-semibold text-lg">Wishlist Kosong</h3>
               <p className="text-sm text-muted-foreground mt-1">Simpan produk favorit Anda di sini.</p>
             </div>
-            <Button onClick={() => setWishlistOpen(false)} className="bg-brand-emerald hover:bg-emerald-700 rounded-full">
+            <Button onClick={() => setWishlistOpen(false)} className="bg-brand-green hover:bg-brand-greenHover rounded-full">
               Jelajahi Produk
             </Button>
           </div>
@@ -84,11 +84,11 @@ export function WishlistDrawer() {
                 </Link>
                 <div className="flex-1 min-w-0">
                   <Link href={`/products/${p.slug}`} onClick={() => setWishlistOpen(false)}>
-                    <h4 className="font-medium text-sm line-clamp-2 hover:text-brand-emerald">{p.name}</h4>
+                    <h4 className="font-medium text-sm line-clamp-2 hover:text-brand-green">{p.name}</h4>
                   </Link>
-                  <p className="text-sm font-bold text-brand-emerald mt-1">{formatRupiah(p.price)}</p>
+                  <p className="text-sm font-bold text-brand-green mt-1">{formatRupiah(p.price)}</p>
                   <div className="mt-2 flex items-center gap-2">
-                    <button onClick={() => { addToCart(p); toast.success('Ditambahkan ke keranjang'); }} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-emerald text-white text-xs font-semibold hover:bg-emerald-700">
+                    <button onClick={() => { addToCart(p); toast.success('Ditambahkan ke keranjang'); }} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-green text-white text-xs font-semibold hover:bg-brand-greenHover">
                       <ShoppingBag className="w-3.5 h-3.5" /> Add
                     </button>
                     <button onClick={() => { toggleWishlist(p.id); toast.success('Dihapus dari wishlist'); }} className="grid place-items-center w-8 h-8 rounded-full hover:bg-red-50 text-red-500">

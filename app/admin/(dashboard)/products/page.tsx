@@ -198,7 +198,7 @@ export default function ProductsAdminPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 className="text-2xl font-display font-bold">Data Produk</h1>
-        <Button onClick={openCreateModal} className="bg-[#28331F] hover:bg-[#28331F]/90 text-[#E7DCC3] rounded-xl shadow-sm">
+        <Button onClick={openCreateModal} className="bg-brand-green hover:bg-brand-greenHover text-brand-cream rounded-xl shadow-sm">
           <Plus className="w-4 h-4 mr-2" /> Tambah Produk
         </Button>
       </div>
@@ -248,7 +248,7 @@ export default function ProductsAdminPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60">
-              {loading ? <tr><td colSpan={5} className="px-6 py-12 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-[#B8791F]" /></td></tr> :
+              {loading ? <tr><td colSpan={5} className="px-6 py-12 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-brand-green" /></td></tr> :
                 filteredProducts.length === 0 ? <tr><td colSpan={5} className="px-6 py-12 text-center text-muted-foreground">Tidak ada produk ditemukan</td></tr> :
                 filteredProducts.map(p => (
                   <tr key={p.id} className="hover:bg-muted/30 transition-colors">
@@ -256,9 +256,9 @@ export default function ProductsAdminPage() {
                       <div className="flex items-center gap-3">
                         {p.images?.[0] ? <Image src={p.images[0].url} alt={p.name} width={40} height={40} className="w-10 h-10 rounded-lg object-contain bg-[#FBF8F2] border border-border/50" /> : <div className="w-10 h-10 bg-muted rounded-lg border border-border/50 flex items-center justify-center"><ImageIcon className="w-4 h-4 text-muted-foreground/50"/></div>}
                         <div>
-                          <p className="font-semibold text-[#28331F] flex items-center gap-2">
+                          <p className="font-semibold text-brand-green flex items-center gap-2">
                             {p.name}
-                            {p.isBestSeller && <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4 bg-[#B8791F]/10 text-[#B8791F]">Best</Badge>}
+                            {p.isBestSeller && <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4 bg-brand-gold/20 text-brand-green">Best</Badge>}
                           </p>
                           <p className="text-xs text-muted-foreground">{p.category?.name}</p>
                         </div>
@@ -266,7 +266,7 @@ export default function ProductsAdminPage() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
-                        <span className="font-medium text-[#28331F]">{formatRupiah(Number(p.price))}</span>
+                        <span className="font-medium text-brand-green">{formatRupiah(Number(p.price))}</span>
                         {p.originalPrice && p.originalPrice > p.price && (
                           <div className="flex items-center gap-1.5 mt-0.5">
                             <span className="text-[10px] text-muted-foreground line-through">{formatRupiah(Number(p.originalPrice))}</span>
@@ -285,7 +285,7 @@ export default function ProductsAdminPage() {
                       </Badge>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${p.isPublished ? 'bg-[#E7DCC3] text-[#28331F]' : 'bg-gray-100 text-gray-500'}`}>
+                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${p.isPublished ? 'bg-brand-cream text-brand-green' : 'bg-gray-100 text-gray-500'}`}>
                         {p.isPublished ? 'AKTIF' : 'NONAKTIF'}
                       </span>
                     </td>
@@ -294,7 +294,7 @@ export default function ProductsAdminPage() {
                         <Button variant="outline" size="sm" onClick={() => handleTogglePublish(p)} disabled={submitting} title={p.isPublished ? 'Nonaktifkan' : 'Aktifkan'} className="h-8 w-8 p-0 rounded-lg">
                           <PowerOff className={`w-3.5 h-3.5 ${p.isPublished ? 'text-amber-600' : 'text-emerald-600'}`} />
                         </Button>
-                        <Button asChild variant="outline" size="sm" className="h-8 w-8 p-0 rounded-lg text-[#28331F] hover:bg-[#E7DCC3]/50 border-border/50" title="Lihat Detail">
+                        <Button asChild variant="outline" size="sm" className="h-8 w-8 p-0 rounded-lg text-brand-green hover:bg-brand-cream/50 border-border/50" title="Lihat Detail">
                           <Link href={`/admin/products/${p.id}`}>
                             <Eye className="w-3.5 h-3.5" />
                           </Link>
@@ -333,7 +333,7 @@ export default function ProductsAdminPage() {
                 <Label>Harga Coret</Label>
                 <Input type="number" min="0" step="1" value={formData.originalPrice} onChange={e => setFormData({...formData, originalPrice: e.target.value})} placeholder="Opsional" />
                 {previewDiscount > 0 && (
-                  <p className="text-[10px] text-[#B8791F] font-medium mt-1">
+                  <p className="text-[10px] text-brand-green font-medium mt-1">
                     Diskon {previewDiscount}% (Tampil: {formatRupiah(Number(formData.price))} <span className="line-through opacity-60">{formatRupiah(Number(formData.originalPrice))}</span>)
                   </p>
                 )}
@@ -383,7 +383,7 @@ export default function ProductsAdminPage() {
 
             <DialogFooter className="pt-4 border-t border-border/50">
               <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)}>Batal</Button>
-              <Button type="submit" disabled={submitting} className="bg-[#28331F] text-[#E7DCC3] hover:bg-[#28331F]/90 rounded-xl px-6">
+              <Button type="submit" disabled={submitting} className="bg-brand-green text-brand-cream hover:bg-brand-greenHover rounded-xl px-6">
                 {submitting ? <Loader2 className="animate-spin w-4 h-4 mr-2" /> : null}Simpan Produk
               </Button>
             </DialogFooter>

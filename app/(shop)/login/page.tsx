@@ -65,7 +65,7 @@ function LoginForm() {
     <div className="min-h-screen pt-28 pb-20 flex items-center justify-center bg-muted/30 p-4">
       <div className="bg-white p-8 rounded-3xl shadow-soft border border-border/60 w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="font-display text-2xl font-bold text-brand-emerald mb-2">Masuk Akun</h1>
+          <h1 className="font-display text-2xl font-bold text-brand-green mb-2">Masuk Akun</h1>
           <p className="text-muted-foreground text-sm">Masuk untuk melihat pesanan Anda</p>
         </div>
 
@@ -94,13 +94,13 @@ function LoginForm() {
             <Input id="password" type="password" required value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} className="rounded-xl" placeholder="••••••••" />
           </div>
 
-          <Button type="submit" disabled={loading} className="w-full h-11 mt-4 rounded-xl bg-brand-emerald hover:bg-emerald-700 text-white font-semibold">
+          <Button type="submit" disabled={loading} className="w-full h-11 mt-4 rounded-xl bg-brand-green hover:bg-brand-greenHover text-white font-semibold">
             {loading ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : 'Masuk'}
           </Button>
         </form>
 
         <p className="text-center text-sm text-muted-foreground mt-6">
-          Belum punya akun? <Link href="/register" className="font-semibold text-brand-emerald hover:underline">Daftar sekarang</Link>
+          Belum punya akun? <Link href="/register" className="font-semibold text-brand-green hover:underline">Daftar sekarang</Link>
         </p>
       </div>
     </div>
@@ -109,7 +109,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen pt-28 pb-20 flex items-center justify-center bg-muted/30 p-4"><Loader2 className="w-8 h-8 animate-spin text-brand-emerald mx-auto" /></div>}>
+    <Suspense fallback={<div className="min-h-screen pt-28 pb-20 flex items-center justify-center bg-muted/30 p-4"><Loader2 className="w-8 h-8 animate-spin text-brand-green mx-auto" /></div>}>
       <LoginForm />
     </Suspense>
   );

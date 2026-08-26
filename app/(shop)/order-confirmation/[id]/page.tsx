@@ -45,7 +45,7 @@ export default async function OrderConfirmationPage({ params }: { params: { id: 
           ) : isPaid ? (
              <>
               <div className="grid place-items-center w-20 h-20 rounded-full bg-emerald-100 mx-auto mb-5">
-                <CheckCircle2 className="w-10 h-10 text-brand-emerald" />
+                <CheckCircle2 className="w-10 h-10 text-brand-green" />
               </div>
               <h1 className="font-display text-2xl sm:text-3xl font-bold mb-2">Pesanan Berhasil!</h1>
               <p className="text-muted-foreground">Terima kasih atas pesanan Anda. Kami akan segera memprosesnya.</p>
@@ -139,7 +139,7 @@ export default async function OrderConfirmationPage({ params }: { params: { id: 
                </div>
                <div className="flex justify-between text-base font-bold pt-2">
                  <span>Total Akhir</span>
-                 <span className="text-brand-emerald">{formatRupiah(Number(order.totalAmount))}</span>
+                 <span className="text-brand-green">{formatRupiah(Number(order.totalAmount))}</span>
                </div>
              </div>
           </div>
@@ -172,7 +172,7 @@ export default async function OrderConfirmationPage({ params }: { params: { id: 
         </div>
 
         <div className="mt-8 text-center">
-          <Link href="/products" className="text-brand-emerald text-sm font-semibold hover:underline">
+          <Link href="/products" className="text-brand-green text-sm font-semibold hover:underline">
             &larr; Lanjut Belanja
           </Link>
         </div>

@@ -76,7 +76,7 @@ export function Hero() {
                   <p className="mt-5 text-base sm:text-lg text-white/90 max-w-xl [text-shadow:0_1px_8px_rgba(0,0,0,0.5)]">{s.subtitle}</p>
                   <div className="mt-8 flex flex-wrap gap-3">
                     <Link href="/products">
-                      <Button size="lg" className="rounded-full bg-brand-emerald hover:bg-emerald-700 text-white px-7 h-12 text-base">
+                      <Button size="lg" className="rounded-full bg-brand-green hover:bg-brand-greenHover text-white px-7 h-12 text-base">
                         Belanja Sekarang <ArrowRight className="w-5 h-5 ml-1" />
                       </Button>
                     </Link>
@@ -104,7 +104,7 @@ export function Hero() {
               { icon: ShieldCheck, title: 'Pembayaran Aman', desc: '100% terpercaya' },
             ].map((t, i) => (
               <div key={i} className="flex items-center gap-3">
-                <div className="grid place-items-center w-11 h-11 rounded-2xl bg-brand-gold/15 text-brand-gold shrink-0">
+                <div className="grid place-items-center w-11 h-11 rounded-2xl bg-brand-gold/20 text-brand-gold shrink-0">
                   <t.icon className="w-5 h-5" />
                 </div>
                 <div>

@@ -103,7 +103,7 @@ export default function CategoriesAdminPage() {
           <h1 className="text-2xl font-display font-bold">Kategori Produk</h1>
           <p className="text-muted-foreground mt-1">Kelola kategori untuk mempermudah pencarian.</p>
         </div>
-        <Button onClick={openCreateModal} className="bg-brand-emerald hover:bg-emerald-700 text-white rounded-xl">
+        <Button onClick={openCreateModal} className="bg-brand-green hover:bg-brand-greenHover text-white rounded-xl">
           <Plus className="w-4 h-4 mr-2" /> Tambah Kategori
         </Button>
       </div>
@@ -157,7 +157,7 @@ export default function CategoriesAdminPage() {
           <form onSubmit={handleSubmit} className="space-y-4 py-4">
             <div className="space-y-2"><Label htmlFor="name">Nama Kategori</Label><Input id="name" required value={formData.name} onChange={(e) => handleNameChange(e.target.value)} className="rounded-xl" placeholder="Contoh: Bodycare" /></div>
             <div className="space-y-2"><Label htmlFor="slug">Slug (URL)</Label><Input id="slug" required value={formData.slug} onChange={(e) => setFormData({...formData, slug: e.target.value})} className="rounded-xl" placeholder="contoh: bodycare" /><p className="text-[10px] text-muted-foreground">Otomatis digenerate dari nama, tapi bisa diedit manual. Harus unik.</p></div>
-            <DialogFooter className="pt-4"><Button type="button" variant="outline" onClick={() => setIsModalOpen(false)} className="rounded-xl">Batal</Button><Button type="submit" disabled={submitting} className="rounded-xl bg-brand-emerald hover:bg-emerald-700 text-white">{submitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}Simpan Kategori</Button></DialogFooter>
+            <DialogFooter className="pt-4"><Button type="button" variant="outline" onClick={() => setIsModalOpen(false)} className="rounded-xl">Batal</Button><Button type="submit" disabled={submitting} className="rounded-xl bg-brand-green hover:bg-brand-greenHover text-white">{submitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}Simpan Kategori</Button></DialogFooter>
           </form>
         </DialogContent>
       </Dialog>

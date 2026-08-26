@@ -31,7 +31,7 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
 
 export function StatsCounter() {
   return (
-    <section className="py-12 lg:py-16 bg-brand-emerald text-white relative overflow-hidden">
+    <section className="py-12 lg:py-16 bg-brand-green text-white relative overflow-hidden">
       <div className="absolute -left-20 -top-20 w-72 h-72 rounded-full bg-brand-gold/10 blur-3xl" />
       <div className="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-white/5 blur-3xl" />
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid grid-cols-2 lg:grid-cols-4 gap-8">

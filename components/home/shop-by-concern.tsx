@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export function ShopByConcern() {
   return (
-    <section className="py-12 lg:py-16 bg-brand-emerald/5">
+    <section className="py-12 lg:py-16 bg-brand-green/5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

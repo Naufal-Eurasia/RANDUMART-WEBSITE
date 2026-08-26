@@ -101,7 +101,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
               }}
               disabled={outOfStock}
               aria-label="Add to cart"
-              className="grid place-items-center w-11 h-11 rounded-full bg-brand-emerald text-white shadow-soft hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="grid place-items-center w-11 h-11 rounded-full bg-brand-green text-white shadow-soft hover:bg-brand-greenHover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Plus className="w-5 h-5" />
             </button>
@@ -126,7 +126,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
           </div>
 
           <Link href={`/products/${product.slug}`}>
-            <h3 className="font-display font-semibold text-sm leading-snug line-clamp-2 hover:text-brand-emerald transition-colors">
+            <h3 className="font-display font-semibold text-sm leading-snug line-clamp-2 hover:text-brand-green transition-colors">
               {product.name}
             </h3>
           </Link>
@@ -135,7 +135,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
           {/* Pricing wrapper shifted to bottom */}
           <div className="mt-auto pt-3">
             <div className="flex items-end gap-2">
-              <span className="font-display font-bold text-base text-brand-emerald">{formatRupiah(product.price)}</span>
+              <span className="font-display font-bold text-base text-brand-green">{formatRupiah(product.price)}</span>
               {product.originalPrice && (
                 <span className="text-xs text-muted-foreground line-through">{formatRupiah(product.originalPrice)}</span>
               )}
@@ -162,7 +162,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
               </button>
               <Link
                 href={`/products/${product.slug}`}
-                className="flex items-center justify-center py-2.5 rounded-xl bg-brand-emerald text-white text-xs font-semibold hover:bg-emerald-700 active:scale-[0.98] transition-all"
+                className="flex items-center justify-center py-2.5 rounded-xl bg-brand-green text-white text-xs font-semibold hover:bg-brand-greenHover active:scale-[0.98] transition-all"
               >
                 Buy Now
               </Link>

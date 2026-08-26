@@ -19,8 +19,8 @@ export function MobileNav() {
       <SheetContent side="left" className="w-[88vw] max-w-sm p-0 flex flex-col">
         <SheetHeader className="p-5 border-b border-border">
           <SheetTitle className="flex items-center gap-2">
-            <div className="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-brand-emerald to-emerald-700 text-white font-display font-bold">RM</div>
-            <span className="font-display font-bold text-brand-emerald">Randumart</span>
+            <div className="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-brand-green to-brand-greenActive text-white font-display font-bold">RM</div>
+            <span className="font-display font-bold text-brand-green">Randumart</span>
           </SheetTitle>
         </SheetHeader>
 
@@ -68,7 +68,7 @@ export function MobileNav() {
             <Link href="#" onClick={() => setMobileNavOpen(false)} className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border font-medium text-sm hover:bg-muted">
               <User className="w-4 h-4" /> Login
             </Link>
-            <Link href="#" onClick={() => setMobileNavOpen(false)} className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-brand-emerald text-white font-medium text-sm">
+            <Link href="#" onClick={() => setMobileNavOpen(false)} className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-brand-green text-white font-medium text-sm">
               Register
             </Link>
           </div>
@@ -86,21 +86,21 @@ export function BottomNav() {
   return (
     <nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 glass border-t border-border">
       <div className="grid grid-cols-5 h-16">
-        <Link href="/" className="flex flex-col items-center justify-center gap-0.5 text-muted-foreground hover:text-brand-emerald">
+        <Link href="/" className="flex flex-col items-center justify-center gap-0.5 text-muted-foreground hover:text-brand-green">
           <Home className="w-5 h-5" /><span className="text-[10px] font-medium">Home</span>
         </Link>
-        <button onClick={() => setSearchOpen(true)} className="flex flex-col items-center justify-center gap-0.5 text-muted-foreground hover:text-brand-emerald">
+        <button onClick={() => setSearchOpen(true)} className="flex flex-col items-center justify-center gap-0.5 text-muted-foreground hover:text-brand-green">
           <Search className="w-5 h-5" /><span className="text-[10px] font-medium">Search</span>
         </button>
-        <button onClick={() => setWishlistOpen(true)} className="relative flex flex-col items-center justify-center gap-0.5 text-muted-foreground hover:text-brand-emerald">
+        <button onClick={() => setWishlistOpen(true)} className="relative flex flex-col items-center justify-center gap-0.5 text-muted-foreground hover:text-brand-green">
           <Heart className="w-5 h-5" />
           {mounted && wishlist.length > 0 && <span className="absolute top-1 right-6 min-w-4 h-4 px-1 grid place-items-center rounded-full bg-accent text-white text-[9px] font-bold">{wishlist.length}</span>}
           <span className="text-[10px] font-medium">Wishlist</span>
         </button>
-        <Link href="/products" className="flex flex-col items-center justify-center gap-0.5 text-muted-foreground hover:text-brand-emerald">
+        <Link href="/products" className="flex flex-col items-center justify-center gap-0.5 text-muted-foreground hover:text-brand-green">
           <ShoppingBag className="w-5 h-5" /><span className="text-[10px] font-medium">Products</span>
         </Link>
-        <button onClick={() => setCartOpen(true)} className="relative flex flex-col items-center justify-center gap-0.5 text-muted-foreground hover:text-brand-emerald">
+        <button onClick={() => setCartOpen(true)} className="relative flex flex-col items-center justify-center gap-0.5 text-muted-foreground hover:text-brand-green">
           <ShoppingBag className="w-5 h-5" />
           {mounted && cartCount() > 0 && <span className="absolute top-1 right-6 min-w-4 h-4 px-1 grid place-items-center rounded-full bg-primary text-white text-[9px] font-bold">{cartCount()}</span>}
           <span className="text-[10px] font-medium">Cart</span>

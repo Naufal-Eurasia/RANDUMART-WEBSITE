@@ -67,7 +67,11 @@ const config: Config = {
           '5': 'hsl(var(--chart-5))',
         },
         brand: {
-          emerald: '#1E7A53',
+          green: '#1a4c1b',
+          greenHover: '#315e32',
+          greenActive: '#123a14',
+          red: '#d61626',
+          blue: '#0d5cac',
           gold: '#C9A227',
           cream: '#FBF8F1',
           beige: '#F5EFE6',

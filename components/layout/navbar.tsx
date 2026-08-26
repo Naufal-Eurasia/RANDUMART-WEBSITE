@@ -34,7 +34,7 @@ export function Navbar() {
   return (
     <>
       {/* Promo ribbon */}
-      <div className="bg-gradient-to-r from-brand-emerald via-emerald-600 to-brand-emerald text-white text-xs sm:text-sm py-2 overflow-hidden">
+      <div className="bg-gradient-to-r from-brand-green via-brand-greenHover to-brand-green text-white text-xs sm:text-sm py-2 overflow-hidden">
         <div className="flex whitespace-nowrap animate-marquee">
           {Array.from({ length: 2 }).map((_, i) => (
             <div key={i} className="flex shrink-0">
@@ -68,7 +68,7 @@ export function Navbar() {
               />
               <div className="hidden sm:block leading-none">
                 <div className="font-display font-bold text-lg tracking-tight text-foreground">
-                  <span className="text-brand-emerald">Randu</span>
+                  <span className="text-brand-green">Randu</span>
                   <span className="text-brand-red">mart</span>
                 </div>
                 <div className="text-[10px] uppercase tracking-[0.2em] font-medium text-brand-blue">
@@ -182,7 +182,7 @@ export function Navbar() {
                 {status === 'loading' ? (
                   <div className="w-[150px] h-9 rounded-md bg-muted/20 animate-pulse"></div>
                 ) : status === 'authenticated' ? (
-                  <Button size="sm" className="bg-brand-emerald hover:bg-emerald-700 text-white" asChild>
+                  <Button size="sm" className="bg-brand-green hover:bg-brand-greenHover text-white" asChild>
                     <Link href={session?.user?.role === 'ADMIN' ? '/admin' : '/account'}>
                       <User className="w-4 h-4 mr-1" /> Akun Saya
                     </Link>
@@ -194,7 +194,7 @@ export function Navbar() {
                         <User className="w-4 h-4 mr-1" /> Login
                       </Link>
                     </Button>
-                    <Button size="sm" className="bg-brand-emerald hover:bg-emerald-700 text-white" asChild>
+                    <Button size="sm" className="bg-brand-green hover:bg-brand-greenHover text-white" asChild>
                       <Link href="/register">
                         Register
                       </Link>

@@ -109,7 +109,7 @@ export function SearchDialog() {
                       <p className="text-sm font-medium line-clamp-1">{p.name}</p>
                       <p className="text-xs text-muted-foreground">{p.category}</p>
                     </div>
-                    <span className="text-sm font-bold text-brand-emerald">{formatRupiah(p.price)}</span>
+                    <span className="text-sm font-bold text-brand-green">{formatRupiah(p.price)}</span>
                   </Link>
                 ))}
               </div>
@@ -148,7 +148,7 @@ export function SearchDialog() {
                         <img src={p.image} alt={p.name} className="w-10 h-12 rounded-lg object-cover" />
                         <div className="min-w-0">
                           <p className="text-xs font-medium line-clamp-1">{p.name}</p>
-                          <p className="text-xs text-brand-emerald font-bold">{formatRupiah(p.price)}</p>
+                          <p className="text-xs text-brand-green font-bold">{formatRupiah(p.price)}</p>
                         </div>
                       </Link>
                     ))}

@@ -34,7 +34,7 @@ export default async function AccountPage() {
             {session.user.image ? (
                <Image src={session.user.image} alt={session.user.name || 'User'} width={64} height={64} className="w-16 h-16 rounded-full object-cover border" />
             ) : (
-               <div className="w-16 h-16 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-display text-2xl font-bold">
+               <div className="w-16 h-16 rounded-full bg-brand-green/10 text-brand-green flex items-center justify-center font-display text-2xl font-bold">
                  {session.user.name?.charAt(0) || 'U'}
                </div>
             )}
@@ -47,13 +47,13 @@ export default async function AccountPage() {
         </div>
 
         <h2 className="text-xl font-display font-bold mb-4 flex items-center gap-2">
-          <Package className="w-5 h-5 text-brand-emerald" /> Riwayat Pesanan Saya
+          <Package className="w-5 h-5 text-brand-green" /> Riwayat Pesanan Saya
         </h2>
 
         {orders.length === 0 ? (
           <div className="bg-white p-12 rounded-3xl shadow-soft border border-border/60 text-center">
             <p className="text-muted-foreground mb-4">Anda belum memiliki riwayat pesanan.</p>
-            <Link href="/products" className="inline-block px-6 py-2.5 rounded-full bg-brand-emerald text-white font-semibold hover:bg-emerald-700">Mulai Belanja</Link>
+            <Link href="/products" className="inline-block px-6 py-2.5 rounded-full bg-brand-green text-white font-semibold hover:bg-brand-greenHover">Mulai Belanja</Link>
           </div>
         ) : (
           <div className="space-y-4">
@@ -78,7 +78,7 @@ export default async function AccountPage() {
                     <p className="font-medium text-sm line-clamp-1">{order.items[0]?.product?.name || 'Produk'}</p>
                     <p className="text-xs text-muted-foreground">{order.items[0]?.quantity} barang x {formatRupiah(Number(order.items[0]?.priceAtPurchase))}</p>
                     {order.items.length > 1 && (
-                      <p className="text-xs text-brand-emerald font-semibold mt-1">+ {order.items.length - 1} produk lainnya</p>
+                      <p className="text-xs text-brand-green font-semibold mt-1">+ {order.items.length - 1} produk lainnya</p>
                     )}
                   </div>
                 </div>
@@ -86,9 +86,9 @@ export default async function AccountPage() {
                 <div className="mt-4 pt-4 border-t border-border/60 flex justify-between items-center">
                   <div>
                     <p className="text-xs text-muted-foreground">Total Belanja</p>
-                    <p className="font-display font-bold text-brand-emerald">{formatRupiah(Number(order.totalAmount))}</p>
+                    <p className="font-display font-bold text-brand-green">{formatRupiah(Number(order.totalAmount))}</p>
                   </div>
-                  <Link href={`/order-confirmation/${order.id}`} className="flex items-center gap-1 text-sm font-semibold text-brand-emerald hover:underline">
+                  <Link href={`/order-confirmation/${order.id}`} className="flex items-center gap-1 text-sm font-semibold text-brand-green hover:underline">
                     Lihat Detail <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>

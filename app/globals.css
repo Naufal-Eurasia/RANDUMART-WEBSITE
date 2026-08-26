@@ -5,26 +5,26 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 150 25% 12%;
+    --foreground: 121 25% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 150 25% 12%;
+    --card-foreground: 121 25% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 150 25% 12%;
-    --primary: 158 60% 30%;
+    --popover-foreground: 121 25% 12%;
+    --primary: 121 49% 20%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 45 60% 52%;
-    --secondary-foreground: 150 25% 12%;
+    --secondary: 210 86% 36.2%;
+    --secondary-foreground: 0 0% 100%;
     --muted: 40 30% 96%;
-    --muted-foreground: 150 10% 40%;
-    --accent: 24 90% 52%;
+    --muted-foreground: 121 10% 40%;
+    --accent: 355 81% 46.3%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     --border: 40 20% 90%;
     --input: 40 20% 90%;
-    --ring: 158 60% 30%;
+    --ring: 121 49% 20%;
     --radius: 0.75rem;
-    --chart-1: 158 60% 30%;
+    --chart-1: 121 49% 20%;
     --chart-2: 45 60% 52%;
     --chart-3: 24 90% 52%;
     --chart-4: 330 80% 60%;
@@ -52,7 +52,7 @@
     -webkit-backdrop-filter: blur(16px) saturate(180%);
   }
   .glass-dark {
-    background: rgba(20, 50, 35, 0.55);
+    background: rgba(18, 52, 18, 0.55);
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
   }
@@ -67,13 +67,13 @@
     scrollbar-width: none;
   }
   .shadow-soft {
-    box-shadow: 0 4px 24px -8px rgba(30, 122, 83, 0.12), 0 2px 8px -4px rgba(0,0,0,0.04);
+    box-shadow: 0 4px 24px -8px rgba(26, 76, 27, 0.12), 0 2px 8px -4px rgba(0,0,0,0.04);
   }
   .shadow-premium {
-    box-shadow: 0 20px 60px -20px rgba(30, 122, 83, 0.25), 0 8px 24px -12px rgba(0,0,0,0.08);
+    box-shadow: 0 20px 60px -20px rgba(26, 76, 27, 0.25), 0 8px 24px -12px rgba(0,0,0,0.08);
   }
   .bg-grid {
-    background-image: radial-gradient(circle, hsl(150 20% 85%) 1px, transparent 1px);
+    background-image: radial-gradient(circle, hsl(121 20% 85%) 1px, transparent 1px);
     background-size: 24px 24px;
   }
 }
@@ -101,11 +101,11 @@
   background: hsl(40 30% 96%);
 }
 ::-webkit-scrollbar-thumb {
-  background: hsl(158 30% 70%);
+  background: hsl(121 30% 70%);
   border-radius: 8px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(158 60% 40%);
+  background: hsl(121 60% 40%);
 }
 
 /* Marquee */

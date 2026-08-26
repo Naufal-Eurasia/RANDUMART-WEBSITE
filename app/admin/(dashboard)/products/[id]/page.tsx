@@ -26,7 +26,7 @@ export default async function AdminProductDetailPage({ params }: { params: { id:
         <h1 className="text-2xl font-display font-bold">Detail Produk</h1>
       </div>
 
-      <div className="bg-[#E7DCC3]/20 border border-[#E7DCC3] rounded-3xl p-6 md:p-8">
+      <div className="bg-brand-cream/20 border border-brand-cream rounded-3xl p-6 md:p-8">
         <div className="grid md:grid-cols-2 gap-8">
           {/* Gallery Area */}
           <div className="space-y-4">
@@ -55,19 +55,19 @@ export default async function AdminProductDetailPage({ params }: { params: { id:
               <div className="flex items-center gap-2 mb-2">
                 <Badge variant="outline" className="bg-white">{product.category.name}</Badge>
                 {product.isPublished ? (
-                  <Badge className="bg-[#28331F] text-[#E7DCC3]">Aktif</Badge>
+                  <Badge className="bg-brand-green text-brand-cream">Aktif</Badge>
                 ) : (
                   <Badge variant="secondary">Nonaktif</Badge>
                 )}
               </div>
-              <h2 className="text-3xl font-display font-bold text-[#28331F]">{product.name}</h2>
+              <h2 className="text-3xl font-display font-bold text-brand-green">{product.name}</h2>
               <p className="text-sm text-muted-foreground mt-1">Slug: {product.slug}</p>
             </div>
 
             <div className="p-4 rounded-2xl bg-white border border-border/50 shadow-sm">
               <p className="text-sm text-muted-foreground mb-1">Harga Final</p>
               <div className="flex items-end gap-3">
-                <span className="text-2xl font-bold text-[#B8791F]">{formatRupiah(Number(product.price))}</span>
+                <span className="text-2xl font-bold text-brand-green">{formatRupiah(Number(product.price))}</span>
                 {product.originalPrice && product.originalPrice > product.price && (
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-sm line-through text-muted-foreground">{formatRupiah(Number(product.originalPrice))}</span>
@@ -80,18 +80,18 @@ export default async function AdminProductDetailPage({ params }: { params: { id:
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 rounded-2xl bg-white border border-border/50">
                 <p className="text-sm text-muted-foreground mb-1">Stok Tersedia</p>
-                <p className={`text-xl font-bold ${product.stock === 0 ? 'text-red-500' : 'text-[#28331F]'}`}>
+                <p className={`text-xl font-bold ${product.stock === 0 ? 'text-red-500' : 'text-brand-green'}`}>
                   {product.stock} {product.stock === 0 && '(Habis)'}
                 </p>
               </div>
               <div className="p-4 rounded-2xl bg-white border border-border/50">
                 <p className="text-sm text-muted-foreground mb-1">Statistik</p>
-                <p className="text-sm font-medium text-[#28331F]">⭐ {product.rating} ({product.reviewCount} ulasan)</p>
+                <p className="text-sm font-medium text-brand-green">⭐ {product.rating} ({product.reviewCount} ulasan)</p>
               </div>
             </div>
 
             <div className="space-y-3">
-              <h3 className="font-semibold text-[#28331F]">Highlight & Badge</h3>
+              <h3 className="font-semibold text-brand-green">Highlight & Badge</h3>
               <div className="flex flex-wrap gap-2">
                 {product.isBestSeller && <Badge className="bg-amber-500 text-white border-none hover:bg-amber-500">Best Seller</Badge>}
                 {product.isNew && <Badge className="bg-emerald-600 text-white border-none hover:bg-emerald-600">Produk Baru</Badge>}
@@ -100,7 +100,7 @@ export default async function AdminProductDetailPage({ params }: { params: { id:
             </div>
 
             <div className="space-y-2">
-              <h3 className="font-semibold text-[#28331F]">Deskripsi Lengkap</h3>
+              <h3 className="font-semibold text-brand-green">Deskripsi Lengkap</h3>
               <div className="p-4 rounded-2xl bg-white border border-border/50 text-sm leading-relaxed text-muted-foreground whitespace-pre-wrap">
                 {product.description}
               </div>

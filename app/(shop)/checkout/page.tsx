@@ -104,13 +104,13 @@ export default function CheckoutPage() {
   if (cart.length === 0) {
     return (
       <div className="min-h-screen pt-28 pb-20 max-w-2xl mx-auto px-4 flex flex-col items-center justify-center text-center">
-        <div className="w-24 h-24 bg-brand-emerald/10 text-brand-emerald rounded-full grid place-items-center mb-6">
+        <div className="w-24 h-24 bg-brand-green/10 text-brand-green rounded-full grid place-items-center mb-6">
           <ShoppingBag className="w-10 h-10" />
         </div>
         <h1 className="text-3xl font-bold font-display mb-3 tracking-tight">Keranjang Kosong</h1>
         <p className="text-muted-foreground mb-10 max-w-sm leading-relaxed">Sepertinya Anda belum memilih produk apapun. Temukan produk herbal & skincare terbaik kami.</p>
         <Link href="/products">
-          <Button className="rounded-xl h-12 px-8 bg-brand-emerald hover:bg-emerald-700 text-white font-medium active:scale-[0.98] transition-transform">
+          <Button className="rounded-xl h-12 px-8 bg-brand-green hover:bg-brand-greenHover text-white font-medium active:scale-[0.98] transition-transform">
             Jelajahi Produk
           </Button>
         </Link>
@@ -121,7 +121,7 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen pt-24 lg:pt-28 pb-20 bg-muted/30">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <Link href="/products" className="inline-flex items-center text-sm text-muted-foreground hover:text-brand-emerald mb-6 transition-colors">
+        <Link href="/products" className="inline-flex items-center text-sm text-muted-foreground hover:text-brand-green mb-6 transition-colors">
           <ArrowLeft className="w-4 h-4 mr-1" /> Kembali belanja
         </Link>
 
@@ -131,7 +131,7 @@ export default function CheckoutPage() {
           {/* Bagian Kiri: Form Identitas */}
           <div className="bg-white p-6 sm:p-8 rounded-[2rem] border border-border/40 shadow-sm">
             <h2 className="font-display text-lg font-bold mb-6 flex items-center gap-3">
-              <span className="w-8 h-8 rounded-full bg-brand-emerald/10 text-brand-emerald grid place-items-center text-sm font-semibold">1</span>
+              <span className="w-8 h-8 rounded-full bg-brand-green/10 text-brand-green grid place-items-center text-sm font-semibold">1</span>
               Informasi Pengiriman
             </h2>
 
@@ -160,7 +160,7 @@ export default function CheckoutPage() {
           {/* Bagian Kanan: Ringkasan Order */}
           <div className="bg-white p-6 sm:p-8 rounded-[2rem] border border-border/40 shadow-sm sticky top-28">
              <h2 className="font-display text-lg font-bold mb-6 flex items-center gap-3">
-              <span className="w-8 h-8 rounded-full bg-brand-emerald/10 text-brand-emerald grid place-items-center text-sm font-semibold">2</span>
+              <span className="w-8 h-8 rounded-full bg-brand-green/10 text-brand-green grid place-items-center text-sm font-semibold">2</span>
               Ringkasan Pesanan
             </h2>
 
@@ -188,7 +188,7 @@ export default function CheckoutPage() {
               </div>
               <div className="border-t border-border/60 pt-3 flex justify-between items-center">
                 <span className="font-bold font-display text-lg">Total Bayar</span>
-                <span className="font-bold font-display text-xl text-brand-emerald">{formatRupiah(cartTotal())}</span>
+                <span className="font-bold font-display text-xl text-brand-green">{formatRupiah(cartTotal())}</span>
               </div>
             </div>
 
@@ -196,7 +196,7 @@ export default function CheckoutPage() {
               type="submit"
               form="checkout-form"
               disabled={loading}
-              className="w-full h-14 rounded-2xl mt-8 bg-brand-emerald hover:bg-emerald-700 text-white font-semibold text-base shadow-md hover:shadow-lg active:scale-[0.98] transition-all"
+              className="w-full h-14 rounded-2xl mt-8 bg-brand-green hover:bg-brand-greenHover text-white font-semibold text-base shadow-md hover:shadow-lg active:scale-[0.98] transition-all"
             >
               {loading ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : 'Buat Pesanan Sekarang'}
             </Button>

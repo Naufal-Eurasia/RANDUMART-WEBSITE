@@ -74,7 +74,7 @@ export default function RegisterPage() {
     <div className="min-h-screen pt-28 pb-20 flex items-center justify-center bg-muted/30 p-4">
       <div className="bg-white p-8 rounded-3xl shadow-soft border border-border/60 w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="font-display text-2xl font-bold text-brand-emerald mb-2">Daftar Akun</h1>
+          <h1 className="font-display text-2xl font-bold text-brand-green mb-2">Daftar Akun</h1>
           <p className="text-muted-foreground text-sm">Buat akun untuk mulai berbelanja</p>
         </div>
 
@@ -111,13 +111,13 @@ export default function RegisterPage() {
             <Input id="confirmPassword" type="password" required value={formData.confirmPassword} onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })} className="rounded-xl" placeholder="••••••••" />
           </div>
 
-          <Button type="submit" disabled={loading} className="w-full h-11 mt-6 rounded-xl bg-brand-emerald hover:bg-emerald-700 text-white font-semibold">
+          <Button type="submit" disabled={loading} className="w-full h-11 mt-6 rounded-xl bg-brand-green hover:bg-brand-greenHover text-white font-semibold">
             {loading ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : 'Daftar Sekarang'}
           </Button>
         </form>
 
         <p className="text-center text-sm text-muted-foreground mt-6">
-          Sudah punya akun? <Link href="/login" className="font-semibold text-brand-emerald hover:underline">Masuk</Link>
+          Sudah punya akun? <Link href="/login" className="font-semibold text-brand-green hover:underline">Masuk</Link>
         </p>
       </div>
     </div>

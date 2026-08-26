@@ -181,7 +181,7 @@ export default function BundlesAdminPage() {
         </div>
         <Button
           onClick={openCreate}
-          className="bg-[#28331F] hover:bg-[#28331F]/90 text-[#E7DCC3] rounded-xl shadow-sm"
+          className="bg-brand-green hover:bg-brand-greenHover text-brand-cream rounded-xl shadow-sm"
         >
           <Plus className="w-4 h-4 mr-2" /> Tambah Bundle
         </Button>
@@ -190,7 +190,7 @@ export default function BundlesAdminPage() {
       {/* Table */}
       {loading ? (
         <div className="flex justify-center py-24">
-          <Loader2 className="w-8 h-8 animate-spin text-[#28331F]" />
+          <Loader2 className="w-8 h-8 animate-spin text-brand-green" />
         </div>
       ) : bundles.length === 0 ? (
         <div className="flex flex-col items-center gap-3 py-24 text-muted-foreground">
@@ -218,11 +218,11 @@ export default function BundlesAdminPage() {
                     <tr key={b.id} className="hover:bg-muted/30 transition-colors">
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-[#28331F]/10 flex items-center justify-center flex-shrink-0">
-                            <ShoppingBag className="w-4 h-4 text-[#28331F]" />
+                          <div className="w-9 h-9 rounded-xl bg-brand-green/10 flex items-center justify-center flex-shrink-0">
+                            <ShoppingBag className="w-4 h-4 text-brand-green" />
                           </div>
                           <div>
-                            <p className="font-semibold text-[#28331F]">{b.name}</p>
+                            <p className="font-semibold text-brand-green">{b.name}</p>
                             <p className="text-xs text-muted-foreground line-clamp-1">
                               {b.items.map((i) => i.product.name).join(', ')}
                             </p>
@@ -234,7 +234,7 @@ export default function BundlesAdminPage() {
                           {b.items.length} produk
                         </Badge>
                       </td>
-                      <td className="px-5 py-4 text-right font-medium text-[#28331F]">
+                      <td className="px-5 py-4 text-right font-medium text-brand-green">
                         {formatRupiah(total)}
                       </td>
                       <td className="px-5 py-4">
@@ -341,9 +341,9 @@ export default function BundlesAdminPage() {
 
             {/* Total preview */}
             {formData.items.length > 0 && (
-              <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-[#28331F]/5 border border-[#28331F]/20">
-                <span className="text-sm font-medium text-[#28331F]">Total Harga Bundle</span>
-                <span className="text-lg font-bold text-[#28331F]">{formatRupiah(totalPreview)}</span>
+              <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-brand-green/5 border border-brand-green/20">
+                <span className="text-sm font-medium text-brand-green">Total Harga Bundle</span>
+                <span className="text-lg font-bold text-brand-green">{formatRupiah(totalPreview)}</span>
               </div>
             )}
 
@@ -386,7 +386,7 @@ export default function BundlesAdminPage() {
                           <p className="text-sm font-medium truncate">{p.name}</p>
                           <p className="text-xs text-muted-foreground">{formatRupiah(Number(p.price))}</p>
                         </div>
-                        <Plus className="w-4 h-4 text-[#28331F] flex-shrink-0" />
+                        <Plus className="w-4 h-4 text-brand-green flex-shrink-0" />
                       </button>
                     );
                   })
@@ -401,7 +401,7 @@ export default function BundlesAdminPage() {
               <Button
                 type="submit"
                 disabled={submitting}
-                className="bg-[#28331F] hover:bg-[#28331F]/90 text-[#E7DCC3] rounded-xl"
+                className="bg-brand-green hover:bg-brand-greenHover text-brand-cream rounded-xl"
               >
                 {submitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 {modalMode === 'edit' ? 'Simpan Perubahan' : 'Buat Bundle'}

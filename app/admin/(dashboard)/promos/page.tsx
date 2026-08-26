@@ -183,7 +183,7 @@ export default function PromosAdminPage() {
         </div>
         <Button
           onClick={openCreate}
-          className="bg-[#28331F] hover:bg-[#28331F]/90 text-[#E7DCC3] rounded-xl shadow-sm"
+          className="bg-brand-green hover:bg-brand-greenHover text-brand-cream rounded-xl shadow-sm"
         >
           <Plus className="w-4 h-4 mr-2" /> Tambah Banner
         </Button>
@@ -192,7 +192,7 @@ export default function PromosAdminPage() {
       {/* Table */}
       {loading ? (
         <div className="flex justify-center py-24">
-          <Loader2 className="w-8 h-8 animate-spin text-[#28331F]" />
+          <Loader2 className="w-8 h-8 animate-spin text-brand-green" />
         </div>
       ) : promos.length === 0 ? (
         <div className="flex flex-col items-center gap-3 py-24 text-muted-foreground">
@@ -226,7 +226,7 @@ export default function PromosAdminPage() {
                           )}
                         </div>
                         <div>
-                          <p className="font-semibold text-[#28331F]">{p.title}</p>
+                          <p className="font-semibold text-brand-green">{p.title}</p>
                           {p.linkUrl && (
                             <p className="text-xs text-muted-foreground line-clamp-1">{p.linkUrl}</p>
                           )}
@@ -377,7 +377,7 @@ export default function PromosAdminPage() {
               <Button
                 type="submit"
                 disabled={submitting}
-                className="bg-[#28331F] hover:bg-[#28331F]/90 text-[#E7DCC3] rounded-xl"
+                className="bg-brand-green hover:bg-brand-greenHover text-brand-cream rounded-xl"
               >
                 {submitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 {modalMode === 'edit' ? 'Simpan Perubahan' : 'Buat Banner'}
