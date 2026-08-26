@@ -91,7 +91,8 @@ export default function ProductDetailClient({ product, related }: { product: any
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 py-4 border-y border-border/60">
             <div className="flex items-center gap-3"><div className="grid place-items-center w-10 h-10 rounded-full bg-primary/10 text-primary"><ShieldCheck className="w-5 h-5" /></div><span className="text-sm font-medium">Garansi 100% Original</span></div>
-            <div className="flex items-center gap-3"><div className="grid place-items-center w-10 h-10 rounded-full bg-primary/10 text-primary"><BadgeCheck className="w-5 h-5" /></div><span className="text-sm font-medium">BPOM Certified</span></div>
+            {product.bpom && <div className="flex items-center gap-3"><div className="grid place-items-center w-10 h-10 rounded-full bg-primary/10 text-primary"><BadgeCheck className="w-5 h-5" /></div><span className="text-sm font-medium">BPOM {product.bpom}</span></div>}
+            {product.halal && <div className="flex items-center gap-3"><div className="grid place-items-center w-10 h-10 rounded-full bg-primary/10 text-primary"><ShieldCheck className="w-5 h-5" /></div><span className="text-sm font-medium">Halal MUI</span></div>}
             <div className="flex items-center gap-3"><div className="grid place-items-center w-10 h-10 rounded-full bg-primary/10 text-primary"><Truck className="w-5 h-5" /></div><span className="text-sm font-medium">Pengiriman Aman</span></div>
           </div>
 

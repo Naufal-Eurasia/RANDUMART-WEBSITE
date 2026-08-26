@@ -29,9 +29,9 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const {
-      name, slug, description, price, originalPrice, discount, 
+      name, slug, description, price, originalPrice, discount,
       stock, categoryId, isBestSeller, isNew, tags, isPublished,
-      rating, reviewCount, imageUrls
+      rating, reviewCount, imageUrls, halalMui, bpomNo
     } = body;
 
     if (!name || !slug || !description || price === undefined || stock === undefined || !categoryId) {
@@ -55,6 +55,8 @@ export async function POST(req: Request) {
         isNew: Boolean(isNew),
         tags: Array.isArray(tags) ? tags : [],
         isPublished: isPublished ?? true,
+        halalMui: halalMui?.trim() || null,
+        bpomNo: bpomNo?.trim() || null,
         images: { create: (imageUrls || []).map((url: string, idx: number) => ({ url, isPrimary: idx === 0 })) },
         rating: rating !== undefined ? Number(rating) : 0,
         reviewCount: reviewCount !== undefined ? Number(reviewCount) : 0,

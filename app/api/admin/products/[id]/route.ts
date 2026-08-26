@@ -24,9 +24,9 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   try {
     const body = await req.json();
     const {
-      name, slug, description, price, originalPrice, discount, 
+      name, slug, description, price, originalPrice, discount,
       stock, categoryId, isBestSeller, isNew, tags, isPublished,
-      rating, reviewCount, imageUrls
+      rating, reviewCount, imageUrls, halalMui, bpomNo
     } = body;
 
     const existing = await prisma.product.findFirst({ 
@@ -62,6 +62,8 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
         isNew: Boolean(isNew),
         tags: Array.isArray(tags) ? tags : [],
         isPublished: Boolean(isPublished),
+        halalMui: halalMui?.trim() || null,
+        bpomNo: bpomNo?.trim() || null,
         rating: rating !== undefined ? Number(rating) : 0,
         reviewCount: reviewCount !== undefined ? Number(reviewCount) : 0,
       }

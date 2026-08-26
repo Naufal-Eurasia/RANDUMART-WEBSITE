@@ -6,35 +6,20 @@ datasource db {
   provider = "postgresql"
 }
 
-enum Role {
-  CUSTOMER
-  ADMIN
-}
-
-enum OrderStatus {
-  PENDING
-  PAID
-  PROCESSING
-  SHIPPED
-  COMPLETED
-  CANCELLED
-  EXPIRED
-}
-
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String?
-  role      Role     @default(CUSTOMER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  orders    Order[]
-  accounts  Account[]
-  cartItems CartItem[]
-  wishlistItems WishlistItem[]
-  image     String?
+  id            String         @id @default(cuid())
+  name          String
+  email         String         @unique
+  password      String?
+  role          Role           @default(CUSTOMER)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  cartItems     CartItem[]
+  orders        Order[]
+  wishlistItems WishlistItem[]
 }
 
 model Category {
@@ -51,34 +36,36 @@ model Product {
   slug          String         @unique
   description   String
   price         Decimal        @db.Decimal(12, 2)
-  originalPrice Decimal?       @db.Decimal(12, 2)
-  discount      Int?
   stock         Int
-  rating        Float          @default(0)
-  reviewCount   Int            @default(0)
-  isBestSeller  Boolean        @default(false)
-  isNew         Boolean        @default(false)
-  tags          String[]
   isPublished   Boolean        @default(true)
   categoryId    String
-  category      Category       @relation(fields: [categoryId], references: [id])
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
-  images        ProductImage[]
-  orderItems    OrderItem[]
+  discount      Int?
+  isBestSeller  Boolean        @default(false)
+  isNew         Boolean        @default(false)
+  originalPrice Decimal?       @db.Decimal(12, 2)
+  rating        Float          @default(0)
+  reviewCount   Int            @default(0)
+  tags          String[]
+  halalMui      String?
+  bpomNo        String?
+  bundleItems   BundleItem[]
   cartItems     CartItem[]
+  orderItems    OrderItem[]
+  category      Category       @relation(fields: [categoryId], references: [id])
+  images        ProductImage[]
   wishlistItems WishlistItem[]
-  bundleItems   BundleItem[] 
-  
+
   @@index([categoryId])
 }
 
 model ProductImage {
   id        String  @id @default(cuid())
   productId String
-  product   Product @relation(fields: [productId], references: [id])
   url       String
   isPrimary Boolean @default(false)
+  product   Product @relation(fields: [productId], references: [id])
 
   @@index([productId])
 }
@@ -86,7 +73,6 @@ model ProductImage {
 model Order {
   id                    String      @id @default(cuid())
   userId                String?
-  user                  User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
   guestName             String?
   guestEmail            String?
   guestPhone            String?
@@ -98,6 +84,7 @@ model Order {
   midtransTransactionId String?
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt
+  user                  User?       @relation(fields: [userId], references: [id])
   items                 OrderItem[]
 
   @@index([userId])
@@ -106,21 +93,21 @@ model Order {
 model OrderItem {
   id              String  @id @default(cuid())
   orderId         String
-  order           Order   @relation(fields: [orderId], references: [id])
   productId       String
-  product         Product @relation(fields: [productId], references: [id])
   quantity        Int
   priceAtPurchase Decimal @db.Decimal(12, 2)
+  order           Order   @relation(fields: [orderId], references: [id])
+  product         Product @relation(fields: [productId], references: [id])
 
   @@index([orderId])
   @@index([productId])
 }
 
 model StoreSetting {
-  id               String   @id @default("singleton")
-  whatsappNumber   String
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id             String   @id @default("singleton")
+  whatsappNumber String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model Account {
@@ -129,15 +116,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -145,12 +131,12 @@ model Account {
 model CartItem {
   id        String   @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
   @@index([userId])
@@ -160,10 +146,10 @@ model CartItem {
 model WishlistItem {
   id        String   @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
   @@index([userId])
@@ -172,19 +158,25 @@ model WishlistItem {
 
 model Bundle {
   id          String       @id @default(cuid())
-  name        String       // Nama Parselnya
+  name        String
+  createdAt   DateTime     @default(now())
+  description String?
+  details     String?
+  imageUrl    String?
+  price       Decimal      @db.Decimal(12, 2)
+  type        BundleType   @default(BUNDLING)
+  updatedAt   DateTime
   items       BundleItem[]
 }
 
 model BundleItem {
-  id          String   @id @default(cuid())
-  bundleId    String
-  bundle      Bundle   @relation(fields: [bundleId], references: [id], onDelete: Cascade) // Perbaikan 2
-  productId   String
-  product     Product  @relation(fields: [productId], references: [id])
-  quantity    Int      @default(1)
+  id        String  @id @default(cuid())
+  bundleId  String
+  productId String
+  quantity  Int     @default(1)
+  bundle    Bundle  @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id])
 
-  // Perbaikan 1: Index biar kencang
   @@index([bundleId])
   @@index([productId])
 }
@@ -200,4 +192,24 @@ model PromoBanner {
   updatedAt DateTime @updatedAt
 
   @@index([isActive])
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  SHIPPED
+  COMPLETED
+  CANCELLED
+  EXPIRED
+}
+
+enum BundleType {
+  BUNDLING
+  PARSEL
 }

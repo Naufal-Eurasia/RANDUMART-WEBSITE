@@ -28,8 +28,8 @@ export function mapPrismaProduct(p: any): Product {
     benefits: [],        // ponytail: add benefits column when product detail uses DB
     ingredients: '',     // ponytail: add to schema when needed
     usage: '',
-    bpom: '',
-    halal: false,
+    bpom: p.bpomNo ?? '',
+    halal: !!p.halalMui,
     stock: p.stock ?? 0,
     tags: p.tags ?? [],
     badges: deriveBadges(p),
