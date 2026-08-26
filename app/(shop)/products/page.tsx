@@ -114,6 +114,9 @@ function ProductsContent() {
               className={cn('flex items-center justify-between w-full text-left px-3 py-2 rounded-xl text-sm transition-colors', category === c.slug ? 'bg-primary text-white font-semibold' : 'hover:bg-muted')}
             >
               <span>{c.emoji} {c.name}</span>
+              <span className={cn('text-xs tabular-nums', category === c.slug ? 'text-white/70' : 'text-muted-foreground')}>
+                {c.productCount}
+              </span>
             </button>
           ))}
         </div>
