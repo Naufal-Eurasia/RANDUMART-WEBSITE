@@ -1,0 +1,216 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  User              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Bundle {
+  id          String       @id
+  name        String
+  createdAt   DateTime     @default(now())
+  description String?
+  details     String?
+  imageUrl    String?
+  price       Decimal      @db.Decimal(12, 2)
+  type        BundleType   @default(BUNDLING)
+  updatedAt   DateTime
+  BundleItem  BundleItem[]
+}
+
+model BundleItem {
+  id        String  @id
+  bundleId  String
+  productId String
+  quantity  Int     @default(1)
+  Bundle    Bundle  @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+  Product   Product @relation(fields: [productId], references: [id])
+
+  @@index([bundleId])
+  @@index([productId])
+}
+
+model CartItem {
+  id        String   @id
+  userId    String
+  productId String
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  Product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@index([productId])
+  @@index([userId])
+}
+
+model Category {
+  id      String    @id
+  name    String
+  slug    String    @unique
+  emoji   String?
+  Product Product[]
+}
+
+model Order {
+  id                    String      @id
+  userId                String?
+  guestName             String?
+  guestEmail            String?
+  guestPhone            String?
+  shippingAddress       String
+  status                OrderStatus @default(PENDING)
+  totalAmount           Decimal     @db.Decimal(12, 2)
+  shippingCost          Decimal     @default(0) @db.Decimal(12, 2)
+  midtransOrderId       String      @unique
+  midtransTransactionId String?
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime
+  User                  User?       @relation(fields: [userId], references: [id])
+  OrderItem             OrderItem[]
+
+  @@index([userId])
+}
+
+model OrderItem {
+  id              String  @id
+  orderId         String
+  productId       String
+  quantity        Int
+  priceAtPurchase Decimal @db.Decimal(12, 2)
+  Order           Order   @relation(fields: [orderId], references: [id])
+  Product         Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model Product {
+  id            String         @id
+  name          String
+  slug          String         @unique
+  description   String
+  price         Decimal        @db.Decimal(12, 2)
+  stock         Int
+  isPublished   Boolean        @default(true)
+  categoryId    String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime
+  discount      Int?
+  isBestSeller  Boolean        @default(false)
+  isNew         Boolean        @default(false)
+  originalPrice Decimal?       @db.Decimal(12, 2)
+  rating        Float          @default(0)
+  reviewCount   Int            @default(0)
+  tags          String[]
+  bpomNo        String?
+  halalMui      String?
+  BundleItem    BundleItem[]
+  CartItem      CartItem[]
+  OrderItem     OrderItem[]
+  Category      Category       @relation(fields: [categoryId], references: [id])
+  ProductImage  ProductImage[]
+  WishlistItem  WishlistItem[]
+
+  @@index([categoryId])
+}
+
+model ProductImage {
+  id        String  @id
+  productId String
+  url       String
+  isPrimary Boolean @default(false)
+  Product   Product @relation(fields: [productId], references: [id])
+
+  @@index([productId])
+}
+
+model PromoBanner {
+  id        String   @id
+  title     String
+  imageUrl  String
+  linkUrl   String?
+  position  Int?
+  isActive  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
+  @@index([isActive])
+}
+
+model StoreSetting {
+  id             String   @id @default("singleton")
+  whatsappNumber String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime
+}
+
+model User {
+  id            String         @id
+  name          String
+  email         String         @unique
+  password      String?
+  role          Role           @default(CUSTOMER)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime
+  emailVerified DateTime?
+  image         String?
+  Account       Account[]
+  CartItem      CartItem[]
+  Order         Order[]
+  WishlistItem  WishlistItem[]
+}
+
+model WishlistItem {
+  id        String   @id
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+  Product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@index([productId])
+  @@index([userId])
+}
+
+enum BundleType {
+  BUNDLING
+  PARSEL
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  SHIPPED
+  COMPLETED
+  CANCELLED
+  EXPIRED
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
