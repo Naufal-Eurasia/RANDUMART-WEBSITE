@@ -8,7 +8,6 @@ interface DbCategory {
   id: string;
   slug: string;
   name: string;
-  emoji: string;
   productCount: number;
 }
 
@@ -26,7 +25,6 @@ export function useCategories() {
           id: c.id,
           slug: c.slug,
           name: c.name,
-          emoji: c.emoji,
           productCount: c.productCount,
           description: `Koleksi ${c.name} pilihan terbaik untuk kebutuhan Anda.`,
           ...getCategoryVisual(i),

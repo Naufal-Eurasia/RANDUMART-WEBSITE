@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Star, Heart, ShoppingBag, Minus, Plus, ShieldCheck, BadgeCheck, Truck, RotateCcw, ChevronRight, ZoomIn, Check } from 'lucide-react';
+import { Star, Heart, ShoppingBag, Minus, Plus, ShieldCheck, BadgeCheck, Truck, ChevronRight, ZoomIn, Check } from 'lucide-react';
 import { formatRupiah } from '@/lib/categories';
 import { useStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
@@ -54,7 +54,7 @@ export default function ProductDetailClient({ product, related }: { product: any
           {images.length > 1 && (
             <div className="flex gap-2 overflow-x-auto no-scrollbar">
               {images.map((img: string, i: number) => (
-                <button key={i} onClick={() => setActiveImg(i)} className={cn('relative shrink-0 w-20 h-20 rounded-2xl overflow-hidden border-2 transition-colors', activeImg === i ? 'border-brand-emerald' : 'border-border')}>
+                <button key={i} onClick={() => setActiveImg(i)} className={cn('relative shrink-0 w-20 h-20 rounded-2xl overflow-hidden border-2 transition-colors', activeImg === i ? 'border-brand-green' : 'border-border')}>
                   <Image src={img} alt={`Thumbnail ${i + 1}`} fill className="object-contain bg-[#FBF8F2]" />
                 </button>
               ))}
@@ -78,22 +78,22 @@ export default function ProductDetailClient({ product, related }: { product: any
               </div>
               <span className="text-muted-foreground text-sm">({product.reviewCount} ulasan)</span>
               <span className="w-1 h-1 rounded-full bg-border"></span>
-              <span className="text-sm font-medium text-brand-emerald">Terjual {product.reviewCount * 3}+</span>
+              <span className="text-sm font-medium text-brand-green">Terjual {product.reviewCount * 3}+</span>
             </div>
           </div>
 
           <div className="flex items-end gap-3">
-            <span className="font-display text-3xl font-bold text-brand-emerald">{formatRupiah(product.price)}</span>
+            <span className="font-display text-3xl font-bold text-brand-green">{formatRupiah(product.price)}</span>
             {product.originalPrice && <span className="text-lg text-muted-foreground line-through mb-1">{formatRupiah(product.originalPrice)}</span>}
           </div>
 
           <p className="text-muted-foreground leading-relaxed">{product.description}</p>
 
-          <div className="grid grid-cols-2 gap-3 py-4 border-y border-border/60">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 py-4 border-y border-border/60">
             <div className="flex items-center gap-3"><div className="grid place-items-center w-10 h-10 rounded-full bg-primary/10 text-primary"><ShieldCheck className="w-5 h-5" /></div><span className="text-sm font-medium">Garansi 100% Original</span></div>
-            <div className="flex items-center gap-3"><div className="grid place-items-center w-10 h-10 rounded-full bg-primary/10 text-primary"><BadgeCheck className="w-5 h-5" /></div><span className="text-sm font-medium">BPOM Certified</span></div>
+            {product.bpom && <div className="flex items-center gap-3"><div className="grid place-items-center w-10 h-10 rounded-full bg-primary/10 text-primary"><BadgeCheck className="w-5 h-5" /></div><span className="text-sm font-medium">BPOM {product.bpom}</span></div>}
+            {product.halal && <div className="flex items-center gap-3"><div className="grid place-items-center w-10 h-10 rounded-full bg-primary/10 text-primary"><ShieldCheck className="w-5 h-5" /></div><span className="text-sm font-medium">Halal MUI</span></div>}
             <div className="flex items-center gap-3"><div className="grid place-items-center w-10 h-10 rounded-full bg-primary/10 text-primary"><Truck className="w-5 h-5" /></div><span className="text-sm font-medium">Pengiriman Aman</span></div>
-            <div className="flex items-center gap-3"><div className="grid place-items-center w-10 h-10 rounded-full bg-primary/10 text-primary"><RotateCcw className="w-5 h-5" /></div><span className="text-sm font-medium">Retur Mudah 7 Hari</span></div>
           </div>
 
           <div className="space-y-4 pt-2">

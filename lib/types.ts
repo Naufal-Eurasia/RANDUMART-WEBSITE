@@ -4,7 +4,6 @@ export interface Category {
   id: string;
   slug: string;
   name: string;
-  emoji: string;
   description: string;
   productCount: number;
   image: string;
@@ -76,7 +75,6 @@ export interface Testimonial {
 export interface Concern {
   slug: string;
   name: string;
-  emoji: string;
   color: string;
   image: string;
 }

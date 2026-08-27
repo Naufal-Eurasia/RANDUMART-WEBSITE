@@ -35,7 +35,7 @@ export function FloatingActions() {
       <button
         onClick={() => setCartOpen(true)}
         aria-label="Cart"
-        className="lg:hidden grid place-items-center w-12 h-12 rounded-full bg-brand-emerald text-white shadow-premium hover:scale-110 transition-transform relative"
+        className="lg:hidden grid place-items-center w-12 h-12 rounded-full bg-brand-green text-white shadow-premium hover:scale-110 transition-transform relative"
       >
         <ShoppingBag className="w-6 h-6" />
         {mounted && cartCount() > 0 && (
@@ -54,7 +54,7 @@ export function FloatingActions() {
             exit={{ opacity: 0, scale: 0.5 }}
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             aria-label="Back to top"
-            className="grid place-items-center w-12 h-12 rounded-full bg-white text-brand-emerald shadow-premium border border-border hover:bg-muted transition-colors"
+            className="grid place-items-center w-12 h-12 rounded-full bg-white text-brand-green shadow-premium border border-border hover:bg-muted transition-colors"
           >
             <ArrowUp className="w-5 h-5" />
           </motion.button>

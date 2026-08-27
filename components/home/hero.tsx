@@ -9,25 +9,25 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Leaf, ShieldCheck, Truck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 const slides = [
   {
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=2000&auto=format&fit=crop',
-    eyebrow: 'Herbal Alami',
-    title: 'Hidup Sehat Dimulai dari Produk Alami Berkualitas',
-    subtitle: 'Temukan berbagai produk herbal, skincare, beauty, personal care, hingga kebutuhan keluarga di Randumart Herbal.',
+    image: '/images/hero/hero-toko.jpg',
+    alt: 'Toko Randumart Herbal & Souvenir Umrah di Jl. Randu Asri, Sidoarjo',
+    // toko ada di kiri foto, digeser ke kanan supaya tidak tertutup teks
+    position: 'object-[70%_center]',
+    eyebrow: 'Toko Fisik Sidoarjo',
+    title: 'Herbal & Souvenir Umrah, Langsung dari Toko Kami',
+    subtitle: 'Jl. Randu Asri Blok F1 No.27, Sidoarjo. Herbal, kurma, sajadah, hingga fashion muslim.',
   },
   {
-    image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=2000&auto=format&fit=crop',
-    eyebrow: 'Beauty & Skincare',
-    title: 'Wajah Cerah, Kulit Sehat, Tampil Percaya Diri',
-    subtitle: 'Rangkaian skincare premium dengan bahan alami teruji dermatologis untuk semua jenis kulit.',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=2000&auto=format&fit=crop',
-    eyebrow: 'Keluarga Sehat',
-    title: 'Perawatan Aman untuk Si Kecil dan Seluruh Keluarga',
-    subtitle: 'Produk lembut, halal, dan BPOM terdaftar untuk kesehatan dan kebahagiaan keluarga.',
+    image: '/images/hero/hero-parsel.jpg',
+    alt: 'Rangkaian parsel dan hampers Randumart',
+    position: 'object-center',
+    eyebrow: 'Parsel & Hampers',
+    title: 'Parsel Rapi untuk Momen Spesial',
+    subtitle: 'Hampers isi pilihan, dirangkai dan dikirim langsung dari toko.',
   },
 ];
 
@@ -36,9 +36,13 @@ export function Hero() {
     <section className="relative -mt-16 lg:-mt-20">
       <Swiper
         modules={[Autoplay, Pagination, EffectFade]}
+        // EffectFade terdaftar tapi prop effect tidak pernah diset, jadi slide lama
+        // menumpuk di atas slide baru (dua-duanya opacity 1) dan slide 2 tak pernah terlihat
+        effect="fade"
+        fadeEffect={{ crossFade: true }}
         autoplay={{ delay: 5500, disableOnInteraction: false }}
         pagination={{ clickable: true }}
-        loop
+        rewind
         speed={900}
         className="h-[100svh] min-h-[600px]"
       >
@@ -46,9 +50,15 @@ export function Hero() {
           <SwiperSlide key={i}>
             <div className="relative h-full w-full">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={s.image} alt={s.eyebrow} className="absolute inset-0 w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/70 via-emerald-900/40 to-emerald-950/60" />
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/70 via-transparent to-transparent" />
+              <img
+                src={s.image}
+                alt={s.alt}
+                fetchPriority={i === 0 ? 'high' : 'low'}
+                loading={i === 0 ? 'eager' : 'lazy'}
+                className={cn('absolute inset-0 w-full h-full object-cover', s.position)}
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/60" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
 
               <div className="relative h-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center">
                 <motion.div
@@ -60,13 +70,13 @@ export function Hero() {
                   <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-dark text-sm font-medium mb-5">
                     <Leaf className="w-4 h-4 text-brand-gold" /> {s.eyebrow}
                   </span>
-                  <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] text-balance">
+                  <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-[-0.02em] text-balance [text-shadow:0_2px_16px_rgba(0,0,0,0.55)]">
                     {s.title}
                   </h1>
-                  <p className="mt-5 text-base sm:text-lg text-white/85 max-w-xl">{s.subtitle}</p>
+                  <p className="mt-5 text-base sm:text-lg text-white/90 max-w-xl [text-shadow:0_1px_8px_rgba(0,0,0,0.5)]">{s.subtitle}</p>
                   <div className="mt-8 flex flex-wrap gap-3">
                     <Link href="/products">
-                      <Button size="lg" className="rounded-full bg-brand-emerald hover:bg-emerald-700 text-white px-7 h-12 text-base">
+                      <Button size="lg" className="rounded-full bg-brand-green hover:bg-brand-greenHover text-white px-7 h-12 text-base">
                         Belanja Sekarang <ArrowRight className="w-5 h-5 ml-1" />
                       </Button>
                     </Link>
@@ -94,7 +104,7 @@ export function Hero() {
               { icon: ShieldCheck, title: 'Pembayaran Aman', desc: '100% terpercaya' },
             ].map((t, i) => (
               <div key={i} className="flex items-center gap-3">
-                <div className="grid place-items-center w-11 h-11 rounded-2xl bg-brand-gold/15 text-brand-gold shrink-0">
+                <div className="grid place-items-center w-11 h-11 rounded-2xl bg-brand-gold/20 text-brand-gold shrink-0">
                   <t.icon className="w-5 h-5" />
                 </div>
                 <div>

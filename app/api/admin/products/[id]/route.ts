@@ -24,9 +24,9 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   try {
     const body = await req.json();
     const {
-      name, slug, description, price, originalPrice, discount, 
+      name, slug, description, price, originalPrice, discount,
       stock, categoryId, isBestSeller, isNew, tags, isPublished,
-      rating, reviewCount, imageUrls
+      rating, reviewCount, imageUrls, halalMui, bpomNo
     } = body;
 
     const existing = await prisma.product.findFirst({ 
@@ -62,6 +62,8 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
         isNew: Boolean(isNew),
         tags: Array.isArray(tags) ? tags : [],
         isPublished: Boolean(isPublished),
+        halalMui: halalMui?.trim() || null,
+        bpomNo: bpomNo?.trim() || null,
         rating: rating !== undefined ? Number(rating) : 0,
         reviewCount: reviewCount !== undefined ? Number(reviewCount) : 0,
       }
@@ -83,8 +85,21 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
     });
 
     if (orderItemsCount > 0) {
-      return NextResponse.json({ 
-        message: "Produk ini punya riwayat transaksi, gunakan 'Nonaktifkan' alih-alih hapus" 
+      return NextResponse.json({
+        message: "Produk ini punya riwayat transaksi, gunakan 'Nonaktifkan' alih-alih hapus"
+      }, { status: 400 });
+    }
+
+    // FK BundleItem.product = Restrict, jadi delete akan gagal jadi 500 mentah tanpa cek ini
+    const bundleItems = await prisma.bundleItem.findMany({
+      where: { productId: params.id },
+      select: { bundle: { select: { name: true } } },
+    });
+
+    if (bundleItems.length > 0) {
+      const names = [...new Set(bundleItems.map((b) => b.bundle.name))].join(', ');
+      return NextResponse.json({
+        message: `Produk ini bagian dari bundle: ${names}. Keluarkan dari bundle dulu sebelum menghapus.`
       }, { status: 400 });
     }
 

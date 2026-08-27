@@ -12,7 +12,7 @@ export function BlogSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between mb-10 gap-4">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <span className="inline-block px-4 py-1.5 rounded-full bg-secondary/20 text-secondary-foreground text-sm font-semibold mb-3">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-secondary/20 text-brand-blue text-sm font-semibold mb-3">
               Artikel & Tips
             </span>
             <h2 className="font-display text-3xl sm:text-4xl font-bold">Edukasi Kesehatan</h2>
@@ -44,7 +44,7 @@ export function BlogSection() {
                     <span>{new Date(post.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                     <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" /> {post.readTime}</span>
                   </div>
-                  <h3 className="font-display font-semibold text-base leading-snug line-clamp-2 group-hover:text-brand-emerald transition-colors">{post.title}</h3>
+                  <h3 className="font-display font-semibold text-base leading-snug line-clamp-2 group-hover:text-brand-green transition-colors">{post.title}</h3>
                   <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{post.excerpt}</p>
                   <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary">Baca selengkapnya <ArrowRight className="w-3.5 h-3.5" /></span>
                 </div>

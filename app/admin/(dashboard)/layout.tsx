@@ -38,8 +38,8 @@ function SidebarNav({ pathname, onNavigate }: { pathname: string; onNavigate?: (
             onClick={onNavigate}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
               isActive
-                ? 'bg-[#B8791F] text-white'
-                : 'text-[#E7DCC3]/80 hover:bg-white/10 hover:text-[#E7DCC3]'
+                ? 'bg-white/10 text-brand-cream'
+                : 'text-brand-cream/80 hover:bg-white/10 hover:text-brand-cream'
             }`}
           >
             <Icon className="w-4 h-4" />
@@ -79,7 +79,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (status === 'loading') {
-    return <div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-[#28331F] border-t-transparent rounded-full animate-spin" /></div>;
+    return <div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-brand-green border-t-transparent rounded-full animate-spin" /></div>;
   }
 
   if (!session || (session.user as any).role !== 'ADMIN') {
@@ -89,9 +89,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-muted/30 flex">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex w-64 bg-[#28331F] fixed inset-y-0 left-0 z-10 flex-col">
+      <aside className="hidden lg:flex w-64 bg-brand-green fixed inset-y-0 left-0 z-10 flex-col">
         <div className="h-16 flex items-center px-6 border-b border-white/10">
-          <Link href="/" className="font-display font-bold text-xl text-[#E7DCC3]">
+          <Link href="/" className="font-display font-bold text-xl text-brand-cream">
             SR12 Admin
           </Link>
         </div>
@@ -103,9 +103,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
       {/* Mobile Sidebar */}
       <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-        <SheetContent side="left" className="w-64 p-0 bg-[#28331F] border-r-0">
+        <SheetContent side="left" className="w-64 p-0 bg-brand-green border-r-0">
           <SheetHeader className="h-16 flex items-center px-6 border-b border-white/10">
-            <SheetTitle className="font-display font-bold text-xl text-[#E7DCC3]">SR12 Admin</SheetTitle>
+            <SheetTitle className="font-display font-bold text-xl text-brand-cream">SR12 Admin</SheetTitle>
           </SheetHeader>
           <SidebarNav pathname={pathname} onNavigate={() => setSidebarOpen(false)} />
           <div className="p-4 border-t border-white/10">
@@ -129,7 +129,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-2 text-sm font-medium hover:bg-muted px-3 py-1.5 rounded-lg transition-colors">
-              <div className="w-7 h-7 rounded-full bg-[#28331F] text-[#E7DCC3] flex items-center justify-center text-xs font-bold">
+              <div className="w-7 h-7 rounded-full bg-brand-green text-brand-cream flex items-center justify-center text-xs font-bold">
                 {session.user.name?.charAt(0)?.toUpperCase() || 'A'}
               </div>
               <span className="hidden sm:inline">{session.user.name}</span>

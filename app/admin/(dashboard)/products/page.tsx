@@ -8,9 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
-import { Loader2, Plus, Edit2, Trash2, PowerOff, Image as ImageIcon, X, Search, Filter, Eye } from 'lucide-react';
-import Link from 'next/link';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Loader2, Plus, Edit2, Trash2, PowerOff, Image as ImageIcon, X, Search, Filter, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { formatRupiah } from '@/lib/categories';
 import { Badge } from '@/components/ui/badge';
@@ -30,10 +29,20 @@ export default function ProductsAdminPage() {
   const [submitting, setSubmitting] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [prodToDelete, setProdToDelete] = useState<any>(null);
+  // ponytail: detail modal pakai objek produk dari state list, bukan fetch ulang —
+  // GET /api/admin/products sudah include category+images tanpa `select`, jadi semua
+  // field yang ditampilkan di sini sudah ada di memori. Kalau admin jadi multi-user
+  // dan data basi bikin masalah, ganti ke fetch on-demand per produk.
+  // Simpan INDEX ke filteredProducts, bukan objek produknya — supaya panah
+  // prev/next mengikuti urutan yang sedang terlihat dan tetap benar saat
+  // pencarian/filter berubah.
+  const [detailIdx, setDetailIdx] = useState<number | null>(null);
+  const [detailImgIdx, setDetailImgIdx] = useState(0);
 
   const [formData, setFormData] = useState<any>({
     id: '', name: '', slug: '', description: '', price: '', originalPrice: '', discount: '',
-    stock: '', categoryId: '', isBestSeller: false, isNew: false, isPublished: true, tagsStr: ''
+    stock: '', categoryId: '', isBestSeller: false, isNew: false, isPublished: true, tagsStr: '',
+    halalMui: '', bpomNo: ''
   });
 
   const [imageFiles, setImageFiles] = useState<File[]>([]);
@@ -77,7 +86,8 @@ export default function ProductsAdminPage() {
       price: String(Math.round(Number(p.price))),
       originalPrice: p.originalPrice ? String(Math.round(Number(p.originalPrice))) : '',
       discount: p.discount || '',
-      stock: p.stock, categoryId: p.categoryId, isBestSeller: p.isBestSeller, isNew: p.isNew, isPublished: p.isPublished, tagsStr: p.tags?.join(', ') || ''
+      stock: p.stock, categoryId: p.categoryId, isBestSeller: p.isBestSeller, isNew: p.isNew, isPublished: p.isPublished, tagsStr: p.tags?.join(', ') || '',
+      halalMui: p.halalMui || '', bpomNo: p.bpomNo || ''
     });
     setImageFiles([]);
     setUploadedImages(p.images || []);
@@ -140,7 +150,9 @@ export default function ProductsAdminPage() {
         isNew: formData.isNew,
         isPublished: formData.isPublished,
         tags: tagsArray,
-        imageUrls: allImgUrls
+        imageUrls: allImgUrls,
+        halalMui: formData.halalMui?.trim() || null,
+        bpomNo: formData.bpomNo?.trim() || null,
       };
 
       const url = modalMode === 'edit' ? `/api/admin/products/${formData.id}` : '/api/admin/products';
@@ -194,11 +206,22 @@ export default function ProductsAdminPage() {
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
+  // Produk yang sedang dibuka di modal detail. Bisa undefined kalau daftar
+  // menyusut saat modal terbuka (produk dihapus / filter berubah) — modal
+  // menutup sendiri lewat `open={...}` di bawah, jangan render isi yang null.
+  const detailProduct = detailIdx === null ? null : filteredProducts[detailIdx] ?? null;
+
+  const gotoDetail = (idx: number) => {
+    if (idx < 0 || idx >= filteredProducts.length) return;
+    setDetailImgIdx(0); // galeri produk baru selalu mulai dari gambar pertama
+    setDetailIdx(idx);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 className="text-2xl font-display font-bold">Data Produk</h1>
-        <Button onClick={openCreateModal} className="bg-[#28331F] hover:bg-[#28331F]/90 text-[#E7DCC3] rounded-xl shadow-sm">
+        <Button onClick={openCreateModal} className="bg-brand-green hover:bg-brand-greenHover text-brand-cream rounded-xl shadow-sm">
           <Plus className="w-4 h-4 mr-2" /> Tambah Produk
         </Button>
       </div>
@@ -248,17 +271,17 @@ export default function ProductsAdminPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60">
-              {loading ? <tr><td colSpan={5} className="px-6 py-12 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-[#B8791F]" /></td></tr> :
+              {loading ? <tr><td colSpan={5} className="px-6 py-12 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-brand-green" /></td></tr> :
                 filteredProducts.length === 0 ? <tr><td colSpan={5} className="px-6 py-12 text-center text-muted-foreground">Tidak ada produk ditemukan</td></tr> :
-                filteredProducts.map(p => (
+                filteredProducts.map((p, i) => (
                   <tr key={p.id} className="hover:bg-muted/30 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         {p.images?.[0] ? <Image src={p.images[0].url} alt={p.name} width={40} height={40} className="w-10 h-10 rounded-lg object-contain bg-[#FBF8F2] border border-border/50" /> : <div className="w-10 h-10 bg-muted rounded-lg border border-border/50 flex items-center justify-center"><ImageIcon className="w-4 h-4 text-muted-foreground/50"/></div>}
                         <div>
-                          <p className="font-semibold text-[#28331F] flex items-center gap-2">
+                          <p className="font-semibold text-brand-green flex items-center gap-2">
                             {p.name}
-                            {p.isBestSeller && <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4 bg-[#B8791F]/10 text-[#B8791F]">Best</Badge>}
+                            {p.isBestSeller && <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4 bg-brand-gold/20 text-brand-green">Best</Badge>}
                           </p>
                           <p className="text-xs text-muted-foreground">{p.category?.name}</p>
                         </div>
@@ -266,8 +289,8 @@ export default function ProductsAdminPage() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
-                        <span className="font-medium text-[#28331F]">{formatRupiah(Number(p.price))}</span>
-                        {p.originalPrice && p.originalPrice > p.price && (
+                        <span className="font-medium text-brand-green">{formatRupiah(Number(p.price))}</span>
+                        {p.originalPrice && Number(p.originalPrice) > Number(p.price) && (
                           <div className="flex items-center gap-1.5 mt-0.5">
                             <span className="text-[10px] text-muted-foreground line-through">{formatRupiah(Number(p.originalPrice))}</span>
                             <span className="text-[10px] bg-red-100 text-red-700 px-1 rounded font-bold">{p.discount}%</span>
@@ -285,7 +308,7 @@ export default function ProductsAdminPage() {
                       </Badge>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${p.isPublished ? 'bg-[#E7DCC3] text-[#28331F]' : 'bg-gray-100 text-gray-500'}`}>
+                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${p.isPublished ? 'bg-brand-cream text-brand-green' : 'bg-gray-100 text-gray-500'}`}>
                         {p.isPublished ? 'AKTIF' : 'NONAKTIF'}
                       </span>
                     </td>
@@ -294,10 +317,8 @@ export default function ProductsAdminPage() {
                         <Button variant="outline" size="sm" onClick={() => handleTogglePublish(p)} disabled={submitting} title={p.isPublished ? 'Nonaktifkan' : 'Aktifkan'} className="h-8 w-8 p-0 rounded-lg">
                           <PowerOff className={`w-3.5 h-3.5 ${p.isPublished ? 'text-amber-600' : 'text-emerald-600'}`} />
                         </Button>
-                        <Button asChild variant="outline" size="sm" className="h-8 w-8 p-0 rounded-lg text-[#28331F] hover:bg-[#E7DCC3]/50 border-border/50" title="Lihat Detail">
-                          <Link href={`/admin/products/${p.id}`}>
-                            <Eye className="w-3.5 h-3.5" />
-                          </Link>
+                        <Button variant="outline" size="sm" onClick={() => gotoDetail(i)} className="h-8 w-8 p-0 rounded-lg text-brand-green hover:bg-brand-cream/50 border-border/50" title="Lihat Detail">
+                          <Eye className="w-3.5 h-3.5" />
                         </Button>
                         <Button variant="outline" size="sm" onClick={() => openEditModal(p)} className="h-8 w-8 p-0 rounded-lg text-blue-600 hover:text-blue-700 hover:bg-blue-50 border-blue-200">
                           <Edit2 className="w-3.5 h-3.5" />
@@ -333,7 +354,7 @@ export default function ProductsAdminPage() {
                 <Label>Harga Coret</Label>
                 <Input type="number" min="0" step="1" value={formData.originalPrice} onChange={e => setFormData({...formData, originalPrice: e.target.value})} placeholder="Opsional" />
                 {previewDiscount > 0 && (
-                  <p className="text-[10px] text-[#B8791F] font-medium mt-1">
+                  <p className="text-[10px] text-brand-green font-medium mt-1">
                     Diskon {previewDiscount}% (Tampil: {formatRupiah(Number(formData.price))} <span className="line-through opacity-60">{formatRupiah(Number(formData.originalPrice))}</span>)
                   </p>
                 )}
@@ -350,6 +371,11 @@ export default function ProductsAdminPage() {
                 </select>
               </div>
               <div className="space-y-2"><Label>Tags (pisahkan koma)</Label><Input value={formData.tagsStr} onChange={e => setFormData({...formData, tagsStr: e.target.value})} placeholder="jerawat, sensitif" /></div>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="space-y-2"><Label>No. Halal MUI</Label><Input value={formData.halalMui} onChange={e => setFormData({...formData, halalMui: e.target.value})} placeholder="ID00410012345678" /></div>
+              <div className="space-y-2"><Label>No. BPOM</Label><Input value={formData.bpomNo} onChange={e => setFormData({...formData, bpomNo: e.target.value})} placeholder="NA18201400123" /></div>
             </div>
 
             <div className="flex gap-6 bg-gray-50 p-4 rounded-xl border border-border/50">
@@ -383,11 +409,166 @@ export default function ProductsAdminPage() {
 
             <DialogFooter className="pt-4 border-t border-border/50">
               <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)}>Batal</Button>
-              <Button type="submit" disabled={submitting} className="bg-[#28331F] text-[#E7DCC3] hover:bg-[#28331F]/90 rounded-xl px-6">
+              <Button type="submit" disabled={submitting} className="bg-brand-green text-brand-cream hover:bg-brand-greenHover rounded-xl px-6">
                 {submitting ? <Loader2 className="animate-spin w-4 h-4 mr-2" /> : null}Simpan Produk
               </Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal Detail Produk (read-only) */}
+      <Dialog open={!!detailProduct} onOpenChange={(v) => !v && setDetailIdx(null)}>
+        <DialogContent
+          className="max-w-3xl max-h-[90vh] overflow-y-auto rounded-3xl"
+          onKeyDown={(e) => {
+            if (detailIdx === null) return;
+            if (e.key === 'ArrowRight') gotoDetail(detailIdx + 1);
+            if (e.key === 'ArrowLeft') gotoDetail(detailIdx - 1);
+          }}
+        >
+          <DialogHeader className="pr-10">
+            <div className="flex items-center justify-between gap-4">
+              <DialogTitle className="font-display text-xl">Detail Produk</DialogTitle>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => detailIdx !== null && gotoDetail(detailIdx - 1)}
+                  disabled={detailIdx === null || detailIdx === 0}
+                  className="h-8 w-8 p-0 rounded-lg"
+                  title="Produk sebelumnya (panah kiri)"
+                  aria-label="Produk sebelumnya"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </Button>
+                <span className="text-xs text-muted-foreground tabular-nums min-w-[56px] text-center">
+                  {(detailIdx ?? 0) + 1} / {filteredProducts.length}
+                </span>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => detailIdx !== null && gotoDetail(detailIdx + 1)}
+                  disabled={detailIdx === null || detailIdx >= filteredProducts.length - 1}
+                  className="h-8 w-8 p-0 rounded-lg"
+                  title="Produk berikutnya (panah kanan)"
+                  aria-label="Produk berikutnya"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+            <DialogDescription className="text-left">Tampilan hanya-baca. Untuk mengubah, tutup lalu pakai tombol Edit.</DialogDescription>
+          </DialogHeader>
+
+          {detailProduct && (() => {
+            // Primary di depan, sisanya menyusul — thumbnail mengganti gambar utama via index.
+            const raw = detailProduct.images || [];
+            const imgs = [...raw].sort((a: any, b: any) => Number(!!b.isPrimary) - Number(!!a.isPrimary));
+            const activeImage = imgs[detailImgIdx]?.url || imgs[0]?.url || '/placeholder.jpg';
+            const hasDiscount =
+              detailProduct.originalPrice &&
+              Number(detailProduct.originalPrice) > Number(detailProduct.price);
+
+            return (
+              <div className="grid md:grid-cols-2 gap-6 py-2">
+                {/* Galeri */}
+                <div className="space-y-3">
+                  <div className="relative h-56 md:h-64 rounded-2xl overflow-hidden bg-white border border-border/50">
+                    <Image src={activeImage} alt={detailProduct.name} fill sizes="(max-width: 768px) 100vw, 384px" className="object-contain bg-brand-cream" />
+                  </div>
+                  {imgs.length > 1 && (
+                    <div className="flex gap-2 overflow-x-auto pb-1">
+                      {imgs.map((img: any, i: number) => (
+                        <button
+                          key={img.id}
+                          type="button"
+                          onClick={() => setDetailImgIdx(i)}
+                          aria-label={`Lihat gambar ${i + 1}`}
+                          className={`relative w-16 h-16 rounded-xl overflow-hidden bg-white border-2 shrink-0 transition-colors ${i === detailImgIdx ? 'border-brand-green' : 'border-border/50 hover:border-brand-green/40'}`}
+                        >
+                          <Image src={img.url} alt="" fill sizes="64px" className="object-contain bg-brand-cream" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Info */}
+                <div className="space-y-5">
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-white">{detailProduct.category?.name || 'Tanpa kategori'}</Badge>
+                      {detailProduct.isPublished ? (
+                        <Badge className="bg-brand-green text-brand-cream hover:bg-brand-green">Aktif</Badge>
+                      ) : (
+                        <Badge variant="secondary">Nonaktif</Badge>
+                      )}
+                    </div>
+                    <h2 className="text-2xl font-display font-bold text-brand-green">{detailProduct.name}</h2>
+                    <p className="text-xs text-muted-foreground mt-1">Slug: {detailProduct.slug}</p>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-white border border-border/50">
+                    <p className="text-sm text-muted-foreground mb-1">Harga Final</p>
+                    <div className="flex items-end gap-3 flex-wrap">
+                      <span className="text-2xl font-bold text-brand-green">{formatRupiah(Number(detailProduct.price))}</span>
+                      {hasDiscount && (
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-sm line-through text-muted-foreground">{formatRupiah(Number(detailProduct.originalPrice))}</span>
+                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-brand-red/10 text-brand-red">-{detailProduct.discount}%</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="p-4 rounded-2xl bg-white border border-border/50">
+                      <p className="text-sm text-muted-foreground mb-1">Stok</p>
+                      <p className={`text-xl font-bold ${detailProduct.stock === 0 ? 'text-brand-red' : 'text-brand-green'}`}>
+                        {detailProduct.stock}{detailProduct.stock === 0 && ' (Habis)'}
+                      </p>
+                    </div>
+                    <div className="p-4 rounded-2xl bg-white border border-border/50">
+                      <p className="text-sm text-muted-foreground mb-1">Rating</p>
+                      <p className="text-sm font-medium text-brand-green">⭐ {detailProduct.rating} ({detailProduct.reviewCount} ulasan)</p>
+                    </div>
+                  </div>
+
+                  {(detailProduct.halalMui || detailProduct.bpomNo) && (
+                    <div className="flex flex-wrap gap-2">
+                      {detailProduct.halalMui && <Badge className="bg-brand-green/10 text-brand-green border-none hover:bg-brand-green/10">Halal MUI: {detailProduct.halalMui}</Badge>}
+                      {detailProduct.bpomNo && <Badge className="bg-brand-blue/10 text-brand-blue border-none hover:bg-brand-blue/10">BPOM: {detailProduct.bpomNo}</Badge>}
+                    </div>
+                  )}
+
+                  {(detailProduct.isBestSeller || detailProduct.isNew || (detailProduct.tags?.length > 0)) && (
+                    <div className="space-y-2">
+                      <h3 className="font-semibold text-brand-green text-sm">Highlight &amp; Tags</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {detailProduct.isBestSeller && <Badge className="bg-brand-gold/20 text-brand-green border-none hover:bg-brand-gold/20">Best Seller</Badge>}
+                        {detailProduct.isNew && <Badge className="bg-brand-green text-brand-cream border-none hover:bg-brand-green">Produk Baru</Badge>}
+                        {(detailProduct.tags || []).map((t: string) => <Badge key={t} variant="outline" className="bg-white">{t}</Badge>)}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    <h3 className="font-semibold text-brand-green text-sm">Deskripsi</h3>
+                    <div className="p-4 rounded-2xl bg-white border border-border/50 text-sm leading-relaxed text-muted-foreground whitespace-pre-wrap">
+                      {detailProduct.description}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          <DialogFooter className="pt-4 border-t border-border/50">
+            <Button type="button" variant="outline" onClick={() => setDetailIdx(null)} className="rounded-xl">Tutup</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 

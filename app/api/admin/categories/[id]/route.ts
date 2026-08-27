@@ -6,7 +6,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   if (!(await checkAdminAuth())) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   
   try {
-    const { name, slug, emoji } = await req.json();
+    const { name, slug } = await req.json();
     if (!name || !slug) return NextResponse.json({ message: 'Name and slug required' }, { status: 400 });
 
     const existing = await prisma.category.findFirst({ where: { slug, id: { not: params.id } } });
@@ -14,7 +14,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 
     const cat = await prisma.category.update({
       where: { id: params.id },
-      data: { name, slug, emoji }
+      data: { name, slug }
     });
     return NextResponse.json(cat);
   } catch (error) {

@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export function ShopByConcern() {
   return (
-    <section className="py-12 lg:py-16 bg-brand-emerald/5">
+    <section className="py-12 lg:py-16 bg-brand-green/5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -38,7 +38,6 @@ export function ShopByConcern() {
                 <img src={c.image} alt={c.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className={`absolute inset-0 bg-gradient-to-t ${c.color} opacity-80 group-hover:opacity-90 transition-opacity`} />
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center p-3">
-                  <span className="text-3xl mb-1">{c.emoji}</span>
                   <p className="font-display font-semibold text-sm">{c.name}</p>
                 </div>
               </Link>

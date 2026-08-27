@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Heart, ShoppingBag, Menu, X, ChevronDown, User } from 'lucide-react';
 import { navLinks } from '@/lib/categories';
@@ -33,7 +34,7 @@ export function Navbar() {
   return (
     <>
       {/* Promo ribbon */}
-      <div className="bg-gradient-to-r from-brand-emerald via-emerald-600 to-brand-emerald text-white text-xs sm:text-sm py-2 overflow-hidden">
+      <div className="bg-gradient-to-r from-brand-green via-brand-greenHover to-brand-green text-white text-xs sm:text-sm py-2 overflow-hidden">
         <div className="flex whitespace-nowrap animate-marquee">
           {Array.from({ length: 2 }).map((_, i) => (
             <div key={i} className="flex shrink-0">
@@ -56,10 +57,18 @@ export function Navbar() {
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 lg:h-20 items-center justify-between gap-4">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 shrink-0">
+            <Link href="/" className="flex items-center gap-2.5 shrink-0">
+              <Image
+                src="/logo.jpg"
+                alt="Randumart"
+                width={44}
+                height={44}
+                priority
+                className="w-10 h-10 lg:w-11 lg:h-11 rounded-full object-cover"
+              />
               <div className="hidden sm:block leading-none">
                 <div className="font-display font-bold text-lg tracking-tight text-foreground">
-                  <span className="text-brand-emerald">Randum</span>
+                  <span className="text-brand-green">Randu</span>
                   <span className="text-brand-red">mart</span>
                 </div>
                 <div className="text-[10px] uppercase tracking-[0.2em] font-medium text-brand-blue">
@@ -69,7 +78,7 @@ export function Navbar() {
             </Link>
 
             {/* Desktop nav */}
-            <div className="hidden xl:flex items-center gap-0.5">
+            <div className="hidden xl:flex items-center">
               {navLinks.map((link) =>
                 link.mega ? (
                   <div
@@ -80,7 +89,7 @@ export function Navbar() {
                   >
                     <button
                       className={cn(
-                        'inline-flex items-center gap-1 px-2 py-2 text-sm font-medium rounded-lg transition-colors',
+                        'inline-flex items-center gap-1 whitespace-nowrap px-1.5 py-2 text-[13px] font-medium rounded-lg transition-colors',
                         'text-foreground hover:bg-muted'
                       )}
                     >
@@ -109,7 +118,7 @@ export function Navbar() {
                                     <img src={c.image} alt={c.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                   </div>
                                   <div>
-                                    <div className="text-sm font-semibold text-foreground">{c.emoji} {c.name}</div>
+                                    <div className="text-sm font-semibold text-foreground">{c.name}</div>
                                     <div className="text-xs text-muted-foreground">{c.productCount} produk</div>
                                   </div>
                                 </Link>
@@ -125,7 +134,7 @@ export function Navbar() {
                     key={link.label}
                     href={link.href}
                     className={cn(
-                      'px-2 py-2 text-sm font-medium rounded-lg transition-colors',
+                      'whitespace-nowrap px-1.5 py-2 text-[13px] font-medium rounded-lg transition-colors',
                       'text-foreground hover:bg-muted'
                     )}
                   >
@@ -173,7 +182,7 @@ export function Navbar() {
                 {status === 'loading' ? (
                   <div className="w-[150px] h-9 rounded-md bg-muted/20 animate-pulse"></div>
                 ) : status === 'authenticated' ? (
-                  <Button size="sm" className="bg-brand-emerald hover:bg-emerald-700 text-white" asChild>
+                  <Button size="sm" className="bg-brand-green hover:bg-brand-greenHover text-white" asChild>
                     <Link href={session?.user?.role === 'ADMIN' ? '/admin' : '/account'}>
                       <User className="w-4 h-4 mr-1" /> Akun Saya
                     </Link>
@@ -185,7 +194,7 @@ export function Navbar() {
                         <User className="w-4 h-4 mr-1" /> Login
                       </Link>
                     </Button>
-                    <Button size="sm" className="bg-brand-emerald hover:bg-emerald-700 text-white" asChild>
+                    <Button size="sm" className="bg-brand-green hover:bg-brand-greenHover text-white" asChild>
                       <Link href="/register">
                         Register
                       </Link>

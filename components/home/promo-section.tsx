@@ -34,7 +34,7 @@ function Countdown() {
   return (
     <div className="flex items-center gap-1.5">
       {[t.h, t.m, t.s].map((v, i) => (
-        <div key={i} className="grid place-items-center w-12 h-12 rounded-xl bg-white/15 backdrop-blur text-white font-display font-bold text-lg">
+        <div key={i} className="grid place-items-center w-12 h-12 rounded-xl bg-white/20 backdrop-blur text-white font-display font-bold text-lg">
           {pad(v)}
         </div>
       ))}
@@ -44,7 +44,7 @@ function Countdown() {
 
 export function PromoSection({ children }: { children?: React.ReactNode }) {
   return (
-    <section id="promo" className="py-12 lg:py-16 bg-brand-emerald/5">
+    <section id="promo" className="py-12 lg:py-16 bg-brand-green/5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -62,7 +62,7 @@ export function PromoSection({ children }: { children?: React.ReactNode }) {
         {children}
 
         {/* Flash sale banner */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-brand-emerald to-emerald-700 p-8 sm:p-10 mb-8 text-white">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-brand-green to-brand-greenHover p-8 sm:p-10 mb-8 text-white">
           <div className="absolute -right-12 -top-12 w-56 h-56 rounded-full bg-brand-gold/20 blur-3xl" />
           <div className="relative grid lg:grid-cols-2 gap-6 items-center">
             <div>
@@ -73,7 +73,7 @@ export function PromoSection({ children }: { children?: React.ReactNode }) {
               <p className="text-white/80 mb-5">Berakhir dalam:</p>
               <Countdown />
               <Link href="/products" className="inline-block mt-6">
-                <Button className="bg-white text-brand-emerald hover:bg-brand-cream rounded-full px-6">Belanja Sekarang</Button>
+                <Button className="bg-white text-brand-green hover:bg-brand-cream rounded-full px-6">Belanja Sekarang</Button>
               </Link>
             </div>
             <div className="hidden lg:grid grid-cols-2 gap-3">

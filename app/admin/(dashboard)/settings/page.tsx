@@ -85,7 +85,7 @@ export default function SettingsAdminPage() {
               </p>
             </div>
 
-            <Button type="submit" disabled={saving} className="bg-brand-emerald hover:bg-emerald-700 text-white rounded-xl">
+            <Button type="submit" disabled={saving} className="bg-brand-green hover:bg-brand-greenHover text-white rounded-xl">
               {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
               Simpan Pengaturan
             </Button>

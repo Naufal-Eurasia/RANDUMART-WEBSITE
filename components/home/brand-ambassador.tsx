@@ -16,7 +16,7 @@ export function BrandAmbassador() {
           alt=""
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/90 via-emerald-900/70 to-emerald-900/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-greenActive/95 via-brand-green/75 to-brand-green/40" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -76,7 +76,7 @@ export function BrandAmbassador() {
             </div>
 
             <Link href="#" className="inline-block mt-8">
-              <Button className="rounded-full bg-white text-brand-emerald hover:bg-brand-cream px-6">
+              <Button className="rounded-full bg-white text-brand-green hover:bg-brand-cream px-6">
                 Lihat Cerita Selengkapnya
               </Button>
             </Link>

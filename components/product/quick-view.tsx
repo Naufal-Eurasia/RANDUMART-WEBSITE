@@ -53,7 +53,7 @@ export function QuickView({ product, open, onOpenChange }: { product: Product; o
             <h2 className="font-display text-xl sm:text-2xl font-bold leading-tight">{product.name}</h2>
 
             <div className="mt-4 flex items-end gap-2">
-              <span className="font-display text-2xl font-bold text-brand-emerald">{formatRupiah(product.price)}</span>
+              <span className="font-display text-2xl font-bold text-brand-green">{formatRupiah(product.price)}</span>
               {product.originalPrice && <span className="text-sm text-muted-foreground line-through">{formatRupiah(product.originalPrice)}</span>}
             </div>
 
@@ -70,7 +70,7 @@ export function QuickView({ product, open, onOpenChange }: { product: Product; o
               {product.description?.length > MAX_DESC_LENGTH && (
                 <button
                   onClick={() => setIsExpanded(!isExpanded)}
-                  className="mt-1 text-sm font-semibold text-brand-emerald hover:underline focus:outline-none"
+                  className="mt-1 text-sm font-semibold text-brand-green hover:underline focus:outline-none"
                 >
                   {isExpanded ? 'Lihat lebih sedikit ↑' : 'Lihat selengkapnya ↓'}
                 </button>
@@ -83,7 +83,7 @@ export function QuickView({ product, open, onOpenChange }: { product: Product; o
                 <button
                   key={i}
                   onClick={() => setActiveImg(i)}
-                  className={cn('w-14 h-14 rounded-xl overflow-hidden border-2 transition-colors', activeImg === i ? 'border-brand-emerald' : 'border-border')}
+                  className={cn('w-14 h-14 rounded-xl overflow-hidden border-2 transition-colors', activeImg === i ? 'border-brand-green' : 'border-border')}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={img?.url || img} alt="" className="w-full h-full object-contain bg-[#FBF8F2]" />
@@ -106,12 +106,12 @@ export function QuickView({ product, open, onOpenChange }: { product: Product; o
               </button>
               <button
                 onClick={() => { addToCart(product, qty); toast.success('Ditambahkan ke keranjang'); onOpenChange(false); }}
-                className="flex-1 flex items-center justify-center gap-2 h-11 rounded-full bg-brand-emerald text-white font-semibold hover:bg-emerald-700 transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 h-11 rounded-full bg-brand-green text-white font-semibold hover:bg-brand-greenHover transition-colors"
               >
                 <ShoppingBag className="w-4 h-4" /> Add to Cart
               </button>
             </div>
-            <Link href={`/products/${product.slug}`} onClick={() => onOpenChange(false)} className="mt-2 text-center text-sm font-medium text-brand-emerald hover:underline">
+            <Link href={`/products/${product.slug}`} onClick={() => onOpenChange(false)} className="mt-2 text-center text-sm font-medium text-brand-green hover:underline">
               Lihat detail produk →
             </Link>
           </div>

@@ -113,7 +113,10 @@ function ProductsContent() {
               onClick={() => { setCategory(c.slug); setPage(1); }}
               className={cn('flex items-center justify-between w-full text-left px-3 py-2 rounded-xl text-sm transition-colors', category === c.slug ? 'bg-primary text-white font-semibold' : 'hover:bg-muted')}
             >
-              <span>{c.emoji} {c.name}</span>
+              <span>{c.name}</span>
+              <span className={cn('text-xs tabular-nums', category === c.slug ? 'text-white/70' : 'text-muted-foreground')}>
+                {c.productCount}
+              </span>
             </button>
           ))}
         </div>
@@ -177,7 +180,7 @@ function ProductsContent() {
         <div className="flex items-end justify-between gap-4 flex-wrap">
           <div>
             <h1 className="font-display text-2xl sm:text-3xl font-bold">
-              {activeCat ? `${activeCat.emoji} ${activeCat.name}` : 'Semua Produk'}
+              {activeCat ? activeCat.name : 'Semua Produk'}
             </h1>
             <p className="text-muted-foreground text-sm mt-1">{loading ? 'Memuat produk...' : `${filtered.length} produk ditemukan`}</p>
           </div>
@@ -244,11 +247,11 @@ function ProductsContent() {
                     <Link href={`/products/${p.slug}`}><h3 className="font-display font-semibold hover:text-primary line-clamp-1">{p.name}</h3></Link>
                     <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{p.shortDescription}</p>
                     <div className="mt-2 flex items-end gap-2">
-                      <span className="font-display font-bold text-brand-emerald">{formatRupiah(p.price)}</span>
+                      <span className="font-display font-bold text-brand-green">{formatRupiah(p.price)}</span>
                       {p.originalPrice && <span className="text-xs text-muted-foreground line-through">{formatRupiah(p.originalPrice)}</span>}
                     </div>
                     <div className="mt-auto pt-3 flex gap-2">
-                      <Link href={`/products/${p.slug}`} className="flex-1 text-center py-2 rounded-full bg-brand-emerald text-white text-sm font-semibold">Buy Now</Link>
+                      <Link href={`/products/${p.slug}`} className="flex-1 text-center py-2 rounded-full bg-brand-green text-white text-sm font-semibold">Buy Now</Link>
                     </div>
                   </div>
                 </motion.div>
@@ -262,7 +265,7 @@ function ProductsContent() {
                 <button
                   key={i}
                   onClick={() => { setPage(i + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className={cn('grid place-items-center w-10 h-10 rounded-full text-sm font-semibold transition-colors', page === i + 1 ? 'bg-brand-emerald text-white' : 'bg-muted hover:bg-primary/10')}
+                  className={cn('grid place-items-center w-10 h-10 rounded-full text-sm font-semibold transition-colors', page === i + 1 ? 'bg-brand-green text-white' : 'bg-muted hover:bg-primary/10')}
                 >
                   {i + 1}
                 </button>

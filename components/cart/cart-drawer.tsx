@@ -17,7 +17,7 @@ export function CartDrawer() {
       <SheetContent side="right" className="w-full sm:max-w-md flex flex-col p-0">
         <SheetHeader className="p-5 border-b border-border">
           <SheetTitle className="flex items-center gap-2 font-display">
-            <ShoppingBag className="w-5 h-5 text-brand-emerald" />
+            <ShoppingBag className="w-5 h-5 text-brand-green" />
             Keranjang Belanja ({cart.length})
           </SheetTitle>
         </SheetHeader>
@@ -31,7 +31,7 @@ export function CartDrawer() {
               <h3 className="font-display font-semibold text-lg">Keranjang Kosong</h3>
               <p className="text-sm text-muted-foreground mt-1">Belum ada produk di keranjang Anda.</p>
             </div>
-            <Button onClick={() => setCartOpen(false)} className="bg-brand-emerald hover:bg-emerald-700 rounded-full">
+            <Button onClick={() => setCartOpen(false)} className="bg-brand-green hover:bg-brand-greenHover rounded-full">
               Mulai Belanja
             </Button>
           </div>
@@ -46,9 +46,9 @@ export function CartDrawer() {
                   </Link>
                   <div className="flex-1 min-w-0">
                     <Link href={`/products/${item.product.slug}`} onClick={() => setCartOpen(false)}>
-                      <h4 className="font-medium text-sm line-clamp-2 hover:text-brand-emerald">{item.product.name}</h4>
+                      <h4 className="font-medium text-sm line-clamp-2 hover:text-brand-green">{item.product.name}</h4>
                     </Link>
-                    <p className="text-sm font-bold text-brand-emerald mt-1">{formatRupiah(item.product.price)}</p>
+                    <p className="text-sm font-bold text-brand-green mt-1">{formatRupiah(item.product.price)}</p>
                     <div className="mt-2 flex items-center justify-between">
                       <div className="flex items-center border border-border rounded-full">
                         <button onClick={() => updateQty(item.product.id, item.quantity - 1)} className="grid place-items-center w-8 h-8 hover:bg-muted rounded-l-full"><Minus className="w-3.5 h-3.5" /></button>
@@ -68,11 +68,11 @@ export function CartDrawer() {
             <div className="p-5 border-t border-border space-y-3">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span className="font-display font-bold text-lg text-brand-emerald">{formatRupiah(cartTotal())}</span>
+                <span className="font-display font-bold text-lg text-brand-green">{formatRupiah(cartTotal())}</span>
               </div>
               <p className="text-xs text-muted-foreground">Ongkir dihitung saat checkout.</p>
               <Link href="/checkout" onClick={() => setCartOpen(false)} className="block">
-                <Button className="w-full h-12 rounded-full bg-brand-emerald hover:bg-emerald-700 text-white">
+                <Button className="w-full h-12 rounded-full bg-brand-green hover:bg-brand-greenHover text-white">
                   Checkout <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
               </Link>

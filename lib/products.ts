@@ -255,11 +255,9 @@ export const whyChoose = [
   { icon: 'Leaf', title: 'Natural Ingredients', desc: 'Bahan alami pilihan tanpa bahan kimia berbahaya.' },
   { icon: 'ShieldCheck', title: 'BPOM Certified', desc: 'Semua produk terdaftar resmi di BPOM Indonesia.' },
   { icon: 'BadgeCheck', title: 'Halal Indonesia', desc: 'Bersertifikat halal MUI untuk ketenangan Anda.' },
-  { icon: 'FlaskConical', title: 'Dermatologically Tested', desc: 'Diuji klinis aman untuk semua jenis kulit.' },
   { icon: 'Users', title: 'Trusted by Thousands', desc: 'Dipercaya ribuan pelanggan di seluruh Indonesia.' },
   { icon: 'Sparkles', title: 'High Quality', desc: 'Standar kualitas tinggi pada setiap produk.' },
   { icon: 'Truck', title: 'Fast Delivery', desc: 'Pengiriman cepat ke seluruh Indonesia.' },
-  { icon: 'Store', title: 'Official Distributor', desc: 'Distributor resmi produk-produk SR12.' },
 ];
 
 export const stats = [
