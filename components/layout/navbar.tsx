@@ -121,9 +121,10 @@ export function Navbar() {
                                   href={`/products?category=${c.slug}`}
                                   className="group flex items-center gap-3 rounded-2xl p-2 hover:bg-muted transition-colors"
                                 >
-                                  <div className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0">
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img src={c.image} alt={c.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                  {/* Foto produk di kotak 56px tidak terbaca; inisial huruf
+                                      lebih jelas dan mengikuti pola tabel kategori admin. */}
+                                  <div className="w-14 h-14 rounded-xl shrink-0 grid place-items-center bg-muted text-lg font-display font-bold text-muted-foreground group-hover:bg-brand-green group-hover:text-brand-cream transition-colors">
+                                    {c.name.charAt(0).toUpperCase()}
                                   </div>
                                   <div>
                                     <div className="text-sm font-semibold text-foreground">{c.name}</div>

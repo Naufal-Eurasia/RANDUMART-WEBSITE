@@ -2,11 +2,9 @@ import { Concern } from './types';
 
 // Categories now come from the database (see app/api/categories/route.ts and
 // hooks/use-categories.ts) — this file only keeps decorative fallbacks for
-// visual fields (image/color/gradient/accent) that don't exist on the
-// Category model, since the DB category list can grow/change at any time.
-const defaultCategoryImage =
-  'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop';
-
+// visual fields (color/gradient/accent) that don't exist on the Category
+// model, since the DB category list can grow/change at any time.
+// Gambar TIDAK lagi di sini: kartu memakai foto produk asli dari API.
 const visualPalette = [
   { color: '#1a4c1b', gradient: 'from-green-900/90 via-green-800/40 to-transparent', accent: 'green' },
   { color: '#DB2777', gradient: 'from-pink-900/90 via-pink-700/40 to-transparent', accent: 'pink' },
@@ -20,8 +18,7 @@ const visualPalette = [
 ];
 
 export function getCategoryVisual(index: number) {
-  const palette = visualPalette[index % visualPalette.length];
-  return { image: defaultCategoryImage, ...palette };
+  return visualPalette[index % visualPalette.length];
 }
 
 export const concerns: Concern[] = [
@@ -33,16 +30,18 @@ export const concerns: Concern[] = [
   { slug: 'weight-management', name: 'Weight Management', color: 'from-teal-500 to-cyan-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },
 ];
 
+// Label menu seragam bahasa Indonesia. 'Brand Ambassador' & 'FAQ' dibiarkan
+// karena keduanya lazim dipakai apa adanya di pasar lokal.
 export const navLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'Products', href: '/products' },
-  { label: 'Categories', href: '/#categories', mega: true },
+  { label: 'Beranda', href: '/' },
+  { label: 'Produk', href: '/products' },
+  { label: 'Kategori', href: '/#categories', mega: true },
   { label: 'Brand Ambassador', href: '/#ambassador' },
   { label: 'Promo', href: '/#promo' },
   { label: 'Artikel', href: '/#blog' },
   { label: 'Tentang Kami', href: '/#about' },
   { label: 'FAQ', href: '/#faq' },
-  { label: 'Contact', href: '/#contact' },
+  { label: 'Kontak', href: '/#contact' },
 ];
 
 export const formatRupiah = (n: number | string | undefined | null) => {

@@ -6,7 +6,8 @@ export interface Category {
   name: string;
   description: string;
   productCount: number;
-  image: string;
+  // null kalau kategori belum punya produk terbit berfoto — kartu jatuh ke warna brand.
+  image: string | null;
   color: string;
   gradient: string;
   accent: string;

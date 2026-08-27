@@ -9,6 +9,7 @@ interface DbCategory {
   slug: string;
   name: string;
   productCount: number;
+  image: string | null;
 }
 
 export function useCategories() {
@@ -21,14 +22,20 @@ export function useCategories() {
       .then((res) => (res.ok ? res.json() : []))
       .then((data: DbCategory[]) => {
         if (!active) return;
-        const merged: Category[] = data.map((c, i) => ({
-          id: c.id,
-          slug: c.slug,
-          name: c.name,
-          productCount: c.productCount,
-          description: `Koleksi ${c.name} pilihan terbaik untuk kebutuhan Anda.`,
-          ...getCategoryVisual(i),
-        }));
+        // Kategori tanpa produk terbit disembunyikan: kalau diklik hasilnya
+        // halaman kosong. Filter dulu sebelum map supaya indeks warna rapat.
+        const merged: Category[] = data
+          .filter((c) => c.productCount > 0)
+          .map((c, i) => ({
+            id: c.id,
+            slug: c.slug,
+            name: c.name,
+            productCount: c.productCount,
+            description: `Koleksi ${c.name} pilihan terbaik untuk kebutuhan Anda.`,
+            image: c.image,
+            // Hanya warna/gradien/aksen — gambar datang dari DB di atas.
+            ...getCategoryVisual(i),
+          }));
         setCategories(merged);
       })
       .catch(() => {
