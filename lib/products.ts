@@ -259,7 +259,7 @@ export const whyChoose = [
   { icon: 'Users', title: 'Trusted by Thousands', desc: 'Dipercaya ribuan pelanggan di seluruh Indonesia.' },
   { icon: 'Sparkles', title: 'High Quality', desc: 'Standar kualitas tinggi pada setiap produk.' },
   { icon: 'Truck', title: 'Fast Delivery', desc: 'Pengiriman cepat ke seluruh Indonesia.' },
-  { icon: 'Store', title: 'Official Distributor', desc: 'Distributor resmi produk-produk SR12.' },
+  { icon: 'Store', title: 'Official Distributor', desc: 'Distributor produk herbal dan oleh - oleh umrah' },
 ];
 
 export const stats = [
