@@ -101,7 +101,7 @@ export default function BundlesAdminPage() {
     }
   }, []);
 
-  useEffect(() => { setBundles((prev) => prev.filter((b) => b.id !== bundleToDelete.id)); }, [fetchData]);
+  useEffect(() => { fetchData(); }, [fetchData]);
 
   // ── Modal helpers ──────────────────────────────────────────────────────────
   const openCreate = () => {
@@ -207,7 +207,6 @@ export default function BundlesAdminPage() {
         setBundles((prev) => [data, ...prev]);
       }
       setIsModalOpen(false);
-      setBundles((prev) => prev.filter((b) => b.id !== bundleToDelete.id));
     } catch {
       toast.error('Kesalahan koneksi');
     } finally {
@@ -252,7 +251,7 @@ export default function BundlesAdminPage() {
         </div>
         <Button
           onClick={openCreate}
-          className="bg-[brand-green] hover:bg-[brand-green]/90 text-[brand-cream] rounded-xl shadow-sm"
+          className="bg-brand-green hover:bg-brand-greenHover text-brand-cream rounded-xl shadow-sm"
         >
           <Plus className="w-4 h-4 mr-2" /> Tambah Bundle
         </Button>
@@ -261,7 +260,7 @@ export default function BundlesAdminPage() {
       {/* Table */}
       {loading ? (
         <div className="flex justify-center py-24">
-          <Loader2 className="w-8 h-8 animate-spin text-[brand-green]" />
+          <Loader2 className="w-8 h-8 animate-spin text-brand-green" />
         </div>
       ) : bundles.length === 0 ? (
         <div className="flex flex-col items-center gap-3 py-24 text-muted-foreground">
@@ -292,17 +291,17 @@ export default function BundlesAdminPage() {
                           // eslint-disable-next-line @next/next/no-img-element
                           <img src={b.imageUrl} alt={b.name} className="w-10 h-10 rounded-xl object-cover" />
                         ) : (
-                          <div className="w-10 h-10 rounded-xl bg-[brand-green]/10 flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-xl bg-brand-green/10 flex items-center justify-center">
                             {isParsel ? (
-                              <Gift className="w-4 h-4 text-[brand-green]" />
+                              <Gift className="w-4 h-4 text-brand-green" />
                             ) : (
-                              <ShoppingBag className="w-4 h-4 text-[brand-green]" />
+                              <ShoppingBag className="w-4 h-4 text-brand-green" />
                             )}
                           </div>
                         )}
                       </td>
                       <td className="px-5 py-4">
-                        <p className="font-semibold text-[brand-green]">{b.name}</p>
+                        <p className="font-semibold text-brand-green">{b.name}</p>
                         <p className="text-xs text-muted-foreground line-clamp-1">
                           {isParsel ? (b.details || b.description || '-') : b.items.map((i) => i.product.name).join(', ')}
                         </p>
@@ -324,7 +323,7 @@ export default function BundlesAdminPage() {
                           </Badge>
                         )}
                       </td>
-                      <td className="px-5 py-4 text-right font-medium text-[brand-green]">
+                      <td className="px-5 py-4 text-right font-medium text-brand-green">
                         {formatRupiah(Number(b.price))}
                       </td>
                       <td className="px-5 py-4">
@@ -375,7 +374,7 @@ export default function BundlesAdminPage() {
                   onClick={() => setFormData((p) => ({ ...p, type: 'BUNDLING' }))}
                   className={`flex items-center gap-2 justify-center px-4 py-2.5 rounded-xl border text-sm font-medium transition-colors ${
                     formData.type === 'BUNDLING'
-                      ? 'border-[brand-green] bg-[brand-green]/10 text-[brand-green]'
+                      ? 'border-brand-green bg-brand-green/10 text-brand-green'
                       : 'border-border/60 text-muted-foreground hover:bg-muted/30'
                   }`}
                 >
@@ -386,7 +385,7 @@ export default function BundlesAdminPage() {
                   onClick={() => setFormData((p) => ({ ...p, type: 'PARSEL' }))}
                   className={`flex items-center gap-2 justify-center px-4 py-2.5 rounded-xl border text-sm font-medium transition-colors ${
                     formData.type === 'PARSEL'
-                      ? 'border-[brand-green] bg-[brand-green]/10 text-[brand-green]'
+                      ? 'border-brand-green bg-brand-green/10 text-brand-green'
                       : 'border-border/60 text-muted-foreground hover:bg-muted/30'
                   }`}
                 >
@@ -596,7 +595,7 @@ export default function BundlesAdminPage() {
                               <p className="text-sm font-medium truncate">{p.name}</p>
                               <p className="text-xs text-muted-foreground">{formatRupiah(Number(p.price))}</p>
                             </div>
-                            <Plus className="w-4 h-4 text-[brand-green] flex-shrink-0" />
+                            <Plus className="w-4 h-4 text-brand-green flex-shrink-0" />
                           </button>
                         );
                       })
@@ -625,7 +624,7 @@ export default function BundlesAdminPage() {
               <Button
                 type="submit"
                 disabled={submitting}
-                className="bg-[brand-green] hover:bg-[brand-green]/90 text-[brand-cream] rounded-xl"
+                className="bg-brand-green hover:bg-brand-greenHover text-brand-cream rounded-xl"
               >
                 {submitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 {modalMode === 'edit' ? 'Simpan Perubahan' : 'Buat Bundle'}
