@@ -176,7 +176,11 @@ export default function ProductsAdminPage() {
     try {
       const payload = { ...p, isPublished: !p.isPublished, originalPrice: p.originalPrice || null, discount: p.discount || null };
       const res = await fetch(`/api/admin/products/${p.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      if (res.ok) { toast.success(`Produk di${p.isPublished ? 'nonaktifkan' : 'aktifkan'}`); fetchData(); }
+      // Patch state lokal, jangan fetchData() — toggle 1 produk tidak perlu tarik ulang seluruh katalog
+      if (res.ok) {
+        toast.success(`Produk di${p.isPublished ? 'nonaktifkan' : 'aktifkan'}`);
+        setProducts(prev => prev.map(x => x.id === p.id ? { ...x, isPublished: !p.isPublished } : x));
+      }
       else toast.error('Gagal merubah status');
     } catch (err) { toast.error('Kesalahan koneksi'); } finally { setSubmitting(false); }
   };
@@ -188,7 +192,11 @@ export default function ProductsAdminPage() {
       const res = await fetch(`/api/admin/products/${prodToDelete.id}`, { method: 'DELETE' });
       const data = await res.json();
       if (!res.ok) toast.error(data.message || 'Gagal menghapus produk');
-      else { toast.success('Produk dihapus'); fetchData(); }
+      else {
+        toast.success('Produk dihapus');
+        setProducts(prev => prev.filter(x => x.id !== prodToDelete.id));
+        setDetailIdx(null); // index lama menunjuk ke slot yang bergeser setelah baris dihapus
+      }
     } catch (err) { toast.error('Kesalahan koneksi'); }
     finally { setSubmitting(false); setDeleteOpen(false); setProdToDelete(null); }
   };

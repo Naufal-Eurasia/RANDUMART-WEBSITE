@@ -37,6 +37,11 @@ export function MobileNav() {
                 </button>
                 {catOpen && (
                   <div className="pl-3 grid grid-cols-2 gap-2 pb-2">
+                    {categories.length === 0 && (
+                      <div className="col-span-full py-4 text-center text-sm text-muted-foreground">
+                        Kategori belum tersedia
+                      </div>
+                    )}
                     {categories.map((c) => (
                       <Link
                         key={c.slug}

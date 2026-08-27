@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { checkAdminAuth } from '@/lib/auth-utils';
+import { BundleType } from '@prisma/client';
 
 // GET /api/admin/bundles/[id] — detail satu bundle (untuk populate form edit)
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
@@ -27,34 +28,62 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   }
 }
 
-// PUT /api/admin/bundles/[id] — update bundle (nama + sync items)
+// PUT /api/admin/bundles/[id] — update bundle/parsel (data + sync items)
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
   if (!(await checkAdminAuth())) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
 
   try {
     const body = await req.json();
-    const { name, items } = body as { name: string; items: { productId: string; quantity: number }[] };
+    const {
+      name,
+      type,
+      imageUrl,
+      description,
+      price,
+      details,
+      items,
+    } = body as {
+      name: string;
+      type?: BundleType;
+      imageUrl?: string;
+      description?: string;
+      price: number | string;
+      details?: string;
+      items?: { productId: string; quantity: number }[];
+    };
+
+    const bundleType: BundleType = type === 'PARSEL' ? 'PARSEL' : 'BUNDLING';
 
     if (!name || !name.trim()) {
       return NextResponse.json({ message: 'Nama bundle wajib diisi' }, { status: 400 });
     }
-    if (!items || items.length === 0) {
-      return NextResponse.json({ message: 'Minimal 1 produk harus dipilih' }, { status: 400 });
+    if (price === undefined || price === null || price === '' || Number.isNaN(Number(price))) {
+      return NextResponse.json({ message: 'Harga jual wajib diisi' }, { status: 400 });
+    }
+    if (bundleType === 'BUNDLING' && (!items || items.length === 0)) {
+      return NextResponse.json({ message: 'Minimal 1 produk harus dipilih untuk Bundling' }, { status: 400 });
     }
 
-    // Gunakan $transaction: hapus items lama, update nama, insert items baru
+    // Gunakan $transaction: hapus items lama, update data, insert items baru (jika Bundling)
     const [, updated] = await prisma.$transaction([
       prisma.bundleItem.deleteMany({ where: { bundleId: params.id } }),
       prisma.bundle.update({
         where: { id: params.id },
         data: {
           name: name.trim(),
-          items: {
-            create: items.map((item) => ({
-              productId: item.productId,
-              quantity: Number(item.quantity) || 1,
-            })),
-          },
+          type: bundleType,
+          imageUrl: imageUrl?.trim() || null,
+          description: description?.trim() || null,
+          price: Number(price),
+          details: details?.trim() || null,
+          items: bundleType === 'BUNDLING' && items
+            ? {
+                create: items.map((item) => ({
+                  productId: item.productId,
+                  quantity: Number(item.quantity) || 1,
+                })),
+              }
+            : undefined,
         },
         include: {
           items: { include: { product: true } },

@@ -86,6 +86,7 @@ export function Navbar() {
                     className="relative"
                     onMouseEnter={() => setMegaOpen(true)}
                     onMouseLeave={() => setMegaOpen(false)}
+                    onClick={() => setMegaOpen(!megaOpen)}
                   >
                     <button
                       className={cn(
@@ -103,10 +104,17 @@ export function Navbar() {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: 12 }}
                           transition={{ duration: 0.2 }}
-                          className="absolute left-1/2 -translate-x-1/2 top-full pt-3 w-[min(92vw,900px)]"
+                          /* left-0, bukan left-1/2: parent-nya tombol (~200px dari tepi kiri),
+                             jadi -translate-x-1/2 atas panel 900px membuang ~250px ke luar viewport. */
+                          className="absolute left-0 top-full pt-3 w-[min(90vw,880px)]"
                         >
                           <div className="glass rounded-3xl shadow-premium border border-border/60 p-5">
-                            <div className="grid grid-cols-3 gap-3">
+                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 max-h-[60vh] overflow-y-auto">
+                              {categories.length === 0 && (
+                                <div className="col-span-full py-6 text-center text-sm text-muted-foreground">
+                                  Kategori belum tersedia
+                                </div>
+                              )}
                               {categories.map((c) => (
                                 <Link
                                   key={c.slug}

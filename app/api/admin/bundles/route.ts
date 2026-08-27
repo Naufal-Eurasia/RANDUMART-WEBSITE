@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { checkAdminAuth } from '@/lib/auth-utils';
+import { BundleType } from '@prisma/client';
 
 // GET /api/admin/bundles — ambil semua bundle beserta item & produknya
 export async function GET() {
@@ -17,7 +18,7 @@ export async function GET() {
           },
         },
       },
-      orderBy: { id: 'desc' },
+      orderBy: { createdAt: 'desc' },
     });
     return NextResponse.json(bundles);
   } catch (error) {
@@ -26,30 +27,58 @@ export async function GET() {
   }
 }
 
-// POST /api/admin/bundles — buat bundle baru
+// POST /api/admin/bundles — buat bundle/parsel baru
 export async function POST(req: Request) {
   if (!(await checkAdminAuth())) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
 
   try {
     const body = await req.json();
-    const { name, items } = body as { name: string; items: { productId: string; quantity: number }[] };
+    const {
+      name,
+      type,
+      imageUrl,
+      description,
+      price,
+      details,
+      items,
+    } = body as {
+      name: string;
+      type?: BundleType;
+      imageUrl?: string;
+      description?: string;
+      price: number | string;
+      details?: string;
+      items?: { productId: string; quantity: number }[];
+    };
+
+    const bundleType: BundleType = type === 'PARSEL' ? 'PARSEL' : 'BUNDLING';
 
     if (!name || !name.trim()) {
       return NextResponse.json({ message: 'Nama bundle wajib diisi' }, { status: 400 });
     }
-    if (!items || items.length === 0) {
-      return NextResponse.json({ message: 'Minimal 1 produk harus dipilih' }, { status: 400 });
+    if (price === undefined || price === null || price === '' || Number.isNaN(Number(price))) {
+      return NextResponse.json({ message: 'Harga jual wajib diisi' }, { status: 400 });
+    }
+    if (bundleType === 'BUNDLING' && (!items || items.length === 0)) {
+      return NextResponse.json({ message: 'Minimal 1 produk harus dipilih untuk Bundling' }, { status: 400 });
     }
 
     const bundle = await prisma.bundle.create({
       data: {
         name: name.trim(),
-        items: {
-          create: items.map((item) => ({
-            productId: item.productId,
-            quantity: Number(item.quantity) || 1,
-          })),
-        },
+        type: bundleType,
+        imageUrl: imageUrl?.trim() || null,
+        description: description?.trim() || null,
+        price: Number(price),
+        details: details?.trim() || null,
+        items: bundleType === 'BUNDLING' && items
+          ? {
+              create: items.map((item) => ({
+                productId: item.productId,
+                quantity: Number(item.quantity) || 1,
+              })),
+            }
+          : undefined,
       },
       include: {
         items: { include: { product: true } },
