@@ -2,27 +2,33 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Heart, ShoppingBag, Menu, X, ChevronDown, User } from 'lucide-react';
-import { navLinks, categories } from '@/lib/categories';
+import { navLinks } from '@/lib/categories';
+import { useCategories } from '@/hooks/use-categories';
 import { useStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
+import { useSession } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 export function Navbar() {
+  const { data: session, status } = useSession();
   const pathname = usePathname();
+  const isHome = pathname === '/';
   const [scrolled, setScrolled] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeAuth, setActiveAuth] = useState<'login' | 'register'>('login');
-  const { cartCount, wishlist, setSearchOpen, setCartOpen, setWishlistOpen, setMobileNavOpen, user, logout } = useStore();
+  const { cartCount, wishlist, setSearchOpen, setCartOpen, setWishlistOpen, setMobileNavOpen } = useStore();
+  const { categories } = useCategories();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+  useEffect(() => setMounted(true), []);
 
   return (
     <>
@@ -51,13 +57,6 @@ export function Navbar() {
           <div className="flex h-16 lg:h-20 items-center justify-between gap-4">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 shrink-0">
-              <div className="relative inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white/90 shadow-soft overflow-hidden">
-                <img
-                  src="/images/randumart-logo.jpeg"
-                  alt="Randumart Logo"
-                  className="w-full h-full object-contain p-1"
-                />
-              </div>
               <div className="hidden sm:block leading-none">
                 <div className="font-display font-bold text-lg tracking-tight text-foreground">
                   <span className="text-brand-emerald">Randum</span>
@@ -70,7 +69,7 @@ export function Navbar() {
             </Link>
 
             {/* Desktop nav */}
-            <div className="hidden lg:flex items-center gap-1">
+            <div className="hidden xl:flex items-center gap-0.5">
               {navLinks.map((link) =>
                 link.mega ? (
                   <div
@@ -81,7 +80,7 @@ export function Navbar() {
                   >
                     <button
                       className={cn(
-                        'inline-flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg transition-colors',
+                        'inline-flex items-center gap-1 px-2 py-2 text-sm font-medium rounded-lg transition-colors',
                         'text-foreground hover:bg-muted'
                       )}
                     >
@@ -126,7 +125,7 @@ export function Navbar() {
                     key={link.label}
                     href={link.href}
                     className={cn(
-                      'px-3 py-2 text-sm font-medium rounded-lg transition-colors',
+                      'px-2 py-2 text-sm font-medium rounded-lg transition-colors',
                       'text-foreground hover:bg-muted'
                     )}
                   >
@@ -151,7 +150,7 @@ export function Navbar() {
                 className={cn('relative grid place-items-center w-10 h-10 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
               >
                 <Heart className="w-5 h-5" />
-                {wishlist.length > 0 && (
+                {mounted && wishlist.length > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 grid place-items-center min-w-5 h-5 px-1 rounded-full bg-accent text-white text-[10px] font-bold">
                     {wishlist.length}
                   </span>
@@ -163,51 +162,34 @@ export function Navbar() {
                 className={cn('relative grid place-items-center w-10 h-10 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
               >
                 <ShoppingBag className="w-5 h-5" />
-                {cartCount() > 0 && (
+                {mounted && cartCount() > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 grid place-items-center min-w-5 h-5 px-1 rounded-full bg-primary text-white text-[10px] font-bold">
                     {cartCount()}
                   </span>
                 )}
               </button>
 
-              <div className="hidden sm:flex items-center gap-2 ml-1">
-                {user ? (
-                  <>
-                    <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-foreground">
-                      <User className="w-4 h-4 text-brand-emerald" /> Hi, {user.name}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={logout}
-                      className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-foreground hover:bg-slate-50"
-                    >
-                      Logout
-                    </button>
-                  </>
+              <div className="hidden sm:flex items-center gap-1 ml-1">
+                {status === 'loading' ? (
+                  <div className="w-[150px] h-9 rounded-md bg-muted/20 animate-pulse"></div>
+                ) : status === 'authenticated' ? (
+                  <Button size="sm" className="bg-brand-emerald hover:bg-emerald-700 text-white" asChild>
+                    <Link href={session?.user?.role === 'ADMIN' ? '/admin' : '/account'}>
+                      <User className="w-4 h-4 mr-1" /> Akun Saya
+                    </Link>
+                  </Button>
                 ) : (
                   <>
-                    <Link
-                      href="/login"
-                      className={cn(
-                        'inline-flex items-center gap-1 rounded-full border px-4 py-2 text-sm font-medium transition-all',
-                        pathname === '/login'
-                          ? 'bg-emerald-500 text-white border-emerald-500 shadow-lg shadow-emerald-500/20'
-                          : 'bg-white text-foreground border-slate-200 hover:bg-slate-50'
-                      )}
-                    >
-                      <User className="w-4 h-4" /> Login
-                    </Link>
-                    <Link
-                      href="/register"
-                      className={cn(
-                        'inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium transition-all',
-                        pathname === '/register'
-                          ? 'bg-emerald-500 text-white border-emerald-500 shadow-lg shadow-emerald-500/20'
-                          : 'bg-white text-foreground border border-slate-200 hover:bg-slate-50'
-                      )}
-                    >
-                      Register
-                    </Link>
+                    <Button variant="ghost" size="sm" className="text-foreground hover:bg-muted" asChild>
+                      <Link href="/login">
+                        <User className="w-4 h-4 mr-1" /> Login
+                      </Link>
+                    </Button>
+                    <Button size="sm" className="bg-brand-emerald hover:bg-emerald-700 text-white" asChild>
+                      <Link href="/register">
+                        Register
+                      </Link>
+                    </Button>
                   </>
                 )}
               </div>
@@ -215,7 +197,7 @@ export function Navbar() {
               <button
                 onClick={() => setMobileNavOpen(true)}
                 aria-label="Menu"
-                className={cn('lg:hidden grid place-items-center w-10 h-10 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
+                className={cn('xl:hidden grid place-items-center w-10 h-10 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
               >
                 <Menu className="w-5 h-5" />
               </button>

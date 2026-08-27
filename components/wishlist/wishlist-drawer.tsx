@@ -1,24 +1,51 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useStore } from '@/lib/store';
-import { products } from '@/lib/products';
 import { Heart, Trash2, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { formatRupiah } from '@/lib/categories';
 import { toast } from 'sonner';
 
 export function WishlistDrawer() {
-  const router = useRouter();
   const { wishlistOpen, setWishlistOpen, wishlist, toggleWishlist, addToCart } = useStore();
-  const items = products.filter((p) => wishlist.includes(p.id));
+  const [items, setItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleBrowseProducts = () => {
-    setWishlistOpen(false);
-    router.push('/products');
-  };
+  useEffect(() => {
+    async function loadWishlist() {
+      if (!wishlistOpen || wishlist.length === 0) {
+        if (wishlist.length === 0) setItems([]);
+        return;
+      }
+      setLoading(true);
+      try {
+        const res = await fetch('/api/products');
+        if (res.ok) {
+          const data = await res.json();
+          const mapped = data
+            .filter((p: any) => wishlist.includes(p.id))
+            .map((p: any) => ({
+             ...p,
+             price: Number(p.price),
+             originalPrice: p.originalPrice ? Number(p.originalPrice) : null,
+             categorySlug: p.category?.slug,
+             categoryName: p.category?.name,
+             image: p.images?.find((img: any) => img.isPrimary)?.url || p.images?.[0]?.url || '/placeholder.jpg',
+             shortDescription: p.description
+          }));
+          setItems(mapped);
+        }
+      } catch (err) {
+        console.error('Failed to fetch wishlist', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadWishlist();
+  }, [wishlistOpen, wishlist]);
 
   return (
     <Sheet open={wishlistOpen} onOpenChange={setWishlistOpen}>
@@ -26,11 +53,11 @@ export function WishlistDrawer() {
         <SheetHeader className="p-5 border-b border-border">
           <SheetTitle className="flex items-center gap-2 font-display">
             <Heart className="w-5 h-5 text-accent" />
-            Wishlist ({items.length})
+            Wishlist ({wishlist.length})
           </SheetTitle>
         </SheetHeader>
 
-        {items.length === 0 ? (
+        {wishlist.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center gap-4 p-8 text-center">
             <div className="grid place-items-center w-24 h-24 rounded-full bg-muted">
               <Heart className="w-10 h-10 text-muted-foreground" />
@@ -39,9 +66,13 @@ export function WishlistDrawer() {
               <h3 className="font-display font-semibold text-lg">Wishlist Kosong</h3>
               <p className="text-sm text-muted-foreground mt-1">Simpan produk favorit Anda di sini.</p>
             </div>
-            <Button onClick={handleBrowseProducts} className="bg-brand-emerald hover:bg-emerald-700 rounded-full">
+            <Button onClick={() => setWishlistOpen(false)} className="bg-brand-emerald hover:bg-emerald-700 rounded-full">
               Jelajahi Produk
             </Button>
+          </div>
+        ) : loading ? (
+          <div className="flex-1 flex items-center justify-center text-muted-foreground">
+             Memuat data...
           </div>
         ) : (
           <div className="flex-1 overflow-y-auto p-5 space-y-4">

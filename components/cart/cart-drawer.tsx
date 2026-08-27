@@ -31,11 +31,9 @@ export function CartDrawer() {
               <h3 className="font-display font-semibold text-lg">Keranjang Kosong</h3>
               <p className="text-sm text-muted-foreground mt-1">Belum ada produk di keranjang Anda.</p>
             </div>
-            <Link href="/products" onClick={() => setCartOpen(false)} className="w-full">
-              <Button className="w-full bg-brand-emerald hover:bg-emerald-700 rounded-full">
-                Mulai Belanja
-              </Button>
-            </Link>
+            <Button onClick={() => setCartOpen(false)} className="bg-brand-emerald hover:bg-emerald-700 rounded-full">
+              Mulai Belanja
+            </Button>
           </div>
         ) : (
           <>
@@ -44,7 +42,7 @@ export function CartDrawer() {
                 <div key={item.product.id} className="flex gap-3">
                   <Link href={`/products/${item.product.slug}`} onClick={() => setCartOpen(false)} className="shrink-0">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={item.product.image} alt={item.product.name} className="w-20 h-24 rounded-xl object-cover" />
+                    <img src={item.product.images?.[0]?.url || '/placeholder.jpg'} alt={item.product.name} className="w-20 h-24 rounded-xl object-cover" />
                   </Link>
                   <div className="flex-1 min-w-0">
                     <Link href={`/products/${item.product.slug}`} onClick={() => setCartOpen(false)}>

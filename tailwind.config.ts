@@ -71,8 +71,6 @@ const config: Config = {
           gold: '#C9A227',
           cream: '#FBF8F1',
           beige: '#F5EFE6',
-          red: '#D32F2F',
-          blue: '#0D47A1',
         },
       },
       keyframes: {

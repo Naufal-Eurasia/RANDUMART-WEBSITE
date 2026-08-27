@@ -8,7 +8,7 @@ import { testimonials } from '@/lib/products';
 
 export function Testimonials() {
   return (
-    <section className="py-20 lg:py-24 bg-brand-cream/50">
+    <section className="py-12 lg:py-16 bg-background">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -20,7 +20,7 @@ export function Testimonials() {
             Testimoni
           </span>
           <h2 className="font-display text-3xl sm:text-4xl font-bold">Apa Kata Pelanggan Kami</h2>
-          <p className="mt-2 text-muted-foreground">Ribuan pelanggan puas dengan produk Randumart Herbal.</p>
+          <p className="mt-2 text-muted-foreground">Ribuan pelanggan puas dengan produk SR12.</p>
         </motion.div>
 
         <Swiper

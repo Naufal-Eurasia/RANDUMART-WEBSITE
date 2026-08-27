@@ -8,7 +8,7 @@ import { useStore } from '@/lib/store';
 import { formatRupiah } from '@/lib/categories';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { QuickView } from './quick-view';
 
 const badgeStyles: Record<string, string> = {
@@ -31,12 +31,13 @@ const badgeLabels: Record<string, string> = {
   'out-of-stock': 'Stok Habis',
 };
 
-function ProductCardImpl({ product, index = 0, imageSrc }: { product: Product; index?: number; imageSrc?: string }) {
+//menambahkan produk randumart dengan lengkap
+
+export function ProductCard({ product, index = 0 }: { product: Product; index?: number }) {
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
   const [quickOpen, setQuickOpen] = useState(false);
   const inWish = isInWishlist(product.id);
   const outOfStock = product.stock === 0;
-  const displayImage = imageSrc || product.image;
 
   return (
     <>
@@ -52,9 +53,9 @@ function ProductCardImpl({ product, index = 0, imageSrc }: { product: Product; i
           <Link href={`/products/${product.slug}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={displayImage}
+              src={product.image || (product as any).imageGallery?.[0] || '/placeholder.jpg'}
               alt={product.name}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+              className="w-full h-full object-contain bg-[#FBF8F2] group-hover:scale-110 transition-transform duration-700 ease-out"
             />
           </Link>
 
@@ -65,9 +66,9 @@ function ProductCardImpl({ product, index = 0, imageSrc }: { product: Product; i
                 -{product.discount}%
               </span>
             )}
-            {product.badges.slice(0, 2).map((b) => (
-              <span key={b} className={cn('px-2 py-1 rounded-full text-[10px] font-bold shadow-soft', badgeStyles[b])}>
-                {badgeLabels[b]}
+            {(product.badges || product.tags || []).slice(0, 2).map((b) => (
+              <span key={b} className={cn('px-2 py-1 rounded-full text-[10px] font-bold shadow-soft', badgeStyles[b] || 'bg-gray-100 text-gray-800 uppercase')}>
+                {badgeLabels[b] || (typeof b === 'string' ? b.replace('-', ' ') : b)}
               </span>
             ))}
           </div>
@@ -121,7 +122,7 @@ function ProductCardImpl({ product, index = 0, imageSrc }: { product: Product; i
               <span className="text-xs font-semibold">{product.rating.toFixed(1)}</span>
             </div>
             <span className="text-xs text-muted-foreground">({product.reviewCount})</span>
-            <span className="ml-auto text-xs text-muted-foreground">{product.category}</span>
+            <span className="ml-auto text-xs text-muted-foreground">{(product as any).categoryName || product.category}</span>
           </div>
 
           <Link href={`/products/${product.slug}`}>
@@ -131,38 +132,41 @@ function ProductCardImpl({ product, index = 0, imageSrc }: { product: Product; i
           </Link>
           <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{product.shortDescription}</p>
 
-          <div className="mt-3 flex items-end gap-2">
-            <span className="font-display font-bold text-base text-brand-emerald">{formatRupiah(product.price)}</span>
-            {product.originalPrice && (
-              <span className="text-xs text-muted-foreground line-through">{formatRupiah(product.originalPrice)}</span>
-            )}
-          </div>
+          {/* Pricing wrapper shifted to bottom */}
+          <div className="mt-auto pt-3">
+            <div className="flex items-end gap-2">
+              <span className="font-display font-bold text-base text-brand-emerald">{formatRupiah(product.price)}</span>
+              {product.originalPrice && (
+                <span className="text-xs text-muted-foreground line-through">{formatRupiah(product.originalPrice)}</span>
+              )}
+            </div>
 
-          <div className="mt-2 flex items-center gap-1.5 text-xs">
-            <span className={cn('inline-block w-2 h-2 rounded-full', outOfStock ? 'bg-gray-400' : 'bg-emerald-500')} />
-            <span className={outOfStock ? 'text-muted-foreground' : 'text-emerald-600 font-medium'}>
-              {outOfStock ? 'Stok habis' : `Stok ${product.stock}`}
-            </span>
-          </div>
+            <div className="mt-2 flex items-center gap-1.5 text-xs">
+              <span className={cn('inline-block w-2 h-2 rounded-full', outOfStock ? 'bg-gray-400' : 'bg-emerald-500')} />
+              <span className={outOfStock ? 'text-muted-foreground' : 'text-emerald-600 font-medium'}>
+                {outOfStock ? 'Stok habis' : `Stok ${product.stock}`}
+              </span>
+            </div>
 
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            <button
-              onClick={() => {
-                if (outOfStock) return;
-                addToCart(product);
-                toast.success('Ditambahkan ke keranjang');
-              }}
-              disabled={outOfStock}
-              className="flex items-center justify-center gap-1.5 py-2.5 rounded-full border border-border text-xs font-semibold hover:bg-muted transition-colors disabled:opacity-50"
-            >
-              <ShoppingBag className="w-3.5 h-3.5" /> Cart
-            </button>
-            <Link
-              href={`/products/${product.slug}`}
-              className="flex items-center justify-center py-2.5 rounded-full bg-brand-emerald text-white text-xs font-semibold hover:bg-emerald-700 transition-colors"
-            >
-              Buy Now
-            </Link>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <button
+                onClick={() => {
+                  if (outOfStock) return;
+                  addToCart(product);
+                  toast.success('Ditambahkan ke keranjang');
+                }}
+                disabled={outOfStock}
+                className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-border text-xs font-semibold hover:bg-muted active:scale-[0.98] transition-all disabled:opacity-50"
+              >
+                <ShoppingBag className="w-3.5 h-3.5" /> Cart
+              </button>
+              <Link
+                href={`/products/${product.slug}`}
+                className="flex items-center justify-center py-2.5 rounded-xl bg-brand-emerald text-white text-xs font-semibold hover:bg-emerald-700 active:scale-[0.98] transition-all"
+              >
+                Buy Now
+              </Link>
+            </div>
           </div>
         </div>
       </motion.div>
@@ -171,8 +175,3 @@ function ProductCardImpl({ product, index = 0, imageSrc }: { product: Product; i
     </>
   );
 }
-
-const ProductCard = React.memo(ProductCardImpl, (prev, next) => prev.product.id === next.product.id && prev.index === next.index);
-ProductCard.displayName = 'ProductCard';
-
-export { ProductCard };

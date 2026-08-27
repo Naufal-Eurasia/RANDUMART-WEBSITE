@@ -1,16 +1,16 @@
 import { Product, BlogPost, Testimonial } from './types';
 
 const img = (id: number, w = 800) =>
-  `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=${w}`;
+  `https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop`;
 
 const reviewNames = ['Siti Rahmawati', 'Dewi Lestari', 'Budi Santoso', 'Putri Anggraini', 'Rina Wijaya', 'Ahmad Fauzi', 'Maya Sari', 'Lina Marlina', 'Eka Pratama', 'Yuni Kartika'];
 
 const avatarImgs = [
-  'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=200',
-  'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=200',
-  'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=200',
-  'https://images.pexels.com/photos/762020/pexels-photo-762020.jpeg?auto=compress&cs=tinysrgb&w=200',
-  'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=200',
+  'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
 ];
 
 function makeReviews(seed: number, count: number) {
@@ -122,7 +122,7 @@ export const products: Product[] = seeds.map((s, i) => {
     originalPrice,
     discount: s.discount || undefined,
     image: img(s.imageId, 800),
-    images: s.galleryIds.map((id) => img(id, 1200)),
+    images: s.galleryIds.map((id) => ({ url: img(id, 1200) })),
     rating: 4 + ((i % 10) / 10),
     reviewCount: 24 + (i * 7) % 180,
     description: s.desc,
@@ -163,7 +163,7 @@ export const blogPosts: BlogPost[] = [
     title: '7 Manfaat Habbatussauda untuk Kesehatan Tubuh',
     excerpt: 'Tanaman habbatussauda dikenal sebagai obat segala penyakit. Simak manfaatnya untuk imunitas dan kesehatan harian.',
     category: 'Herbal Education',
-    image: 'https://images.pexels.com/photos/4753990/pexels-photo-4753990.jpeg?auto=compress&cs=tinysrgb&w=800',
+    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
     author: 'Tim SR12',
     date: '2024-06-12',
     readTime: '5 menit',
@@ -174,7 +174,7 @@ export const blogPosts: BlogPost[] = [
     title: 'Rutin Skincare Pagi untuk Pemula',
     excerpt: 'Belum tahu urutan skincare pagi? Ini panduan lengkap untuk pemula dengan produk yang tepat.',
     category: 'Skincare Guide',
-    image: 'https://images.pexels.com/photos/3018845/pexels-photo-3018845.jpeg?auto=compress&cs=tinysrgb&w=800',
+    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
     author: 'Dewi Lestari',
     date: '2024-06-20',
     readTime: '6 menit',
@@ -185,7 +185,7 @@ export const blogPosts: BlogPost[] = [
     title: '5 Tips Brightening Wajah Secara Alami',
     excerpt: 'Wajah kusam? Ikuti 5 tips sederhana untuk mencerahkan wajah dengan bahan alami dan produk yang tepat.',
     category: 'Beauty Tips',
-    image: 'https://images.pexels.com/photos/2533266/pexels-photo-2533266.jpeg?auto=compress&cs=tinysrgb&w=800',
+    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
     author: 'Putri Anggraini',
     date: '2024-07-01',
     readTime: '4 menit',
@@ -196,7 +196,7 @@ export const blogPosts: BlogPost[] = [
     title: 'Cara Menjaga Imun Keluarga di Musim Hujan',
     excerpt: 'Musim hujan identik dengan flu. Begini cara menjaga imun keluarga dengan suplemen dan herbal alami.',
     category: 'Health Tips',
-    image: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=800',
+    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
     author: 'Tim SR12',
     date: '2024-07-10',
     readTime: '7 menit',
@@ -259,7 +259,7 @@ export const whyChoose = [
   { icon: 'Users', title: 'Trusted by Thousands', desc: 'Dipercaya ribuan pelanggan di seluruh Indonesia.' },
   { icon: 'Sparkles', title: 'High Quality', desc: 'Standar kualitas tinggi pada setiap produk.' },
   { icon: 'Truck', title: 'Fast Delivery', desc: 'Pengiriman cepat ke seluruh Indonesia.' },
-  { icon: 'Store', title: 'Official Distributor', desc: 'Distributor resmi produk-produk SR12.' },
+  { icon: 'Store', title: 'Official Distributor', desc: 'Distributor produk herbal dan oleh - oleh umrah' },
 ];
 
 export const stats = [

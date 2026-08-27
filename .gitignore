@@ -34,3 +34,28 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+AGENTS.md
+README.md
+BUSINESS_RULES.md
+DATABASE.md
+DESIGN.md
+tasks/
+docs/
+scripts/
+.claude/
+CLAUDE.md
+
+graphify-out/
+
+.claude/
+
+.mcp.json
+
+# Claude Code & Agents
+.claude/
+.agents/
+skills-lock.json
+.mcp.json
+.playwright-mcp/
+*.orig

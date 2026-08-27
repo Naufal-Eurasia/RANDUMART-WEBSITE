@@ -2,35 +2,25 @@
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useStore } from '@/lib/store';
-import { navLinks, categories } from '@/lib/categories';
+import { navLinks } from '@/lib/categories';
+import { useCategories } from '@/hooks/use-categories';
 import Link from 'next/link';
 import { ChevronDown, User, Home, Search, Heart, ShoppingBag } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 export function MobileNav() {
-  const { mobileNavOpen, setMobileNavOpen, setSearchOpen, setCartOpen, setWishlistOpen, cartCount, wishlist, user, logout } = useStore();
+  const { mobileNavOpen, setMobileNavOpen, setSearchOpen, setCartOpen, setWishlistOpen, cartCount, wishlist } = useStore();
+  const { categories } = useCategories();
   const [catOpen, setCatOpen] = useState(false);
 
   return (
     <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
       <SheetContent side="left" className="w-[88vw] max-w-sm p-0 flex flex-col">
         <SheetHeader className="p-5 border-b border-border">
-          <SheetTitle className="flex items-center gap-3">
-            <div className="relative inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white/90 shadow-soft overflow-hidden">
-              <img
-                src="/images/randumart-logo.jpeg"
-                alt="Randumart Logo"
-                className="w-full h-full object-contain p-1"
-              />
-            </div>
-            <div>
-              <div className="font-display font-bold text-base text-foreground">
-                <span className="text-brand-emerald">Randum</span>
-                <span className="text-brand-red">mart</span>
-              </div>
-              <div className="text-[10px] uppercase tracking-[0.2em] font-medium text-brand-blue">Herbal & Souvenir Umrah</div>
-            </div>
+          <SheetTitle className="flex items-center gap-2">
+            <div className="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-brand-emerald to-emerald-700 text-white font-display font-bold">RM</div>
+            <span className="font-display font-bold text-brand-emerald">Randumart</span>
           </SheetTitle>
         </SheetHeader>
 
@@ -76,32 +66,12 @@ export function MobileNav() {
 
         <div className="p-5 border-t border-border space-y-3">
           <div className="grid grid-cols-2 gap-2">
-            {user ? (
-              <>
-                <button
-                  type="button"
-                  onClick={() => {
-                    logout();
-                    setMobileNavOpen(false);
-                  }}
-                  className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border bg-white font-medium text-sm text-foreground hover:bg-muted"
-                >
-                  Logout
-                </button>
-                <span className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border bg-white font-medium text-sm text-foreground">
-                  <User className="w-4 h-4 text-brand-emerald" /> Hi, {user.name}
-                </span>
-              </>
-            ) : (
-              <>
-                <Link href="/login" onClick={() => setMobileNavOpen(false)} className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border font-medium text-sm hover:bg-muted">
-                  <User className="w-4 h-4" /> Login
-                </Link>
-                <Link href="/register" onClick={() => setMobileNavOpen(false)} className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-brand-emerald text-white font-medium text-sm">
-                  Register
-                </Link>
-              </>
-            )}
+            <Link href="#" onClick={() => setMobileNavOpen(false)} className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border font-medium text-sm hover:bg-muted">
+              <User className="w-4 h-4" /> Login
+            </Link>
+            <Link href="#" onClick={() => setMobileNavOpen(false)} className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-brand-emerald text-white font-medium text-sm">
+              Register
+            </Link>
           </div>
         </div>
       </SheetContent>
@@ -111,6 +81,9 @@ export function MobileNav() {
 
 export function BottomNav() {
   const { setSearchOpen, setCartOpen, setWishlistOpen, cartCount, wishlist } = useStore();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   return (
     <nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 glass border-t border-border">
       <div className="grid grid-cols-5 h-16">
@@ -122,7 +95,7 @@ export function BottomNav() {
         </button>
         <button onClick={() => setWishlistOpen(true)} className="relative flex flex-col items-center justify-center gap-0.5 text-muted-foreground hover:text-brand-emerald">
           <Heart className="w-5 h-5" />
-          {wishlist.length > 0 && <span className="absolute top-1 right-6 min-w-4 h-4 px-1 grid place-items-center rounded-full bg-accent text-white text-[9px] font-bold">{wishlist.length}</span>}
+          {mounted && wishlist.length > 0 && <span className="absolute top-1 right-6 min-w-4 h-4 px-1 grid place-items-center rounded-full bg-accent text-white text-[9px] font-bold">{wishlist.length}</span>}
           <span className="text-[10px] font-medium">Wishlist</span>
         </button>
         <Link href="/products" className="flex flex-col items-center justify-center gap-0.5 text-muted-foreground hover:text-brand-emerald">
@@ -130,7 +103,7 @@ export function BottomNav() {
         </Link>
         <button onClick={() => setCartOpen(true)} className="relative flex flex-col items-center justify-center gap-0.5 text-muted-foreground hover:text-brand-emerald">
           <ShoppingBag className="w-5 h-5" />
-          {cartCount() > 0 && <span className="absolute top-1 right-6 min-w-4 h-4 px-1 grid place-items-center rounded-full bg-primary text-white text-[9px] font-bold">{cartCount()}</span>}
+          {mounted && cartCount() > 0 && <span className="absolute top-1 right-6 min-w-4 h-4 px-1 grid place-items-center rounded-full bg-primary text-white text-[9px] font-bold">{cartCount()}</span>}
           <span className="text-[10px] font-medium">Cart</span>
         </button>
       </div>

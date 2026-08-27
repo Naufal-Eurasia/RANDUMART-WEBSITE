@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode, Autoplay } from 'swiper/modules';
 import { motion } from 'framer-motion';
 import { ProductCard } from '@/components/product/product-card';
-import { products } from '@/lib/products';
+import { Product } from '@/lib/types';
 
 const tabs = [
   { key: 'newest', label: 'Newest' },
@@ -17,7 +17,7 @@ const tabs = [
 
 type TabKey = typeof tabs[number]['key'];
 
-function getProducts(key: TabKey) {
+function getProducts(key: TabKey, products: Product[]) {
   switch (key) {
     case 'newest':
       return products.filter((p) => p.isNew);
@@ -34,9 +34,9 @@ function getProducts(key: TabKey) {
   }
 }
 
-export function ProductCatalog() {
+export function ProductCatalog({ products }: { products: Product[] }) {
   const [active, setActive] = useState<TabKey>('best-seller');
-  const list = getProducts(active);
+  const list = getProducts(active, products);
 
   return (
     <section className="py-20 lg:py-24 bg-background">
