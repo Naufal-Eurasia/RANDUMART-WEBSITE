@@ -1,17 +1,8 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { cdn } from '@/lib/cloudinary';
 
 export const dynamic = 'force-dynamic';
-
-// Foto produk asli rata-rata 600 KB; 13 kategori = 7,8 MB kalau dipakai mentah.
-// Sisipkan transformasi Cloudinary supaya turun ke ~17 KB per gambar.
-// next.config.js set images.unoptimized, jadi ini satu-satunya tuas resize.
-// ponytail: hanya menangani host Cloudinary — host lain lewat apa adanya.
-function thumbnail(url: string | undefined): string | null {
-  if (!url) return null;
-  if (!url.includes('res.cloudinary.com') || !url.includes('/upload/')) return url;
-  return url.replace('/upload/', '/upload/f_auto,q_auto,w_400,h_533,c_fill,g_auto/');
-}
 
 export async function GET() {
   const categories = await prisma.category.findMany({
@@ -36,7 +27,8 @@ export async function GET() {
     slug: c.slug,
     name: c.name,
     productCount: c._count.products,
-    image: thumbnail(c.products[0]?.images[0]?.url),
+    // Dengan tinggi: dipotong ke 3:4 karena kartu kategori object-cover.
+    image: cdn(c.products[0]?.images[0]?.url, 400, 533),
   }));
 
   return NextResponse.json(mapped);

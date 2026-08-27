@@ -77,8 +77,10 @@ export function Navbar() {
               </div>
             </Link>
 
-            {/* Desktop nav */}
-            <div className="hidden xl:flex items-center">
+            {/* Desktop nav — 8 link setelah 'Brand Ambassador' dicabut, jadi
+                padding & ukuran teks dilonggarkan dari px-1.5/13px yang dulu
+                dipakai supaya 9 link muat. Sisa ruang di xl masih ~180px. */}
+            <div className="hidden xl:flex items-center gap-0.5">
               {navLinks.map((link) =>
                 link.mega ? (
                   <div
@@ -90,7 +92,7 @@ export function Navbar() {
                   >
                     <button
                       className={cn(
-                        'inline-flex items-center gap-1 whitespace-nowrap px-1.5 py-2 text-[13px] font-medium rounded-lg transition-colors',
+                        'inline-flex items-center gap-1 whitespace-nowrap px-3 py-2 text-sm font-medium rounded-lg transition-colors',
                         'text-foreground hover:bg-muted'
                       )}
                     >
@@ -143,7 +145,7 @@ export function Navbar() {
                     key={link.label}
                     href={link.href}
                     className={cn(
-                      'whitespace-nowrap px-1.5 py-2 text-[13px] font-medium rounded-lg transition-colors',
+                      'whitespace-nowrap px-3 py-2 text-sm font-medium rounded-lg transition-colors',
                       'text-foreground hover:bg-muted'
                     )}
                   >

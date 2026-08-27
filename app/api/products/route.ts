@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { mapPrismaProducts } from '@/lib/product-mapper';
 
 export const revalidate = 15;
 
@@ -49,7 +50,11 @@ export async function GET(request: Request) {
       }
     });
 
-    return NextResponse.json(products);
+    // Lewat mapper, bukan baris Prisma mentah: mapper yang memasang
+    // transformasi Cloudinary dan menormalkan Decimal jadi number.
+    // Endpoint ini dulu satu-satunya yang melewatinya, jadi klien
+    // terpaksa memetakan ulang sendiri.
+    return NextResponse.json(mapPrismaProducts(products));
   } catch (error) {
     console.error('API Products Error:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });

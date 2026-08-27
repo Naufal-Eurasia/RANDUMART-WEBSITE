@@ -30,13 +30,15 @@ export const concerns: Concern[] = [
   { slug: 'weight-management', name: 'Weight Management', color: 'from-teal-500 to-cyan-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },
 ];
 
-// Label menu seragam bahasa Indonesia. 'Brand Ambassador' & 'FAQ' dibiarkan
-// karena keduanya lazim dipakai apa adanya di pasar lokal.
+// Label menu seragam bahasa Indonesia. 'FAQ' dibiarkan karena lazim
+// dipakai apa adanya di pasar lokal.
+// 'Brand Ambassador' dicabut dari navbar: tujuannya cuma satu poster,
+// tidak cukup jadi destinasi menu. Section-nya tetap ada di beranda dan
+// masih ditautkan dari footer.
 export const navLinks = [
   { label: 'Beranda', href: '/' },
   { label: 'Produk', href: '/products' },
   { label: 'Kategori', href: '/#categories', mega: true },
-  { label: 'Brand Ambassador', href: '/#ambassador' },
   { label: 'Promo', href: '/#promo' },
   { label: 'Artikel', href: '/#blog' },
   { label: 'Tentang Kami', href: '/#about' },
