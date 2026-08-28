@@ -46,7 +46,7 @@ export default async function Home() {
       <ProductCatalog products={catalog} />
       <BrandAmbassador />
       <WhyChoose />
-      <StatsCounter />
+      {/* <StatsCounter /> Disembunyikan: angka overclaim palsu (380+ produk padahal 84, 25k pelanggan padahal 8). Tampilkan lagi jika terhubung ke DB. */}
       <ShopByConcern />
       <Testimonials />
       <BlogSection />

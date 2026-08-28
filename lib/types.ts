@@ -43,6 +43,9 @@ export interface Product {
   bpom: string;
   halal: boolean;
   stock: number;
+  // Jumlah unit terjual nyata dari OrderItem. Sebelumnya UI mengarang
+  // angka ini dari reviewCount * 3 — produk terjual 2 unit tetap "0+".
+  soldCount: number;
   tags: string[];
   badges: Badge[];
   reviews: Review[];

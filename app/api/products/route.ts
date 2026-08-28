@@ -47,6 +47,9 @@ export async function GET(request: Request) {
       include: {
         images: true,
         category: true,
+        // Dibutuhkan mapper untuk menghitung soldCount. Hanya status &
+        // quantity yang ditarik — bukan seluruh baris pesanan.
+        orderItems: { select: { quantity: true, order: { select: { status: true } } } },
       }
     });
 

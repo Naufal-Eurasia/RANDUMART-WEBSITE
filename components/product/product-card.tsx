@@ -80,13 +80,16 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
               toast.success(inWish ? 'Dihapus dari wishlist' : 'Ditambahkan ke wishlist');
             }}
             aria-label="Toggle wishlist"
-            className="absolute top-3 right-3 grid place-items-center w-9 h-9 rounded-full glass shadow-soft hover:scale-110 transition-transform"
+            className="absolute top-3 right-3 grid place-items-center w-11 h-11 rounded-full glass shadow-soft hover:scale-110 transition-transform"
           >
             <Heart className={cn('w-4 h-4', inWish ? 'fill-accent text-accent' : 'text-foreground')} />
           </button>
 
-          {/* Quick actions */}
-          <div className="absolute bottom-3 inset-x-3 flex gap-2 opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+          {/* Quick actions — disembunyikan total di bawah lg. Perangkat sentuh
+              tidak punya hover, jadi opacity-0 group-hover di layar HP berarti
+              tombol ini tidak pernah bisa diraih. Kartu sudah punya Cart &
+              Buy Now di bawah, jadi tidak ada fungsi yang hilang. */}
+          <div className="hidden lg:flex absolute bottom-3 inset-x-3 gap-2 opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
             <button
               onClick={() => setQuickOpen(true)}
               className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-full glass shadow-soft text-sm font-semibold hover:bg-white transition-colors"
@@ -156,13 +159,13 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
                   toast.success('Ditambahkan ke keranjang');
                 }}
                 disabled={outOfStock}
-                className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-border text-xs font-semibold hover:bg-muted active:scale-[0.98] transition-all disabled:opacity-50"
+                className="flex items-center justify-center gap-1.5 h-11 rounded-xl border border-border text-xs font-semibold hover:bg-muted active:scale-[0.98] transition-all disabled:opacity-50"
               >
                 <ShoppingBag className="w-3.5 h-3.5" /> Cart
               </button>
               <Link
                 href={`/products/${product.slug}`}
-                className="flex items-center justify-center py-2.5 rounded-xl bg-brand-green text-white text-xs font-semibold hover:bg-brand-greenHover active:scale-[0.98] transition-all"
+                className="flex items-center justify-center h-11 rounded-xl bg-brand-green text-white text-xs font-semibold hover:bg-brand-greenHover active:scale-[0.98] transition-all"
               >
                 Buy Now
               </Link>

@@ -47,7 +47,7 @@ export function MobileNav() {
                         key={c.slug}
                         href={`/products?category=${c.slug}`}
                         onClick={() => setMobileNavOpen(false)}
-                        className="flex items-center gap-2 p-2 rounded-lg hover:bg-muted text-sm"
+                        className="flex items-center gap-2 px-2 py-3 rounded-lg hover:bg-muted text-sm"
                       >
                         <span className="font-medium">{c.name}</span>
                       </Link>
@@ -70,10 +70,12 @@ export function MobileNav() {
 
         <div className="p-5 border-t border-border space-y-3">
           <div className="grid grid-cols-2 gap-2">
-            <Link href="#" onClick={() => setMobileNavOpen(false)} className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border font-medium text-sm hover:bg-muted">
+            {/* href sebelumnya "#" — tombol Login/Register di menu HP tidak
+                menuju ke mana pun. Disamakan dengan navbar.tsx:204,209. */}
+            <Link href="/login" onClick={() => setMobileNavOpen(false)} className="flex items-center justify-center gap-2 h-11 rounded-xl border border-border font-medium text-sm hover:bg-muted">
               <User className="w-4 h-4" /> Login
             </Link>
-            <Link href="#" onClick={() => setMobileNavOpen(false)} className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-brand-green text-white font-medium text-sm">
+            <Link href="/register" onClick={() => setMobileNavOpen(false)} className="flex items-center justify-center gap-2 h-11 rounded-xl bg-brand-green text-white font-medium text-sm">
               Register
             </Link>
           </div>

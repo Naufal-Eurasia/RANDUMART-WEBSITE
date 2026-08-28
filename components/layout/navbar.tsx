@@ -38,7 +38,7 @@ export function Navbar() {
         <div className="flex whitespace-nowrap animate-marquee">
           {Array.from({ length: 2 }).map((_, i) => (
             <div key={i} className="flex shrink-0">
-              {['Gratis ongkir min. Rp150.000', 'Flash Sale hingga 50% OFF', 'Produk BPOM & Halal terjamin', 'Pembayaran aman & terpercaya', 'New Arrival setiap minggu'].map((t, j) => (
+              {['Gratis ongkir ke seluruh Indonesia', 'Flash Sale hingga 50% OFF', 'Produk BPOM & Halal terjamin', 'Pembayaran aman & terpercaya', 'New Arrival setiap minggu'].map((t, j) => (
                 <span key={j} className="mx-6 inline-flex items-center gap-2 font-medium">
                   <span className="text-brand-gold">✦</span> {t}
                 </span>
@@ -160,14 +160,14 @@ export function Navbar() {
               <button
                 onClick={() => setSearchOpen(true)}
                 aria-label="Search"
-                className={cn('grid place-items-center w-10 h-10 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
+                className={cn('grid place-items-center w-11 h-11 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
               >
                 <Search className="w-5 h-5" />
               </button>
               <button
                 onClick={() => setWishlistOpen(true)}
                 aria-label="Wishlist"
-                className={cn('relative grid place-items-center w-10 h-10 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
+                className={cn('relative grid place-items-center w-11 h-11 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
               >
                 <Heart className="w-5 h-5" />
                 {mounted && wishlist.length > 0 && (
@@ -179,7 +179,7 @@ export function Navbar() {
               <button
                 onClick={() => setCartOpen(true)}
                 aria-label="Cart"
-                className={cn('relative grid place-items-center w-10 h-10 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
+                className={cn('relative grid place-items-center w-11 h-11 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
               >
                 <ShoppingBag className="w-5 h-5" />
                 {mounted && cartCount() > 0 && (
@@ -217,7 +217,7 @@ export function Navbar() {
               <button
                 onClick={() => setMobileNavOpen(true)}
                 aria-label="Menu"
-                className={cn('xl:hidden grid place-items-center w-10 h-10 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
+                className={cn('xl:hidden grid place-items-center w-11 h-11 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
               >
                 <Menu className="w-5 h-5" />
               </button>

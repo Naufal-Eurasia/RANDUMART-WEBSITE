@@ -133,6 +133,7 @@ export const products: Product[] = seeds.map((s, i) => {
     bpom: s.bpom,
     halal: s.badges.includes('halal'),
     stock: s.stock,
+    soldCount: 0,   // data statis, bukan dari OrderItem
     tags: s.tags,
     badges: s.badges,
     reviews: makeReviews(i + 1, 3),

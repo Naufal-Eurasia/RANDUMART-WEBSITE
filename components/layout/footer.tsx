@@ -31,7 +31,9 @@ export function Footer() {
               <h3 className="font-display text-2xl sm:text-3xl font-bold mb-2">Dapatkan Penawaran Eksklusif</h3>
               <p className="text-white/80 max-w-md">Berlangganan newsletter kami untuk promo spesial, tips kesehatan, dan produk terbaru langsung ke inbox Anda.</p>
             </div>
-            <form onSubmit={subscribe} className="flex gap-2">
+            {/* Menumpuk di bawah sm: input + tombol bersebelahan di 360px
+                menyisakan ~150px untuk mengetik email — tidak terpakai. */}
+            <form onSubmit={subscribe} className="flex flex-col sm:flex-row gap-2">
               <Input
                 type="email"
                 placeholder="Email Anda"
@@ -39,7 +41,7 @@ export function Footer() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="bg-white/95 border-0 text-foreground h-12 rounded-full"
               />
-              <Button type="submit" size="lg" className="bg-brand-gold hover:bg-amber-500 text-foreground rounded-full px-6 shrink-0">
+              <Button type="submit" size="lg" className="bg-brand-gold hover:bg-amber-500 text-foreground rounded-full px-6 shrink-0 w-full sm:w-auto">
                 <Send className="w-4 h-4 mr-1" /> Langganan
               </Button>
             </form>
@@ -62,7 +64,7 @@ export function Footer() {
           </p>
           <div className="flex gap-2">
             {[Instagram, Facebook, Youtube].map((Icon, i) => (
-              <a key={i} href="#" className="grid place-items-center w-10 h-10 rounded-full bg-white shadow-soft text-brand-green hover:bg-brand-green hover:text-white transition-colors">
+              <a key={i} href="#" className="grid place-items-center w-11 h-11 rounded-full bg-white shadow-soft text-brand-green hover:bg-brand-green hover:text-white transition-colors">
                 <Icon className="w-5 h-5" />
               </a>
             ))}
@@ -72,23 +74,24 @@ export function Footer() {
         {/* Quick Links */}
         <div>
           <h4 className="font-display font-semibold mb-4 text-foreground">Quick Links</h4>
-          <ul className="space-y-2.5 text-sm text-muted-foreground">
-            <li><Link href="/products" className="hover:text-brand-green transition-colors">Semua Produk</Link></li>
-            <li><Link href="/#ambassador" className="hover:text-brand-green transition-colors">Brand Ambassador</Link></li>
-            <li><Link href="/#promo" className="hover:text-brand-green transition-colors">Promo</Link></li>
-            <li><Link href="/#blog" className="hover:text-brand-green transition-colors">Artikel</Link></li>
-            <li><Link href="/#about" className="hover:text-brand-green transition-colors">Tentang Kami</Link></li>
-            <li><Link href="/#faq" className="hover:text-brand-green transition-colors">FAQ</Link></li>
+          {/* block py-3 = tinggi sentuh ~44px. */}
+          <ul className="text-sm text-muted-foreground">
+            <li><Link href="/products" className="block py-3 hover:text-brand-green transition-colors">Semua Produk</Link></li>
+            <li><Link href="/#ambassador" className="block py-3 hover:text-brand-green transition-colors">Brand Ambassador</Link></li>
+            <li><Link href="/#promo" className="block py-3 hover:text-brand-green transition-colors">Promo</Link></li>
+            <li><Link href="/#blog" className="block py-3 hover:text-brand-green transition-colors">Artikel</Link></li>
+            <li><Link href="/#about" className="block py-3 hover:text-brand-green transition-colors">Tentang Kami</Link></li>
+            <li><Link href="/#faq" className="block py-3 hover:text-brand-green transition-colors">FAQ</Link></li>
           </ul>
         </div>
 
         {/* Categories */}
         <div>
           <h4 className="font-display font-semibold mb-4 text-foreground">Kategori</h4>
-          <ul className="space-y-2.5 text-sm text-muted-foreground">
+          <ul className="text-sm text-muted-foreground">
             {categories.slice(0, 6).map((c) => (
               <li key={c.slug}>
-                <Link href={`/products?category=${c.slug}`} className="hover:text-brand-green transition-colors">{c.name}</Link>
+                <Link href={`/products?category=${c.slug}`} className="block py-3 hover:text-brand-green transition-colors">{c.name}</Link>
               </li>
             ))}
           </ul>
@@ -113,11 +116,11 @@ export function Footer() {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
-        <p>© 2024 Randumart. All rights reserved.</p>
-        <div className="flex gap-4">
-          <Link href="#" className="hover:text-brand-green">Privacy Policy</Link>
-          <Link href="#" className="hover:text-brand-green">Terms</Link>
-          <Link href="#" className="hover:text-brand-green">Shipping</Link>
+        <p>© 2026 Randumart. All rights reserved.</p>
+        <div className="flex gap-1">
+          <Link href="#" className="px-2 py-2.5 hover:text-brand-green">Privacy Policy</Link>
+          <Link href="#" className="px-2 py-2.5 hover:text-brand-green">Terms</Link>
+          <Link href="#" className="px-2 py-2.5 hover:text-brand-green">Shipping</Link>
         </div>
       </div>
     </footer>
