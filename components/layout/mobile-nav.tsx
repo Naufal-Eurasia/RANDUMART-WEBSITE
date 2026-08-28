@@ -37,6 +37,11 @@ export function MobileNav() {
                 </button>
                 {catOpen && (
                   <div className="pl-3 grid grid-cols-2 gap-2 pb-2">
+                    {categories.length === 0 && (
+                      <div className="col-span-full py-4 text-center text-sm text-muted-foreground">
+                        Kategori belum tersedia
+                      </div>
+                    )}
                     {categories.map((c) => (
                       <Link
                         key={c.slug}
@@ -87,23 +92,23 @@ export function BottomNav() {
     <nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 glass border-t border-border">
       <div className="grid grid-cols-5 h-16">
         <Link href="/" className="flex flex-col items-center justify-center gap-0.5 text-muted-foreground hover:text-brand-green">
-          <Home className="w-5 h-5" /><span className="text-[10px] font-medium">Home</span>
+          <Home className="w-5 h-5" /><span className="text-[10px] font-medium">Beranda</span>
         </Link>
         <button onClick={() => setSearchOpen(true)} className="flex flex-col items-center justify-center gap-0.5 text-muted-foreground hover:text-brand-green">
-          <Search className="w-5 h-5" /><span className="text-[10px] font-medium">Search</span>
+          <Search className="w-5 h-5" /><span className="text-[10px] font-medium">Cari</span>
         </button>
         <button onClick={() => setWishlistOpen(true)} className="relative flex flex-col items-center justify-center gap-0.5 text-muted-foreground hover:text-brand-green">
           <Heart className="w-5 h-5" />
           {mounted && wishlist.length > 0 && <span className="absolute top-1 right-6 min-w-4 h-4 px-1 grid place-items-center rounded-full bg-accent text-white text-[9px] font-bold">{wishlist.length}</span>}
-          <span className="text-[10px] font-medium">Wishlist</span>
+          <span className="text-[10px] font-medium">Favorit</span>
         </button>
         <Link href="/products" className="flex flex-col items-center justify-center gap-0.5 text-muted-foreground hover:text-brand-green">
-          <ShoppingBag className="w-5 h-5" /><span className="text-[10px] font-medium">Products</span>
+          <ShoppingBag className="w-5 h-5" /><span className="text-[10px] font-medium">Produk</span>
         </Link>
         <button onClick={() => setCartOpen(true)} className="relative flex flex-col items-center justify-center gap-0.5 text-muted-foreground hover:text-brand-green">
           <ShoppingBag className="w-5 h-5" />
           {mounted && cartCount() > 0 && <span className="absolute top-1 right-6 min-w-4 h-4 px-1 grid place-items-center rounded-full bg-primary text-white text-[9px] font-bold">{cartCount()}</span>}
-          <span className="text-[10px] font-medium">Cart</span>
+          <span className="text-[10px] font-medium">Keranjang</span>
         </button>
       </div>
     </nav>

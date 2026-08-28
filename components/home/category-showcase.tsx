@@ -41,12 +41,20 @@ export function CategoryShowcase() {
                 href={`/products?category=${cat.slug}`}
                 className="group relative block aspect-[3/4] rounded-3xl overflow-hidden shadow-soft hover:shadow-premium transition-all duration-500 hover:-translate-y-1.5"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={cat.image}
-                  alt={cat.name}
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 ease-out"
-                />
+                {/* Latar warna brand selalu ada di bawah foto: itu yang terlihat
+                    kalau kategori belum berfoto atau URL-nya mati. */}
+                <div className="absolute inset-0" style={{ background: cat.color }} />
+                {cat.image && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={cat.image}
+                    alt={cat.name}
+                    loading="lazy"
+                    decoding="async"
+                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 ease-out"
+                  />
+                )}
                 <div className={`absolute inset-0 bg-gradient-to-t ${cat.gradient}`} />
 
                 {/* Glassmorphism label */}
@@ -59,7 +67,7 @@ export function CategoryShowcase() {
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-semibold text-primary">{cat.productCount} produk</span>
                       <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary group-hover:gap-2 transition-all">
-                        Explore <ArrowRight className="w-3.5 h-3.5" />
+                        Lihat <ArrowRight className="w-3.5 h-3.5" />
                       </span>
                     </div>
                   </div>

@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
+import { cdn } from '@/lib/cloudinary';
 
 export async function PromoBanner() {
   const banners = await prisma.promoBanner.findMany({
@@ -15,8 +16,10 @@ export async function PromoBanner() {
       {banners.map((banner) => {
         const image = (
           <div className="relative w-full aspect-[16/5] min-h-[120px] rounded-3xl overflow-hidden bg-muted">
+            {/* 1600px: banner selebar layar, dan yang position 0 dimuat
+                priority — ini gambar pertama yang dilihat pembeli. */}
             <Image
-              src={banner.imageUrl}
+              src={cdn(banner.imageUrl, 1600) ?? banner.imageUrl}
               alt={banner.title}
               fill
               className="object-cover"

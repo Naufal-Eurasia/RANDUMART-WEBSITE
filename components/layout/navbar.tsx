@@ -77,8 +77,10 @@ export function Navbar() {
               </div>
             </Link>
 
-            {/* Desktop nav */}
-            <div className="hidden xl:flex items-center">
+            {/* Desktop nav — 8 link setelah 'Brand Ambassador' dicabut, jadi
+                padding & ukuran teks dilonggarkan dari px-1.5/13px yang dulu
+                dipakai supaya 9 link muat. Sisa ruang di xl masih ~180px. */}
+            <div className="hidden xl:flex items-center gap-0.5">
               {navLinks.map((link) =>
                 link.mega ? (
                   <div
@@ -86,10 +88,11 @@ export function Navbar() {
                     className="relative"
                     onMouseEnter={() => setMegaOpen(true)}
                     onMouseLeave={() => setMegaOpen(false)}
+                    onClick={() => setMegaOpen(!megaOpen)}
                   >
                     <button
                       className={cn(
-                        'inline-flex items-center gap-1 whitespace-nowrap px-1.5 py-2 text-[13px] font-medium rounded-lg transition-colors',
+                        'inline-flex items-center gap-1 whitespace-nowrap px-3 py-2 text-sm font-medium rounded-lg transition-colors',
                         'text-foreground hover:bg-muted'
                       )}
                     >
@@ -103,19 +106,27 @@ export function Navbar() {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: 12 }}
                           transition={{ duration: 0.2 }}
-                          className="absolute left-1/2 -translate-x-1/2 top-full pt-3 w-[min(92vw,900px)]"
+                          /* left-0, bukan left-1/2: parent-nya tombol (~200px dari tepi kiri),
+                             jadi -translate-x-1/2 atas panel 900px membuang ~250px ke luar viewport. */
+                          className="absolute left-0 top-full pt-3 w-[min(90vw,880px)]"
                         >
                           <div className="glass rounded-3xl shadow-premium border border-border/60 p-5">
-                            <div className="grid grid-cols-3 gap-3">
+                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 max-h-[60vh] overflow-y-auto">
+                              {categories.length === 0 && (
+                                <div className="col-span-full py-6 text-center text-sm text-muted-foreground">
+                                  Kategori belum tersedia
+                                </div>
+                              )}
                               {categories.map((c) => (
                                 <Link
                                   key={c.slug}
                                   href={`/products?category=${c.slug}`}
                                   className="group flex items-center gap-3 rounded-2xl p-2 hover:bg-muted transition-colors"
                                 >
-                                  <div className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0">
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img src={c.image} alt={c.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                  {/* Foto produk di kotak 56px tidak terbaca; inisial huruf
+                                      lebih jelas dan mengikuti pola tabel kategori admin. */}
+                                  <div className="w-14 h-14 rounded-xl shrink-0 grid place-items-center bg-muted text-lg font-display font-bold text-muted-foreground group-hover:bg-brand-green group-hover:text-brand-cream transition-colors">
+                                    {c.name.charAt(0).toUpperCase()}
                                   </div>
                                   <div>
                                     <div className="text-sm font-semibold text-foreground">{c.name}</div>
@@ -134,7 +145,7 @@ export function Navbar() {
                     key={link.label}
                     href={link.href}
                     className={cn(
-                      'whitespace-nowrap px-1.5 py-2 text-[13px] font-medium rounded-lg transition-colors',
+                      'whitespace-nowrap px-3 py-2 text-sm font-medium rounded-lg transition-colors',
                       'text-foreground hover:bg-muted'
                     )}
                   >

@@ -49,17 +49,10 @@ function ProductsContent() {
       try {
         const res = await fetch('/api/products');
         if (res.ok) {
-          const data = await res.json();
-          const mapped = data.map((p: any) => ({
-             ...p,
-             price: Number(p.price),
-             originalPrice: p.originalPrice ? Number(p.originalPrice) : null,
-             categorySlug: p.category?.slug,
-             categoryName: p.category?.name,
-             image: p.images?.find((img: any) => img.isPrimary)?.url || p.images?.[0]?.url || '',
-             shortDescription: p.description
-          }));
-          setDbProducts(mapped);
+          // Sudah lewat mapPrismaProducts di server: harga sudah number,
+          // gambar sudah bertransformasi Cloudinary. Tidak dipetakan ulang
+          // di sini — dulu perlu karena endpointnya kirim baris mentah.
+          setDbProducts(await res.json());
         }
       } catch (err) {
         console.error("Failed to fetch products", err);
@@ -76,7 +69,7 @@ function ProductsContent() {
     list = list.filter((p) => p.price >= priceRange[0] && p.price <= priceRange[1]);
     if (minRating > 0) list = list.filter((p) => p.rating >= minRating);
     if (inStockOnly) list = list.filter((p) => p.stock > 0);
-    if (bestSellerOnly) list = list.filter((p) => p.isBestSeller);
+    if (bestSellerOnly) list = list.filter((p) => p.bestSeller);
     if (initialConcern) list = list.filter((p) => p.tags && p.tags.includes(initialConcern));
 
     switch (sort) {
@@ -242,7 +235,7 @@ function ProductsContent() {
                     <div className="flex items-center gap-2 mb-1">
                       <div className="flex items-center gap-0.5"><Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" /><span className="text-xs font-semibold">{p.rating.toFixed(1)}</span></div>
                       <span className="text-xs text-muted-foreground">({p.reviewCount})</span>
-                      <span className="ml-auto text-xs text-muted-foreground">{p.categoryName}</span>
+                      <span className="ml-auto text-xs text-muted-foreground">{p.category}</span>
                     </div>
                     <Link href={`/products/${p.slug}`}><h3 className="font-display font-semibold hover:text-primary line-clamp-1">{p.name}</h3></Link>
                     <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{p.shortDescription}</p>

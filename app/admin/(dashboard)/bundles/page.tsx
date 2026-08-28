@@ -201,8 +201,12 @@ export default function BundlesAdminPage() {
       const data = await res.json();
       if (!res.ok) { toast.error(data.message || 'Gagal menyimpan bundle'); return; }
       toast.success(modalMode === 'edit' ? 'Bundle berhasil diperbarui' : 'Bundle berhasil dibuat');
+      if (modalMode === 'edit') {
+        setBundles((prev) => prev.map((b) => (b.id === editingId ? data : b)));
+      } else {
+        setBundles((prev) => [data, ...prev]);
+      }
       setIsModalOpen(false);
-      fetchData();
     } catch {
       toast.error('Kesalahan koneksi');
     } finally {
@@ -218,7 +222,7 @@ export default function BundlesAdminPage() {
       const res = await fetch(`/api/admin/bundles/${bundleToDelete.id}`, { method: 'DELETE' });
       const data = await res.json();
       if (!res.ok) toast.error(data.message || 'Gagal menghapus');
-      else { toast.success('Bundle dihapus'); fetchData(); }
+      else { toast.success('Bundle dihapus'); setBundles((prev) => prev.filter((b) => b.id !== bundleToDelete.id)); }
     } catch {
       toast.error('Kesalahan koneksi');
     } finally {

@@ -1,4 +1,5 @@
 import type { Product, Badge } from './types';
+import { cdn, IMG_CARD, IMG_GALLERY } from './cloudinary';
 
 function deriveBadges(p: any): Badge[] {
   const b: Badge[] = [];
@@ -19,8 +20,10 @@ export function mapPrismaProduct(p: any): Product {
     price: Number(p.price),
     originalPrice: p.originalPrice ? Number(p.originalPrice) : undefined,
     discount: p.discount ?? undefined,
-    image: primary?.url ?? p.images?.[0]?.url ?? '/placeholder.jpg',
-    images: (p.images ?? []).map((i: any) => ({ url: i.url })),
+    // Semua URL gambar lewat cdn() di sini — ini satu-satunya pintu keluar
+    // produk ke klien, jadi tidak ada jalur yang lolos mengirim foto mentah.
+    image: cdn(primary?.url ?? p.images?.[0]?.url, IMG_CARD) ?? '/placeholder.jpg',
+    images: (p.images ?? []).map((i: any) => ({ url: cdn(i.url, IMG_GALLERY) ?? '' })),
     rating: p.rating ?? 0,
     reviewCount: p.reviewCount ?? 0,
     description: p.description ?? '',
