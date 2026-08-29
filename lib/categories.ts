@@ -22,23 +22,21 @@ export function getCategoryVisual(index: number) {
 }
 
 export const concerns: Concern[] = [
-  { slug: 'acne', name: 'Acne', color: 'from-rose-500 to-pink-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },
-  { slug: 'brightening', name: 'Brightening', color: 'from-amber-400 to-yellow-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },
-  { slug: 'anti-aging', name: 'Anti Aging', color: 'from-violet-500 to-purple-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },
-  { slug: 'hair-care', name: 'Hair Care', color: 'from-cyan-500 to-blue-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },
-  { slug: 'immunity', name: 'Immunity', color: 'from-emerald-500 to-green-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },
-  { slug: 'weight-management', name: 'Weight Management', color: 'from-teal-500 to-cyan-500', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop' },
+  { slug: 'acne', name: 'Acne', color: 'from-rose-500 to-pink-500', image: '/images/products/ACNE.jpg' },
+  { slug: 'face-care', name: 'Face Care', color: 'from-amber-400 to-yellow-500', image: '/images/products/BRIGHTENING DAY CREAM.jpg' },
+  { slug: 'body-care', name: 'Body Care', color: 'from-violet-500 to-purple-500', image: '/images/products/DEODORANT SPRAY.jpg' },
+  { slug: 'face-wash', name: 'Face Wash', color: 'from-cyan-500 to-blue-500', image: '/images/products/FACE WASH.jpg' },
+  { slug: 'personal-care', name: 'Personal Care', color: 'from-emerald-500 to-green-500', image: '/images/products/LIP CARE NATURAL.jpg' },
+  { slug: 'herbal', name: 'Herbal', color: 'from-teal-500 to-cyan-500', image: '/images/products/GOMILKU GOLD.jpg' },
 ];
 
 // Label menu seragam bahasa Indonesia. 'FAQ' dibiarkan karena lazim
 // dipakai apa adanya di pasar lokal.
-// 'Brand Ambassador' dicabut dari navbar: tujuannya cuma satu poster,
-// tidak cukup jadi destinasi menu. Section-nya tetap ada di beranda dan
-// masih ditautkan dari footer.
 export const navLinks = [
   { label: 'Beranda', href: '/' },
   { label: 'Produk', href: '/products' },
   { label: 'Kategori', href: '/#categories', mega: true },
+  { label: 'Brand Ambassador', href: '/#ambassador' },
   { label: 'Promo', href: '/#promo' },
   { label: 'Artikel', href: '/#blog' },
   { label: 'Tentang Kami', href: '/#about' },

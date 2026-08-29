@@ -29,7 +29,7 @@ export function FeaturedProducts({ products }: { products: Product[] }) {
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-          {featured.map((p, i) => (
+          {featured?.map((p, i) => (
             <ProductCard key={p.id} product={p} index={i} />
           ))}
         </div>

@@ -252,12 +252,17 @@ export const testimonials: Testimonial[] = [
 ];
 
 export const whyChoose = [
-  { icon: 'Leaf', title: 'Natural Ingredients', desc: 'Bahan alami pilihan tanpa bahan kimia berbahaya.' },
-  { icon: 'ShieldCheck', title: 'BPOM Certified', desc: 'Semua produk terdaftar resmi di BPOM Indonesia.' },
+  { icon: 'Leaf', title: 'Pilihan Produk Herbal', desc: 'Menyediakan beragam pilihan produk herbal dan kebutuhan kesehatan untuk melengkapi kebutuhan Anda dan keluarga.' },
+  { icon: 'Landmark', title: 'Spesialis Oleh-Oleh Umrah & Haji', desc: 'Pilihan produk yang cocok dijadikan buah tangan untuk keluarga, kerabat, sahabat, maupun rekan kerja setelah pulang dari Tanah Suci.' },
+  { icon: 'Gift', title: 'Paket Oleh-Oleh Praktis', desc: 'Tersedia pilihan paket yang praktis untuk memudahkan jamaah menyiapkan oleh-oleh tanpa harus repot memilih satu per satu.' },
+  { icon: 'Package', title: 'Bisa Pesan Jumlah Banyak', desc: 'Melayani kebutuhan personal hingga pemesanan dalam jumlah besar untuk jamaah, keluarga, komunitas, maupun perusahaan.' },
+  { icon: 'SlidersHorizontal', title: 'Bisa Disesuaikan dengan Kebutuhan', desc: 'Pilihan produk dan paket dapat dikonsultasikan sesuai kebutuhan, jumlah penerima, dan anggaran.' },
+  { icon: 'ShieldCheck', title: 'Produk Terpercaya', desc: 'Mengutamakan produk yang jelas asal-usulnya dan memenuhi ketentuan serta perizinan yang berlaku sesuai kategori produknya.' },
+  { icon: 'Truck', title: 'Pengiriman Praktis', desc: 'Pesanan dapat dikirim ke berbagai wilayah Indonesia sehingga Anda tidak perlu repot membawa atau mencari oleh-oleh sendiri.' },
+  { icon: 'Headphones', title: 'Dibantu Tim yang Responsif', desc: 'Tim Randumart siap membantu memilih produk, menentukan paket, hingga proses pemesanan dan pengiriman.' },
   { icon: 'BadgeCheck', title: 'Halal Indonesia', desc: 'Bersertifikat halal MUI untuk ketenangan Anda.' },
+  { icon: 'ShieldCheck', title: 'BPOM Certified', desc: 'Semua produk terdaftar resmi di BPOM Indonesia.' },
   { icon: 'Users', title: 'Trusted by Thousands', desc: 'Dipercaya ribuan pelanggan di seluruh Indonesia.' },
-  { icon: 'Sparkles', title: 'High Quality', desc: 'Standar kualitas tinggi pada setiap produk.' },
-  { icon: 'Truck', title: 'Fast Delivery', desc: 'Pengiriman cepat ke seluruh Indonesia.' },
 ];
 
 export const stats = [

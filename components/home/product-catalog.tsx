@@ -17,7 +17,9 @@ const tabs = [
 
 type TabKey = typeof tabs[number]['key'];
 
-function getProducts(key: TabKey, products: Product[]) {
+function getProducts(key: TabKey, products: Product[] = []) {
+  if (!products || !Array.isArray(products)) return [];
+
   switch (key) {
     case 'newest':
       return products.filter((p) => p.isNew);
@@ -26,9 +28,9 @@ function getProducts(key: TabKey, products: Product[]) {
     case 'limited':
       return products.filter((p) => p.limited);
     case 'recommended':
-      return products.filter((p) => p.tags.includes('immunity') || p.tags.includes('brightening'));
+      return products.filter((p) => p.tags?.some((t) => ['immunity', 'brightening'].includes(t)));
     case 'popular':
-      return [...products].sort((a, b) => b.reviewCount - a.reviewCount);
+      return [...products].sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
     default:
       return products;
   }
@@ -82,7 +84,7 @@ export function ProductCatalog({ products }: { products: Product[] }) {
           }}
           className="!pb-2"
         >
-          {list.map((p, i) => (
+          {list?.map((p, i) => (
             <SwiperSlide key={p.id} className="!h-auto">
               <ProductCard product={p} index={i} />
             </SwiperSlide>
