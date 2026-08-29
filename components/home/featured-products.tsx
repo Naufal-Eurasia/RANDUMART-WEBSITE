@@ -5,13 +5,13 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/product/product-card';
-import { products } from '@/lib/products';
+import { Product } from '@/lib/types';
 
-export function FeaturedProducts() {
-  const featured = products.filter((p) => p.bestSeller || p.isNew).slice(0, 8);
+export function FeaturedProducts({ products }: { products: Product[] }) {
+  const featured = products;
 
   return (
-    <section className="py-20 lg:py-24 bg-brand-cream/50">
+    <section className="py-12 lg:py-16 bg-background">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between mb-10 gap-4">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
@@ -29,7 +29,7 @@ export function FeaturedProducts() {
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-          {featured.map((p, i) => (
+          {featured?.map((p, i) => (
             <ProductCard key={p.id} product={p} index={i} />
           ))}
         </div>

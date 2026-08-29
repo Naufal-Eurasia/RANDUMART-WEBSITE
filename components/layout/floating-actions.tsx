@@ -9,8 +9,10 @@ import { ShoppingBag } from 'lucide-react';
 export function FloatingActions() {
   const [show, setShow] = useState(false);
   const { setCartOpen, cartCount } = useStore();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const onScroll = () => setShow(window.scrollY > 600);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
@@ -36,7 +38,7 @@ export function FloatingActions() {
         className="lg:hidden grid place-items-center w-12 h-12 rounded-full bg-brand-emerald text-white shadow-premium hover:scale-110 transition-transform relative"
       >
         <ShoppingBag className="w-6 h-6" />
-        {cartCount() > 0 && (
+        {mounted && cartCount() > 0 && (
           <span className="absolute -top-1 -right-1 grid place-items-center min-w-5 h-5 px-1 rounded-full bg-accent text-white text-[10px] font-bold">
             {cartCount()}
           </span>

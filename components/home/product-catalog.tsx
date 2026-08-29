@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode, Autoplay } from 'swiper/modules';
 import { motion } from 'framer-motion';
 import { ProductCard } from '@/components/product/product-card';
-import { products } from '@/lib/products';
+import { Product } from '@/lib/types';
 
 const tabs = [
   { key: 'newest', label: 'Newest' },
@@ -17,7 +17,9 @@ const tabs = [
 
 type TabKey = typeof tabs[number]['key'];
 
-function getProducts(key: TabKey) {
+function getProducts(key: TabKey, products: Product[] = []) {
+  if (!products || !Array.isArray(products)) return [];
+
   switch (key) {
     case 'newest':
       return products.filter((p) => p.isNew);
@@ -26,17 +28,17 @@ function getProducts(key: TabKey) {
     case 'limited':
       return products.filter((p) => p.limited);
     case 'recommended':
-      return products.filter((p) => p.tags.includes('immunity') || p.tags.includes('brightening'));
+      return products.filter((p) => p.tags?.some((t) => ['immunity', 'brightening'].includes(t)));
     case 'popular':
-      return [...products].sort((a, b) => b.reviewCount - a.reviewCount);
+      return [...products].sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
     default:
       return products;
   }
 }
 
-export function ProductCatalog() {
+export function ProductCatalog({ products }: { products: Product[] }) {
   const [active, setActive] = useState<TabKey>('best-seller');
-  const list = getProducts(active);
+  const list = getProducts(active, products);
 
   return (
     <section className="py-20 lg:py-24 bg-background">
@@ -82,7 +84,7 @@ export function ProductCatalog() {
           }}
           className="!pb-2"
         >
-          {list.map((p, i) => (
+          {list?.map((p, i) => (
             <SwiperSlide key={p.id} className="!h-auto">
               <ProductCard product={p} index={i} />
             </SwiperSlide>

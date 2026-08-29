@@ -42,7 +42,7 @@ export function CartDrawer() {
                 <div key={item.product.id} className="flex gap-3">
                   <Link href={`/products/${item.product.slug}`} onClick={() => setCartOpen(false)} className="shrink-0">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={item.product.image} alt={item.product.name} className="w-20 h-24 rounded-xl object-cover" />
+                    <img src={item.product.images?.[0]?.url || '/placeholder.jpg'} alt={item.product.name} className="w-20 h-24 rounded-xl object-cover" />
                   </Link>
                   <div className="flex-1 min-w-0">
                     <Link href={`/products/${item.product.slug}`} onClick={() => setCartOpen(false)}>

@@ -2,21 +2,27 @@
 
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useStore } from '@/lib/store';
-import { products } from '@/lib/products';
-import { Search, TrendingUp, Clock, X } from 'lucide-react';
+import { Product } from '@/lib/types';
+import { Search, TrendingUp, Clock, X, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { formatRupiah } from '@/lib/categories';
 
 const popularKeywords = ['Habbatussauda', 'Vitamin C', 'Lipstick', 'Madu', 'Sunscreen', 'Serum'];
-const trendingSlugs = ['sr12-habbatussauda-capsule', 'sr12-vitamin-c-serum-10', 'sr12-matte-lipstick-velvet', 'sr12-madu-hutan-murni-500g'];
 
 export function SearchDialog() {
   const { searchOpen, setSearchOpen } = useStore();
   const [q, setQ] = useState('');
+  const [debouncedQ, setDebouncedQ] = useState('');
   const [recent, setRecent] = useState<string[]>([]);
+
+  const [results, setResults] = useState<Product[]>([]);
+  const [trending, setTrending] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Focus & Load Recent + Trending
   useEffect(() => {
     if (searchOpen) {
       setTimeout(() => inputRef.current?.focus(), 100);
@@ -24,24 +30,46 @@ export function SearchDialog() {
         const r = JSON.parse(localStorage.getItem('sr12-recent-searches') || '[]');
         setRecent(r);
       } catch {}
+
+      // Fetch trending (sekali saja)
+      if (trending.length === 0) {
+        fetch('/api/search?trending=true')
+          .then(res => res.json())
+          .then(data => setTrending(data))
+          .catch(console.error);
+      }
     } else {
       setQ('');
+      setDebouncedQ('');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchOpen]);
 
-  const results = useMemo(() => {
-    if (!q.trim()) return [];
-    const lower = q.toLowerCase();
-    return products.filter((p) => p.name.toLowerCase().includes(lower) || p.category.toLowerCase().includes(lower) || p.tags.some((t) => t.includes(lower))).slice(0, 6);
+  // Debounce logic
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedQ(q), 300);
+    return () => clearTimeout(timer);
   }, [q]);
+
+  // Fetch results based on debounced search
+  useEffect(() => {
+    if (!debouncedQ.trim()) {
+      setResults([]);
+      return;
+    }
+    setIsLoading(true);
+    fetch(`/api/search?q=${encodeURIComponent(debouncedQ)}`)
+      .then(res => res.json())
+      .then(data => setResults(data))
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
+  }, [debouncedQ]);
 
   const saveRecent = (term: string) => {
     const next = [term, ...recent.filter((r) => r !== term)].slice(0, 5);
     setRecent(next);
     localStorage.setItem('sr12-recent-searches', JSON.stringify(next));
   };
-
-  const trending = products.filter((p) => trendingSlugs.includes(p.slug));
 
   return (
     <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
@@ -57,12 +85,20 @@ export function SearchDialog() {
             placeholder="Cari produk, kategori, atau brand..."
             className="flex-1 bg-transparent outline-none text-base placeholder:text-muted-foreground"
           />
-          {q && <button onClick={() => setQ('')}><X className="w-4 h-4 text-muted-foreground" /></button>}
+          {q && (
+            <button onClick={() => setQ('')} className="hover:text-foreground">
+              <X className="w-4 h-4 text-muted-foreground" />
+            </button>
+          )}
         </div>
 
         <div className="max-h-[60vh] overflow-y-auto p-4">
           {q.trim() ? (
-            results.length > 0 ? (
+            isLoading ? (
+              <div className="py-10 flex justify-center">
+                <Loader2 className="w-6 h-6 animate-spin text-primary" />
+              </div>
+            ) : results.length > 0 ? (
               <div className="space-y-2">
                 <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Hasil Pencarian</p>
                 {results.map((p) => (
@@ -102,21 +138,23 @@ export function SearchDialog() {
                   ))}
                 </div>
               </div>
-              <div>
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 flex items-center gap-1.5"><TrendingUp className="w-3.5 h-3.5" /> Produk Trending</p>
-                <div className="grid grid-cols-2 gap-2">
-                  {trending.map((p) => (
-                    <Link key={p.id} href={`/products/${p.slug}`} onClick={() => setSearchOpen(false)} className="flex items-center gap-2 p-2 rounded-xl hover:bg-muted transition-colors">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={p.image} alt={p.name} className="w-10 h-12 rounded-lg object-cover" />
-                      <div className="min-w-0">
-                        <p className="text-xs font-medium line-clamp-1">{p.name}</p>
-                        <p className="text-xs text-brand-emerald font-bold">{formatRupiah(p.price)}</p>
-                      </div>
-                    </Link>
-                  ))}
+              {trending.length > 0 && (
+                <div>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2 flex items-center gap-1.5"><TrendingUp className="w-3.5 h-3.5" /> Produk Trending</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {trending.map((p) => (
+                      <Link key={p.id} href={`/products/${p.slug}`} onClick={() => setSearchOpen(false)} className="flex items-center gap-2 p-2 rounded-xl hover:bg-muted transition-colors">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={p.image} alt={p.name} className="w-10 h-12 rounded-lg object-cover" />
+                        <div className="min-w-0">
+                          <p className="text-xs font-medium line-clamp-1">{p.name}</p>
+                          <p className="text-xs text-brand-emerald font-bold">{formatRupiah(p.price)}</p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           )}
         </div>

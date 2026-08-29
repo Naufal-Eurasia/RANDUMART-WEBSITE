@@ -1,14 +1,14 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Leaf, ShieldCheck, BadgeCheck, FlaskConical, Users, Sparkles, Truck, Store } from 'lucide-react';
+import { Leaf, Landmark, Gift, Package, SlidersHorizontal, ShieldCheck, Truck, Headphones } from 'lucide-react';
 import { whyChoose } from '@/lib/products';
 
-const icons = { Leaf, ShieldCheck, BadgeCheck, FlaskConical, Users, Sparkles, Truck, Store } as const;
+const icons = { Leaf, Landmark, Gift, Package, SlidersHorizontal, ShieldCheck, Truck, Headphones } as const;
 
 export function WhyChoose() {
   return (
-    <section id="about" className="py-20 lg:py-24 bg-background">
+    <section id="about" className="py-12 lg:py-16 bg-muted/50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -19,8 +19,8 @@ export function WhyChoose() {
           <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-3">
             Keunggulan Kami
           </span>
-          <h2 className="font-display text-3xl sm:text-4xl font-bold">Mengapa Memilih SR12?</h2>
-          <p className="mt-2 text-muted-foreground">Komitmen kami untuk produk alami berkualitas tinggi.</p>
+          <h2 className="font-display text-3xl sm:text-4xl font-bold">Mengapa Memilih Randumart?</h2>
+          <p className="mt-2 text-muted-foreground">Lebih dari sekadar toko herbal dan oleh-oleh Umrah & Haji.</p>
         </motion.div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">

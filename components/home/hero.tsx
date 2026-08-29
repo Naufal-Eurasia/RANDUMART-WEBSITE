@@ -1,5 +1,8 @@
 'use client';
 
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/effect-fade';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, EffectFade } from 'swiper/modules';
 import { motion } from 'framer-motion';
@@ -9,19 +12,19 @@ import { Button } from '@/components/ui/button';
 
 const slides = [
   {
-    image: 'https://images.pexels.com/photos/4753990/pexels-photo-4753990.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=2000&auto=format&fit=crop',
     eyebrow: 'Herbal Alami',
     title: 'Hidup Sehat Dimulai dari Produk Alami Berkualitas',
-    subtitle: 'Temukan berbagai produk herbal, skincare, beauty, personal care, hingga kebutuhan keluarga dari SR12.',
+    subtitle: 'Temukan berbagai produk herbal, skincare, beauty, personal care, hingga kebutuhan keluarga di Randumart Herbal.',
   },
   {
-    image: 'https://images.pexels.com/photos/2533266/pexels-photo-2533266.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=2000&auto=format&fit=crop',
     eyebrow: 'Beauty & Skincare',
     title: 'Wajah Cerah, Kulit Sehat, Tampil Percaya Diri',
     subtitle: 'Rangkaian skincare premium dengan bahan alami teruji dermatologis untuk semua jenis kulit.',
   },
   {
-    image: 'https://images.pexels.com/photos/3933254/pexels-photo-3933254.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=2000&auto=format&fit=crop',
     eyebrow: 'Keluarga Sehat',
     title: 'Perawatan Aman untuk Si Kecil dan Seluruh Keluarga',
     subtitle: 'Produk lembut, halal, dan BPOM terdaftar untuk kesehatan dan kebahagiaan keluarga.',
@@ -30,7 +33,7 @@ const slides = [
 
 export function Hero() {
   return (
-    <section className="relative -mt-[4.5rem] lg:-mt-[6.5rem]">
+    <section className="relative -mt-16 lg:-mt-20">
       <Swiper
         modules={[Autoplay, Pagination, EffectFade]}
         autoplay={{ delay: 5500, disableOnInteraction: false }}
@@ -68,7 +71,7 @@ export function Hero() {
                       </Button>
                     </Link>
                     <Link href="/#categories">
-                      <Button size="lg" variant="outline" className="rounded-full bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white px-7 h-12 text-base backdrop-blur">
+                      <Button size="lg" variant="outline" className="rounded-full bg-white/10 border-brand-gold/30 text-white hover:bg-white/20 hover:text-white px-7 h-12 text-base backdrop-blur">
                         Lihat Katalog
                       </Button>
                     </Link>
@@ -91,7 +94,7 @@ export function Hero() {
               { icon: ShieldCheck, title: 'Pembayaran Aman', desc: '100% terpercaya' },
             ].map((t, i) => (
               <div key={i} className="flex items-center gap-3">
-                <div className="grid place-items-center w-11 h-11 rounded-2xl bg-primary/10 text-primary shrink-0">
+                <div className="grid place-items-center w-11 h-11 rounded-2xl bg-brand-gold/15 text-brand-gold shrink-0">
                   <t.icon className="w-5 h-5" />
                 </div>
                 <div>
