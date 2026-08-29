@@ -167,7 +167,7 @@ export function Navbar() {
               <button
                 onClick={() => setWishlistOpen(true)}
                 aria-label="Wishlist"
-                className={cn('relative grid place-items-center w-10 h-10 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
+                className={cn('group relative grid place-items-center w-10 h-10 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
               >
                 <Heart className="w-5 h-5" />
                 {mounted && wishlist.length > 0 && (
@@ -175,11 +175,14 @@ export function Navbar() {
                     {wishlist.length}
                   </span>
                 )}
+                <span className="hidden sm:block pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-2 whitespace-nowrap rounded-md bg-gray-900 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 z-50">
+                  Produk Disukai
+                </span>
               </button>
               <button
                 onClick={() => setCartOpen(true)}
                 aria-label="Cart"
-                className={cn('relative grid place-items-center w-10 h-10 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
+                className={cn('group relative grid place-items-center w-10 h-10 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
               >
                 <ShoppingBag className="w-5 h-5" />
                 {mounted && cartCount() > 0 && (
@@ -187,6 +190,9 @@ export function Navbar() {
                     {cartCount()}
                   </span>
                 )}
+                <span className="hidden sm:block pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-2 whitespace-nowrap rounded-md bg-gray-900 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 z-50">
+                  Keranjang Belanja
+                </span>
               </button>
 
               <div className="hidden sm:flex items-center gap-1 ml-1">
