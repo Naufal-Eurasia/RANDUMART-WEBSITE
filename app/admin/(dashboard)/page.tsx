@@ -5,6 +5,8 @@ import { formatRupiah } from '@/lib/categories';
 
 const statusColors: Record<string, string> = {
   PENDING: 'bg-brand-gold/20 text-brand-green border-brand-gold/40',
+  MENUNGGU_ONGKIR: 'bg-amber-100 text-amber-700 border-transparent',
+  MENUNGGU_BAYAR: 'bg-brand-gold/20 text-brand-green border-brand-gold/40',
   PAID: 'bg-brand-green text-brand-cream border-transparent',
   PROCESSING: 'bg-brand-cream text-brand-green border-brand-green/20',
   SHIPPED: 'bg-indigo-100 text-indigo-700 border-transparent',
@@ -15,6 +17,8 @@ const statusColors: Record<string, string> = {
 
 const statusLabels: Record<string, string> = {
   PENDING: 'Belum Bayar',
+  MENUNGGU_ONGKIR: 'Menunggu Ongkir',
+  MENUNGGU_BAYAR: 'Menunggu Pembayaran',
   PAID: 'Perlu Dikirim',
   PROCESSING: 'Diproses',
   SHIPPED: 'Dikirim',

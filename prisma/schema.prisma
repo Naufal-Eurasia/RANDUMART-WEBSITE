@@ -207,6 +207,8 @@ enum OrderStatus {
   COMPLETED
   CANCELLED
   EXPIRED
+  MENUNGGU_ONGKIR
+  MENUNGGU_BAYAR
 }
 
 enum BundleType {
