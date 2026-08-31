@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
-import { Loader2, Eye, MapPin, Package, Check, X, MessageCircle, Search } from 'lucide-react';
+import { Loader2, Eye, MapPin, Package, Check, X, MessageCircle, Search, ArrowUpDown, ChevronUp, ChevronDown } from 'lucide-react';
 import { formatRupiah } from '@/lib/categories';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
@@ -36,12 +36,15 @@ const statusLabels: Record<string, string> = {
   EXPIRED: 'Kedaluwarsa',
 };
 
+type SortKey = 'date' | 'total';
+
 export default function OrdersAdminPage() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [activeTab, setActiveTab] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: 'asc' | 'desc' } | null>(null);
 
   // Detail Modal State
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
@@ -99,6 +102,36 @@ export default function OrdersAdminPage() {
     return matchesTab && matchesSearch;
   });
 
+  const handleSort = (key: SortKey) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') direction = 'desc';
+    setSortConfig({ key, direction });
+  };
+
+  const getSortedOrders = () => {
+    if (!sortConfig) return filteredOrders;
+    return [...filteredOrders].sort((a, b) => {
+      if (sortConfig.key === 'date') {
+        return sortConfig.direction === 'asc'
+          ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      }
+      if (sortConfig.key === 'total') {
+        const totalA = Number(a.totalAmount) || 0;
+        const totalB = Number(b.totalAmount) || 0;
+        return sortConfig.direction === 'asc' ? totalA - totalB : totalB - totalA;
+      }
+      return 0;
+    });
+  };
+
+  const SortIcon = ({ columnKey }: { columnKey: SortKey }) => {
+    if (sortConfig?.key !== columnKey) return <ArrowUpDown className="w-3.5 h-3.5 ml-1 opacity-50" />;
+    return sortConfig.direction === 'asc' ? <ChevronUp className="w-3.5 h-3.5 ml-1" /> : <ChevronDown className="w-3.5 h-3.5 ml-1" />;
+  };
+
+  const sortedOrders = getSortedOrders();
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -136,17 +169,21 @@ export default function OrdersAdminPage() {
             <thead className="bg-muted/50 text-muted-foreground border-b border-border/60">
               <tr>
                 <th className="px-6 py-4 font-semibold">ID Pesanan</th>
-                <th className="px-6 py-4 font-semibold">Waktu</th>
+                <th className="px-6 py-4 font-semibold cursor-pointer select-none hover:text-foreground" onClick={() => handleSort('date')}>
+                  <div className="flex items-center gap-1">Waktu <SortIcon columnKey="date" /></div>
+                </th>
                 <th className="px-6 py-4 font-semibold">Pelanggan</th>
-                <th className="px-6 py-4 font-semibold">Total Pembayaran</th>
+                <th className="px-6 py-4 font-semibold cursor-pointer select-none hover:text-foreground" onClick={() => handleSort('total')}>
+                  <div className="flex items-center gap-1">Total Pembayaran <SortIcon columnKey="total" /></div>
+                </th>
                 <th className="px-6 py-4 font-semibold text-center">Status</th>
                 <th className="px-6 py-4 font-semibold text-right">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60">
               {loading ? <tr><td colSpan={6} className="px-6 py-12 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto" /></td></tr> :
-                filteredOrders.length === 0 ? <tr><td colSpan={6} className="px-6 py-12 text-center text-muted-foreground">Tidak ada pesanan ditemukan</td></tr> :
-                filteredOrders.map((o) => (
+                sortedOrders.length === 0 ? <tr><td colSpan={6} className="px-6 py-12 text-center text-muted-foreground">Tidak ada pesanan ditemukan</td></tr> :
+                sortedOrders.map((o) => (
                   <tr key={o.id} className="hover:bg-muted/30">
                     <td className="px-6 py-4">
                       <button onClick={() => openDetail(o)} className="font-semibold text-brand-green hover:underline flex items-center gap-1.5">

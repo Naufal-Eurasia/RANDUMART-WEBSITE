@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import {
-  Plus, Edit2, Trash2, Loader2, PackageOpen, ShoppingBag, X, Search, Gift, ImagePlus,
+  Plus, Edit2, Trash2, Loader2, PackageOpen, ShoppingBag, X, Search, Gift, ImagePlus, ArrowUpDown, ChevronUp, ChevronDown
 } from 'lucide-react';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
@@ -68,6 +68,9 @@ export default function BundlesAdminPage() {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [loading, setLoading]     = useState(true);
   const [submitting, setSubmitting] = useState(false);
+
+  type SortKey = 'type' | 'price' | 'itemsCount';
+  const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: 'asc' | 'desc' } | null>(null);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -240,6 +243,39 @@ export default function BundlesAdminPage() {
 
   const totalPreview = calcTotal(formData.items, allProducts);
 
+  const handleSort = (key: SortKey) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') direction = 'desc';
+    setSortConfig({ key, direction });
+  };
+
+  const getSortedBundles = () => {
+    if (!sortConfig) return bundles;
+    return [...bundles].sort((a, b) => {
+      if (sortConfig.key === 'type') {
+        return sortConfig.direction === 'asc' ? a.type.localeCompare(b.type) : b.type.localeCompare(a.type);
+      }
+      if (sortConfig.key === 'price') {
+        const priceA = Number(a.price) || 0;
+        const priceB = Number(b.price) || 0;
+        return sortConfig.direction === 'asc' ? priceA - priceB : priceB - priceA;
+      }
+      if (sortConfig.key === 'itemsCount') {
+        const countA = a.items.reduce((sum, item) => sum + item.quantity, 0);
+        const countB = b.items.reduce((sum, item) => sum + item.quantity, 0);
+        return sortConfig.direction === 'asc' ? countA - countB : countB - countA;
+      }
+      return 0;
+    });
+  };
+
+  const SortIcon = ({ columnKey }: { columnKey: SortKey }) => {
+    if (sortConfig?.key !== columnKey) return <ArrowUpDown className="w-3.5 h-3.5 ml-1 opacity-50" />;
+    return sortConfig.direction === 'asc' ? <ChevronUp className="w-3.5 h-3.5 ml-1" /> : <ChevronDown className="w-3.5 h-3.5 ml-1" />;
+  };
+
+  const sortedBundles = getSortedBundles();
+
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div className="space-y-6">
@@ -275,14 +311,20 @@ export default function BundlesAdminPage() {
                 <tr>
                   <th className="text-left px-5 py-3 font-semibold text-muted-foreground">Foto</th>
                   <th className="text-left px-5 py-3 font-semibold text-muted-foreground">Nama Bundle</th>
-                  <th className="text-center px-5 py-3 font-semibold text-muted-foreground">Tipe</th>
-                  <th className="text-center px-5 py-3 font-semibold text-muted-foreground">Jml Produk</th>
-                  <th className="text-right px-5 py-3 font-semibold text-muted-foreground">Harga</th>
+                  <th className="text-center px-5 py-3 font-semibold text-muted-foreground cursor-pointer select-none hover:text-foreground" onClick={() => handleSort('type')}>
+                    <div className="flex items-center justify-center gap-1">Tipe <SortIcon columnKey="type" /></div>
+                  </th>
+                  <th className="text-center px-5 py-3 font-semibold text-muted-foreground cursor-pointer select-none hover:text-foreground" onClick={() => handleSort('itemsCount')}>
+                    <div className="flex items-center justify-center gap-1">Jml Produk <SortIcon columnKey="itemsCount" /></div>
+                  </th>
+                  <th className="text-right px-5 py-3 font-semibold text-muted-foreground cursor-pointer select-none hover:text-foreground" onClick={() => handleSort('price')}>
+                    <div className="flex items-center justify-end gap-1">Harga <SortIcon columnKey="price" /></div>
+                  </th>
                   <th className="text-center px-5 py-3 font-semibold text-muted-foreground">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/40">
-                {bundles.map((b) => {
+                {sortedBundles.map((b) => {
                   const isParsel = b.type === 'PARSEL';
                   return (
                     <tr key={b.id} className="hover:bg-muted/30 transition-colors">
