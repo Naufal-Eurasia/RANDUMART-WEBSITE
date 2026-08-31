@@ -201,6 +201,8 @@ enum Role {
 
 enum OrderStatus {
   PENDING
+  MENUNGGU_ONGKIR
+  MENUNGGU_BAYAR
   PAID
   PROCESSING
   SHIPPED

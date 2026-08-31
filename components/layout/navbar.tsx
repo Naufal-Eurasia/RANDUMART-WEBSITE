@@ -38,7 +38,7 @@ export function Navbar() {
         <div className="flex whitespace-nowrap animate-marquee">
           {Array.from({ length: 2 }).map((_, i) => (
             <div key={i} className="flex shrink-0">
-              {['Gratis ongkir ke seluruh Indonesia', 'Flash Sale hingga 50% OFF', 'Produk BPOM & Halal terjamin', 'Pembayaran aman & terpercaya', 'New Arrival setiap minggu'].map((t, j) => (
+              {['Pengiriman aman ke seluruh Indonesia', 'Flash Sale hingga 50% OFF', 'Produk BPOM & Halal terjamin', 'Pembayaran aman & terpercaya', 'New Arrival setiap minggu'].map((t, j) => (
                 <span key={j} className="mx-6 inline-flex items-center gap-2 font-medium">
                   <span className="text-brand-gold">✦</span> {t}
                 </span>

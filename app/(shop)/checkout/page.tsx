@@ -184,7 +184,7 @@ export default function CheckoutPage() {
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Biaya Kirim</span>
-                <span className="font-medium text-emerald-600">Gratis (Promo v1)</span>
+                <span className="font-medium text-amber-600">Dihitung Admin via WA</span>
               </div>
               <div className="border-t border-border/60 pt-3 flex justify-between items-center">
                 <span className="font-bold font-display text-lg">Total Bayar</span>

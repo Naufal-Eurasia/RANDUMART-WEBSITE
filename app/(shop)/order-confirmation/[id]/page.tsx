@@ -1,8 +1,21 @@
 import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { formatRupiah } from '@/lib/categories';
+import { buildOrderMessage, buildWaLink, subtotalOf } from '@/lib/whatsapp';
 import { CheckCircle2, Clock, MapPin, Package, AlertCircle, XCircle } from 'lucide-react';
 import Link from 'next/link';
+
+// Halaman ini PUBLIK (middleware.ts:25 hanya menjaga /admin & /account) dan
+// order.id adalah cuid — timestamp + counter + fingerprint + 4 karakter acak,
+// jadi bukan rahasia yang kuat. Alamat hanya ditampilkan sebagian: cukup untuk
+// pemesan mengenali tujuan kirimnya, tidak cukup untuk orang lain memakainya.
+// ponytail: ambil segmen terakhir setelah koma (biasanya kota/provinsi).
+// Kalau nanti alamat jadi terstruktur (Blok B), ganti dengan field kota saja.
+function maskAddress(addr: string): string {
+  const parts = addr.split(',').map((s) => s.trim()).filter(Boolean);
+  const tail = parts.length > 1 ? parts[parts.length - 1] : '';
+  return tail ? `••••, ${tail}` : '••••';
+}
 
 export default async function OrderConfirmationPage({ params }: { params: { id: string } }) {
   const [order, storeSetting] = await Promise.all([
@@ -23,8 +36,13 @@ export default async function OrderConfirmationPage({ params }: { params: { id: 
     notFound();
   }
 
-  const waNumber = storeSetting?.whatsappNumber || '6281234567890';
-  const isPending = order.status === 'PENDING';
+  // Tanpa fallback hardcode. Nomor '6281234567890' yang dulu dipakai di sini
+  // milik pihak asing: kalau StoreSetting kosong, data pesanan pelanggan asli
+  // terkirim ke orang yang tidak dikenal. Lebih baik tombol mati dan terlihat
+  // rusak daripada diam-diam mengirim ke nomor salah.
+  // buildWaLink mengembalikan null kalau nomornya kosong atau tidak masuk akal.
+  const waLink = buildWaLink(storeSetting?.whatsappNumber, buildOrderMessage(order));
+  const isPending = order.status === 'PENDING' || order.status === 'MENUNGGU_ONGKIR' || order.status === 'MENUNGGU_BAYAR';
   const isPaid = order.status === 'PAID' || order.status === 'COMPLETED' || order.status === 'SHIPPED' || order.status === 'PROCESSING';
   const isExpired = order.status === 'EXPIRED';
 
@@ -84,28 +102,28 @@ export default async function OrderConfirmationPage({ params }: { params: { id: 
              </div>
 
              <div className="flex flex-col items-center justify-center">
-               <a
-                 href={`https://wa.me/${waNumber}?text=${encodeURIComponent(
-                   `Halo Admin *Randumart*, saya ingin mengkonfirmasi pesanan saya.\n\n` +
-                   `*DETAIL PESANAN*\n` +
-                   `🏷️ Order ID: *${order.id}*\n` +
-                   `👤 Nama: ${order.guestName}\n` +
-                   `📞 No. WA: ${order.guestPhone}\n\n` +
-                   `*RINGKASAN BELANJA*\n` +
-                   order.items.map(i => `${i.quantity}x ${i.product.name} - ${formatRupiah(Number(i.priceAtPurchase) * i.quantity)}`).join('\n') +
-                   `\n-----------------------------------\n` +
-                   `💰 *TOTAL TAGIHAN: ${formatRupiah(Number(order.totalAmount))}*\n` +
-                   `*(Belum termasuk ongkir. Ongkir akan diinfokan admin)*\n\n` +
-                   `*ALAMAT PENGIRIMAN*\n` +
-                   `${order.shippingAddress}\n\n` +
-                   `Mohon informasi nomor rekening untuk proses transfer. Terima kasih! 🙏`
-                 )}`}
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className="flex w-full sm:w-auto items-center justify-center gap-2 px-10 py-4 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-semibold shadow-soft active:scale-[0.98] transition-all"
-               >
-                 Kirim Konfirmasi ke WhatsApp Admin
-               </a>
+               {waLink ? (
+                 <a
+                   href={waLink}
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="flex w-full sm:w-auto items-center justify-center gap-2 px-10 py-4 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-semibold shadow-soft active:scale-[0.98] transition-all"
+                 >
+                   Kirim Konfirmasi ke WhatsApp Admin
+                 </a>
+               ) : (
+                 <div className="text-center">
+                   <button
+                     disabled
+                     className="flex w-full sm:w-auto items-center justify-center gap-2 px-10 py-4 rounded-xl bg-muted text-muted-foreground font-semibold cursor-not-allowed"
+                   >
+                     Nomor Admin Belum Diatur
+                   </button>
+                   <p className="text-xs text-muted-foreground mt-3">
+                     Hubungi admin melalui kontak di halaman utama dengan menyebut kode pesanan di atas.
+                   </p>
+                 </div>
+               )}
              </div>
           </div>
         )}
@@ -128,17 +146,25 @@ export default async function OrderConfirmationPage({ params }: { params: { id: 
                  </div>
                ))}
              </div>
+             {/* Subtotal dihitung dari item, bukan `totalAmount - shippingCost`.
+                 Rumus lama salah: saat ongkir belum diisi, totalAmount memang
+                 subtotal, jadi mengurangi ongkir lagi akan menghitung ganda
+                 begitu ongkir terisi. Angka di sini tidak bergantung status. */}
              <div className="border-t border-border/60 mt-4 pt-4 space-y-2">
                <div className="flex justify-between text-sm">
                  <span className="text-muted-foreground">Subtotal</span>
-                 <span className="font-medium">{formatRupiah(Number(order.totalAmount) - Number(order.shippingCost))}</span>
+                 <span className="font-medium">{formatRupiah(subtotalOf(order.items))}</span>
                </div>
                <div className="flex justify-between text-sm">
                  <span className="text-muted-foreground">Biaya Kirim</span>
-                 <span className="font-medium text-amber-600">Dihitung Admin via WA</span>
+                 {Number(order.shippingCost) > 0 ? (
+                   <span className="font-medium">{formatRupiah(Number(order.shippingCost))}</span>
+                 ) : (
+                   <span className="font-medium text-amber-600">Dihitung Admin via WA</span>
+                 )}
                </div>
                <div className="flex justify-between text-base font-bold pt-2">
-                 <span>Total Akhir</span>
+                 <span>{Number(order.shippingCost) > 0 ? 'Total Akhir' : 'Subtotal (belum termasuk ongkir)'}</span>
                  <span className="text-brand-green">{formatRupiah(Number(order.totalAmount))}</span>
                </div>
              </div>
@@ -150,22 +176,20 @@ export default async function OrderConfirmationPage({ params }: { params: { id: 
                <MapPin className="w-5 h-5 text-muted-foreground" />
                Alamat Pengiriman
              </h2>
+             {/* Nomor telepon & email dihapus, alamat disamarkan: halaman ini
+                 publik. Pemesan sudah tahu datanya sendiri, jadi menampilkannya
+                 tidak menambah nilai — hanya menambah yang bisa bocor. */}
              <div className="space-y-3 text-sm">
                <div>
                  <p className="text-muted-foreground text-xs mb-0.5">Nama Penerima</p>
                  <p className="font-medium">{order.guestName}</p>
                </div>
                <div>
-                 <p className="text-muted-foreground text-xs mb-0.5">Nomor Telepon</p>
-                 <p className="font-medium">{order.guestPhone}</p>
-               </div>
-               <div>
-                 <p className="text-muted-foreground text-xs mb-0.5">Email</p>
-                 <p className="font-medium">{order.guestEmail}</p>
-               </div>
-               <div>
-                 <p className="text-muted-foreground text-xs mb-0.5">Alamat Lengkap</p>
-                 <p className="font-medium leading-relaxed">{order.shippingAddress}</p>
+                 <p className="text-muted-foreground text-xs mb-0.5">Alamat Pengiriman</p>
+                 <p className="font-medium leading-relaxed">{maskAddress(order.shippingAddress)}</p>
+                 <p className="text-xs text-muted-foreground mt-1">
+                   Alamat lengkap disembunyikan demi keamanan. Admin sudah menerimanya.
+                 </p>
                </div>
              </div>
           </div>

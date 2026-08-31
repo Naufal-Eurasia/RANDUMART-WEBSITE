@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 const promos = [
   { icon: Zap, title: 'Flash Sale 50% OFF', desc: 'Diskon spesial untuk produk terpilih. Buruan sebelum kehabisan!', color: 'from-orange-500 to-red-500', cta: 'Belanja Sekarang' },
   { icon: Gift, title: 'Bundle Hemat 30%', desc: 'Paket bundling skincare lengkap dengan harga lebih hemat.', color: 'from-emerald-500 to-teal-500', cta: 'Lihat Bundle' },
-  { icon: Truck, title: 'Gratis Ongkir', desc: 'Minimal belanja Rp150.000 ke seluruh Indonesia.', color: 'from-blue-500 to-cyan-500', cta: 'Klaim Sekarang' },
+  { icon: Truck, title: 'Pengiriman Aman', desc: 'Dikemas rapi dengan bubble wrap ke seluruh Indonesia.', color: 'from-blue-500 to-cyan-500', cta: 'Beli Sekarang' },
   { icon: Clock, title: 'Limited Time Offer', desc: 'Voucher Rp25.000 untuk pembelian pertama Anda.', color: 'from-fuchsia-500 to-pink-500', cta: 'Pakai Voucher' },
 ];
 

@@ -2,13 +2,26 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { checkAdminAuth } from '@/lib/auth-utils';
 
+const VALID_TRANSITIONS: Record<string, string[]> = {
+  PENDING: ['MENUNGGU_ONGKIR', 'CANCELLED', 'EXPIRED'],
+  MENUNGGU_ONGKIR: ['MENUNGGU_BAYAR', 'CANCELLED'],
+  MENUNGGU_BAYAR: ['PAID', 'CANCELLED', 'EXPIRED'],
+  PAID: ['PROCESSING', 'SHIPPED'],
+  PROCESSING: ['SHIPPED'],
+  SHIPPED: ['COMPLETED'],
+  COMPLETED: [],
+  CANCELLED: [],
+  EXPIRED: [],
+};
+
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
   if (!(await checkAdminAuth())) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  
+
   try {
-    const { status } = await req.json();
-    const validStatuses = ['PENDING', 'PAID', 'PROCESSING', 'SHIPPED', 'COMPLETED', 'CANCELLED', 'EXPIRED'];
-    if (!validStatuses.includes(status)) return NextResponse.json({ message: 'Invalid status' }, { status: 400 });
+    const { status, shippingCost } = await req.json();
+    if (!Object.keys(VALID_TRANSITIONS).includes(status)) {
+      return NextResponse.json({ message: 'Invalid status' }, { status: 400 });
+    }
 
     const order = await prisma.order.findUnique({
       where: { id: params.id },
@@ -17,9 +30,14 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 
     if (!order) return NextResponse.json({ message: 'Order not found' }, { status: 404 });
 
+    // MENUNGGU_BAYAR -> MENUNGGU_BAYAR is allowed to update shipping cost
+    if (order.status !== status && !VALID_TRANSITIONS[order.status].includes(status)) {
+      return NextResponse.json({ message: `Cannot transition from ${order.status} to ${status}` }, { status: 400 });
+    }
+
     const updatedOrder = await prisma.$transaction(async (tx) => {
-      // Validasi Stok Atomik HANYA saat transisi PENDING -> PAID
-      if (status === 'PAID' && order.status === 'PENDING') {
+      // Validasi Stok Atomik HANYA saat status dipastikan bergeser masuk ke flow berbayar
+      if (status === 'PAID') {
         for (const item of order.items) {
           const result = await tx.product.updateMany({
             where: { id: item.productId, stock: { gte: item.quantity } },
@@ -31,15 +49,27 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
         }
       }
 
-      // Pembatalan HANYA diizinkan dari status PENDING (Sesuai BUSINESS_RULES.md)
-      if ((status === 'CANCELLED' || status === 'EXPIRED') && order.status !== 'PENDING') {
-        throw new Error('Pesanan hanya dapat dibatalkan jika status masih PENDING.');
+      const updateData: any = { status };
+
+      if (shippingCost !== undefined && (order.status === 'MENUNGGU_ONGKIR' || order.status === 'MENUNGGU_BAYAR')) {
+        updateData.shippingCost = Number(shippingCost);
+        // Sesuai kesepakatan: totalAmount = subtotal + ongkir saat MENUNGGU_BAYAR
+        // (totalAmount saat checkout menyimpan subtotal murni)
+        const subtotal = order.items.reduce((sum, item) => sum + (Number(item.priceAtPurchase) * item.quantity), 0);
+        updateData.totalAmount = subtotal + Number(shippingCost);
       }
 
-      return tx.order.update({
-        where: { id: params.id },
-        data: { status }
+      // Gunakan CAS (updateMany) untuk mencegah race condition jika request paralel
+      const res = await tx.order.updateMany({
+        where: { id: params.id, status: order.status },
+        data: updateData
       });
+
+      if (res.count === 0) {
+        throw new Error('Status pesanan sudah berubah, silakan muat ulang.');
+      }
+
+      return tx.order.findUnique({ where: { id: params.id } });
     });
 
     return NextResponse.json(updatedOrder);

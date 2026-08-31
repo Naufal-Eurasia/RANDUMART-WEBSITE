@@ -85,10 +85,10 @@ export async function POST(req: Request) {
         guestEmail: email,
         guestPhone: phone,
         shippingAddress: address,
-        status: 'PENDING',
+        status: 'MENUNGGU_ONGKIR',
         totalAmount: calculatedTotalAmount, // Terhitung 100% dari Backend
-        shippingCost: 0, // V1: Gratis ongkir
-        midtransOrderId: uniqueMidtransId, 
+        shippingCost: 0, // Dihitung admin nanti
+        midtransOrderId: uniqueMidtransId,
         items: {
           create: orderItemsData,
         }

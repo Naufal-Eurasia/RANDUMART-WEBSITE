@@ -66,9 +66,9 @@ export default async function AccountPage() {
                   </div>
                   <span className={`px-3 py-1 rounded-full text-xs font-bold w-fit ${
                     order.status === 'PAID' || order.status === 'COMPLETED' ? 'bg-emerald-100 text-emerald-700' :
-                    order.status === 'PENDING' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-700'
+                    (order.status === 'PENDING' || order.status === 'MENUNGGU_ONGKIR' || order.status === 'MENUNGGU_BAYAR') ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-700'
                   }`}>
-                    {order.status}
+                    {order.status === 'MENUNGGU_ONGKIR' ? 'Menunggu Ongkir' : order.status === 'MENUNGGU_BAYAR' ? 'Menunggu Bayar' : order.status}
                   </span>
                 </div>
 
@@ -85,7 +85,7 @@ export default async function AccountPage() {
 
                 <div className="mt-4 pt-4 border-t border-border/60 flex justify-between items-center">
                   <div>
-                    <p className="text-xs text-muted-foreground">Total Belanja</p>
+                    <p className="text-xs text-muted-foreground">{order.status === 'MENUNGGU_ONGKIR' ? 'Subtotal (belum ongkir)' : 'Total Akhir'}</p>
                     <p className="font-display font-bold text-brand-green">{formatRupiah(Number(order.totalAmount))}</p>
                   </div>
                   <Link href={`/order-confirmation/${order.id}`} className="flex items-center gap-1 text-sm font-semibold text-brand-green hover:underline">
