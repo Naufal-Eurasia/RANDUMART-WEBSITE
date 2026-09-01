@@ -156,6 +156,10 @@ export function getRelatedProducts(product: Product, limit = 4) {
     .slice(0, limit);
 }
 
+export function getBlogPostBySlug(slug: string) {
+  return blogPosts.find((p) => p.slug === slug);
+}
+
 export const blogPosts: BlogPost[] = [
   {
     id: 'b1',
@@ -163,7 +167,7 @@ export const blogPosts: BlogPost[] = [
     title: '7 Manfaat Habbatussauda untuk Kesehatan Tubuh',
     excerpt: 'Tanaman habbatussauda dikenal sebagai obat segala penyakit. Simak manfaatnya untuk imunitas dan kesehatan harian.',
     category: 'Herbal Education',
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=800&auto=format&fit=crop',
     author: 'Tim SR12',
     date: '2024-06-12',
     readTime: '5 menit',
@@ -174,7 +178,7 @@ export const blogPosts: BlogPost[] = [
     title: 'Rutin Skincare Pagi untuk Pemula',
     excerpt: 'Belum tahu urutan skincare pagi? Ini panduan lengkap untuk pemula dengan produk yang tepat.',
     category: 'Skincare Guide',
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?q=80&w=800&auto=format&fit=crop',
     author: 'Dewi Lestari',
     date: '2024-06-20',
     readTime: '6 menit',
@@ -185,7 +189,7 @@ export const blogPosts: BlogPost[] = [
     title: '5 Tips Brightening Wajah Secara Alami',
     excerpt: 'Wajah kusam? Ikuti 5 tips sederhana untuk mencerahkan wajah dengan bahan alami dan produk yang tepat.',
     category: 'Beauty Tips',
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=800&auto=format&fit=crop',
     author: 'Putri Anggraini',
     date: '2024-07-01',
     readTime: '4 menit',
@@ -196,7 +200,7 @@ export const blogPosts: BlogPost[] = [
     title: 'Cara Menjaga Imun Keluarga di Musim Hujan',
     excerpt: 'Musim hujan identik dengan flu. Begini cara menjaga imun keluarga dengan suplemen dan herbal alami.',
     category: 'Health Tips',
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1550572017-4fcdbb59cc32?q=80&w=800&auto=format&fit=crop',
     author: 'Tim SR12',
     date: '2024-07-10',
     readTime: '7 menit',

@@ -33,7 +33,7 @@ export function BlogSection() {
               transition={{ duration: 0.4, delay: i * 0.06 }}
               className="group rounded-3xl overflow-hidden bg-white border border-border/60 shadow-soft hover:shadow-premium transition-all hover:-translate-y-1"
             >
-              <Link href="#" className="block">
+              <Link href={`/blog/${post.slug}`} className="block">
                 <div className="relative aspect-[4/3] overflow-hidden bg-muted">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={post.image} alt={post.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
