@@ -14,7 +14,7 @@ export const ORDER_STATUS_LABELS: Record<string, string> = {
   PENDING: 'Checkout Lama (Pending)',
   MENUNGGU_ONGKIR: 'Menunggu Ongkir',
   MENUNGGU_BAYAR: 'Menunggu Bayar',
-  PAID: 'Dibayar',
+  PAID: 'Perlu Dikirim',
   PROCESSING: 'Diproses',
   SHIPPED: 'Dikirim',
   COMPLETED: 'Selesai',

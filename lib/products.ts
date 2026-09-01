@@ -157,6 +157,10 @@ export function getRelatedProducts(product: Product, limit = 4) {
     .slice(0, limit);
 }
 
+export function getBlogPostBySlug(slug: string) {
+  return blogPosts.find((p) => p.slug === slug);
+}
+
 export const blogPosts: BlogPost[] = [
   {
     id: 'b1',
@@ -164,7 +168,7 @@ export const blogPosts: BlogPost[] = [
     title: '7 Manfaat Habbatussauda untuk Kesehatan Tubuh',
     excerpt: 'Tanaman habbatussauda dikenal sebagai obat segala penyakit. Simak manfaatnya untuk imunitas dan kesehatan harian.',
     category: 'Herbal Education',
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=800&auto=format&fit=crop',
     author: 'Tim SR12',
     date: '2024-06-12',
     readTime: '5 menit',
@@ -175,7 +179,7 @@ export const blogPosts: BlogPost[] = [
     title: 'Rutin Skincare Pagi untuk Pemula',
     excerpt: 'Belum tahu urutan skincare pagi? Ini panduan lengkap untuk pemula dengan produk yang tepat.',
     category: 'Skincare Guide',
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?q=80&w=800&auto=format&fit=crop',
     author: 'Dewi Lestari',
     date: '2024-06-20',
     readTime: '6 menit',
@@ -186,7 +190,7 @@ export const blogPosts: BlogPost[] = [
     title: '5 Tips Brightening Wajah Secara Alami',
     excerpt: 'Wajah kusam? Ikuti 5 tips sederhana untuk mencerahkan wajah dengan bahan alami dan produk yang tepat.',
     category: 'Beauty Tips',
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=800&auto=format&fit=crop',
     author: 'Putri Anggraini',
     date: '2024-07-01',
     readTime: '4 menit',
@@ -197,7 +201,7 @@ export const blogPosts: BlogPost[] = [
     title: 'Cara Menjaga Imun Keluarga di Musim Hujan',
     excerpt: 'Musim hujan identik dengan flu. Begini cara menjaga imun keluarga dengan suplemen dan herbal alami.',
     category: 'Health Tips',
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1550572017-4fcdbb59cc32?q=80&w=800&auto=format&fit=crop',
     author: 'Tim SR12',
     date: '2024-07-10',
     readTime: '7 menit',
@@ -253,12 +257,17 @@ export const testimonials: Testimonial[] = [
 ];
 
 export const whyChoose = [
-  { icon: 'Leaf', title: 'Natural Ingredients', desc: 'Bahan alami pilihan tanpa bahan kimia berbahaya.' },
-  { icon: 'ShieldCheck', title: 'BPOM Certified', desc: 'Semua produk terdaftar resmi di BPOM Indonesia.' },
-  { icon: 'BadgeCheck', title: 'Halal Indonesia', desc: 'Bersertifikat halal MUI untuk ketenangan Anda.' },
-  { icon: 'Users', title: 'Trusted by Thousands', desc: 'Dipercaya ribuan pelanggan di seluruh Indonesia.' },
-  { icon: 'Sparkles', title: 'High Quality', desc: 'Standar kualitas tinggi pada setiap produk.' },
-  { icon: 'Truck', title: 'Fast Delivery', desc: 'Pengiriman cepat ke seluruh Indonesia.' },
+  { icon: 'Leaf', title: 'Pilihan Produk Herbal', desc: 'Menyediakan beragam pilihan produk herbal dan kebutuhan kesehatan untuk melengkapi kebutuhan Anda dan keluarga.' },
+  { icon: 'Landmark', title: 'Spesialis Oleh-Oleh Umrah & Haji', desc: 'Pilihan produk yang cocok dijadikan buah tangan untuk keluarga, kerabat, sahabat, maupun rekan kerja setelah pulang dari Tanah Suci.' },
+  { icon: 'Gift', title: 'Paket Oleh-Oleh Praktis', desc: 'Tersedia pilihan paket yang praktis untuk memudahkan jamaah menyiapkan oleh-oleh tanpa harus repot memilih satu per satu.' },
+  { icon: 'Package', title: 'Bisa Pesan Jumlah Banyak', desc: 'Melayani kebutuhan personal hingga pemesanan dalam jumlah besar untuk jamaah, keluarga, komunitas, maupun perusahaan.' },
+  { icon: 'SlidersHorizontal', title: 'Bisa Disesuaikan dengan Kebutuhan', desc: 'Pilihan produk dan paket dapat dikonsultasikan sesuai kebutuhan, jumlah penerima, dan anggaran.' },
+  { icon: 'ShieldCheck', title: 'Produk Terpercaya', desc: 'Mengutamakan produk yang jelas asal-usulnya dan memenuhi ketentuan serta perizinan yang berlaku sesuai kategori produknya.' },
+  { icon: 'Truck', title: 'Pengiriman Praktis', desc: 'Pesanan dapat dikirim ke berbagai wilayah Indonesia sehingga Anda tidak perlu repot membawa atau mencari oleh-oleh sendiri.' },
+  { icon: 'Headphones', title: 'Dibantu Tim yang Responsif', desc: 'Tim Randumart siap membantu memilih produk, menentukan paket, hingga proses pemesanan dan pengiriman.' },
+  // Kalimat halal sengaja seragam dengan FAQ entri 'Apakah produk Randumart
+  // halal?' — klaim yang sama tidak boleh punya dua versi di halaman berbeda.
+  { icon: 'BadgeCheck', title: 'Halal Indonesia', desc: 'Mengutamakan produk yang memiliki status halal sesuai ketentuan yang berlaku. Sertifikasi dapat diperiksa pada kemasan masing-masing produk.' },
 ];
 
 export const stats = [

@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Instagram, Facebook, Youtube, Phone, MapPin, Send } from 'lucide-react';
+import Image from 'next/image';
+import { Instagram, Phone, MapPin, Send } from 'lucide-react';
 import { useCategories } from '@/hooks/use-categories';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -53,7 +54,9 @@ export function Footer() {
         {/* About */}
         <div className="col-span-2 lg:col-span-2">
           <Link href="/" className="flex items-center gap-2 mb-4">
-            <div className="grid place-items-center w-10 h-10 rounded-xl bg-gradient-to-br from-brand-green to-brand-greenActive text-white font-display font-bold text-lg">RM</div>
+            <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0">
+              <Image src="/logo.jpg" alt="Randumart Logo" fill sizes="40px" className="object-cover" />
+            </div>
             <div className="leading-none">
               <div className="font-display font-bold text-lg text-brand-green">Randumart</div>
               <div className="text-[10px] uppercase tracking-[0.2em] font-medium text-muted-foreground">Official Store</div>
@@ -63,11 +66,15 @@ export function Footer() {
             Randumart adalah toko resmi produk herbal, skincare, beauty, personal care, dan suplemen alami berkualitas untuk keluarga Indonesia.
           </p>
           <div className="flex gap-2">
-            {[Instagram, Facebook, Youtube].map((Icon, i) => (
-              <a key={i} href="#" className="grid place-items-center w-11 h-11 rounded-full bg-white shadow-soft text-brand-green hover:bg-brand-green hover:text-white transition-colors">
-                <Icon className="w-5 h-5" />
-              </a>
-            ))}
+            <a
+              href="https://www.instagram.com/randumart.official"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram Randumart"
+              className="grid place-items-center w-11 h-11 rounded-full bg-white shadow-soft text-brand-green hover:bg-brand-green hover:text-white transition-colors"
+            >
+              <Instagram className="w-5 h-5" />
+            </a>
           </div>
         </div>
 

@@ -19,8 +19,6 @@ import {
 import { ORDER_STATUS_COLORS, ORDER_STATUS_LABELS } from "@/lib/order-status";
 import { buildWaLink, normalizeWaNumber, buildInvoiceMessage } from '@/lib/whatsapp';
 
-
-
 type SortKey = 'date' | 'total';
 
 export default function OrdersAdminPage() {

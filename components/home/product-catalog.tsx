@@ -17,7 +17,9 @@ const tabs = [
 
 type TabKey = typeof tabs[number]['key'];
 
-function getProducts(key: TabKey, products: Product[]) {
+function getProducts(key: TabKey, products: Product[] = [], popularProducts: Product[] = []) {
+  if (!products || !Array.isArray(products)) return [];
+
   switch (key) {
     case 'newest':
       return products.filter((p) => p.isNew);
@@ -26,17 +28,21 @@ function getProducts(key: TabKey, products: Product[]) {
     case 'limited':
       return products.filter((p) => p.limited);
     case 'recommended':
-      return products.filter((p) => p.tags.includes('immunity') || p.tags.includes('brightening'));
+      return products.filter((p) => p.tags?.some((t) => ['immunity', 'brightening'].includes(t)));
     case 'popular':
-      return [...products].sort((a, b) => b.reviewCount - a.reviewCount);
+      // Diurutkan server-side berdasarkan total quantity terjual (lihat
+      // lib/product-popularity.ts) — fallback ke reviewCount kalau prop belum dikirim.
+      return popularProducts.length > 0
+        ? popularProducts
+        : [...products].sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
     default:
       return products;
   }
 }
 
-export function ProductCatalog({ products }: { products: Product[] }) {
+export function ProductCatalog({ products, popular = [] }: { products: Product[]; popular?: Product[] }) {
   const [active, setActive] = useState<TabKey>('best-seller');
-  const list = getProducts(active, products);
+  const list = getProducts(active, products, popular);
 
   return (
     <section className="py-20 lg:py-24 bg-background">
@@ -82,7 +88,7 @@ export function ProductCatalog({ products }: { products: Product[] }) {
           }}
           className="!pb-2"
         >
-          {list.map((p, i) => (
+          {list?.map((p, i) => (
             <SwiperSlide key={p.id} className="!h-auto">
               <ProductCard product={p} index={i} />
             </SwiperSlide>

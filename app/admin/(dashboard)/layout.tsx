@@ -92,7 +92,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       <aside className="hidden lg:flex w-64 bg-brand-green fixed inset-y-0 left-0 z-10 flex-col">
         <div className="h-16 flex items-center px-6 border-b border-white/10">
           <Link href="/" className="font-display font-bold text-xl text-brand-cream">
-            SR12 Admin
+            Randumart Admin
           </Link>
         </div>
         <SidebarNav pathname={pathname} />
@@ -105,7 +105,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
         <SheetContent side="left" className="w-64 p-0 bg-brand-green border-r-0">
           <SheetHeader className="h-16 flex items-center px-6 border-b border-white/10">
-            <SheetTitle className="font-display font-bold text-xl text-brand-cream">SR12 Admin</SheetTitle>
+            <SheetTitle className="font-display font-bold text-xl text-brand-cream">Randumart Admin</SheetTitle>
           </SheetHeader>
           <SidebarNav pathname={pathname} onNavigate={() => setSidebarOpen(false)} />
           <div className="p-4 border-t border-white/10">

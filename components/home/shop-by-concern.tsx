@@ -32,13 +32,23 @@ export function ShopByConcern() {
             >
               <Link
                 href={`/products?concern=${c.slug}`}
-                className="group relative block aspect-square rounded-3xl overflow-hidden shadow-soft hover:shadow-premium transition-all hover:-translate-y-1"
+                className="group relative block aspect-square rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
               >
+                {/* Gambar Utama (Tetap Cerah) */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={c.image} alt={c.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                <div className={`absolute inset-0 bg-gradient-to-t ${c.color} opacity-80 group-hover:opacity-90 transition-opacity`} />
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center p-3">
-                  <p className="font-display font-semibold text-sm">{c.name}</p>
+                <img
+                  src={c.image}
+                  alt={c.name}
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+
+                {/* Tombol Putih Ramping & Minimalis */}
+                <div className="absolute inset-0 flex items-center justify-center p-2 z-10">
+                  <div className="bg-white/80 backdrop-blur-sm px-2.5 py-1 rounded-full shadow-sm border border-white/50 group-hover:bg-white group-hover:shadow-md transition-all duration-300 text-center max-w-[85%]">
+                    <p className="font-display font-semibold text-[11px] sm:text-xs text-slate-800 tracking-tight truncate">
+                      {c.name}
+                    </p>
+                  </div>
                 </div>
               </Link>
             </motion.div>
