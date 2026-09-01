@@ -86,7 +86,7 @@ export function InstagramGallery() {
           <p className="mt-2 text-muted-foreground">Temukan tips kecantikan dan update produk terbaru setiap hari.</p>
         </motion.div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
           {images.map((item, i) => (
             <motion.a
               key={i}
@@ -96,7 +96,7 @@ export function InstagramGallery() {
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.4, delay: (i % 4) * 0.05 }}
+              transition={{ duration: 0.4, delay: (i % 3) * 0.05 }}
               className="group relative aspect-square rounded-2xl overflow-hidden bg-muted"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
