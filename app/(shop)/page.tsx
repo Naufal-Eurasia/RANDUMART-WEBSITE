@@ -53,7 +53,10 @@ export default async function Home() {
       <BrandAmbassador />
       <WhyChoose />
       {/* <StatsCounter /> Disembunyikan: angka overclaim palsu (380+ produk padahal 84, 25k pelanggan padahal 8). Tampilkan lagi jika terhubung ke DB. */}
-      <ShopByConcern />
+      {/* <ShopByConcern /> Disembunyikan sementara (1 Sep 2026): kolom tags kosong
+          untuk semua 85 produk di DB produksi, jadi semua slug concern mengarah ke
+          halaman kosong. Aktifkan lagi setelah tags diisi untuk mayoritas produk.
+          Lihat catatan testing merge-test-ino @ 55c0040. */}
       <Testimonials />
       <BlogSection />
       <InstagramGallery />
