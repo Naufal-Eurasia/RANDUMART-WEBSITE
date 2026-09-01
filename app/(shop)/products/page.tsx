@@ -8,6 +8,7 @@ import { useCategories } from '@/hooks/use-categories';
 import { ProductCard } from '@/components/product/product-card';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
+import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -24,13 +25,22 @@ const sortOptions = [
   { value: 'discount', label: 'Diskon Terbesar' },
 ];
 
+const PRICE_MIN = 0;
+const PRICE_MAX = 500000;
+
+const formatThousands = (digits: string) =>
+  digits ? new Intl.NumberFormat('id-ID').format(Number(digits)) : '';
+
 function ProductsContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get('category') || 'all';
   const initialConcern = searchParams.get('concern');
 
   const [category, setCategory] = useState(initialCategory);
-  const [priceRange, setPriceRange] = useState<number[]>([0, 500000]);
+  const [priceRange, setPriceRange] = useState<number[]>([PRICE_MIN, PRICE_MAX]);
+  const [minPriceInput, setMinPriceInput] = useState(String(PRICE_MIN));
+  const [maxPriceInput, setMaxPriceInput] = useState(String(PRICE_MAX));
+  const [priceError, setPriceError] = useState<string | null>(null);
   const [minRating, setMinRating] = useState(0);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [bestSellerOnly, setBestSellerOnly] = useState(false);
@@ -88,6 +98,41 @@ function ProductsContent() {
 
   const activeCat = categories.find((c) => c.slug === category);
 
+  const handlePriceSliderChange = (vals: number[]) => {
+    setPriceRange(vals);
+    setMinPriceInput(String(vals[0]));
+    setMaxPriceInput(String(vals[1]));
+    setPriceError(null);
+  };
+
+  const handleMinPriceInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawDigits = e.target.value.replace(/\D/g, '');
+    if (rawDigits === '') { setMinPriceInput(''); setPriceError('Harga minimum tidak boleh kosong.'); return; }
+
+    const val = Math.min(Number(rawDigits), PRICE_MAX);
+    setMinPriceInput(String(val));
+
+    const maxVal = Number(maxPriceInput || 0);
+    if (val > maxVal) { setPriceError('Harga minimum tidak boleh lebih besar dari harga maksimum.'); return; }
+
+    setPriceError(null);
+    setPriceRange([val, maxVal]);
+  };
+
+  const handleMaxPriceInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawDigits = e.target.value.replace(/\D/g, '');
+    if (rawDigits === '') { setMaxPriceInput(''); setPriceError('Harga maksimum tidak boleh kosong.'); return; }
+
+    const val = Math.min(Number(rawDigits), PRICE_MAX);
+    setMaxPriceInput(String(val));
+
+    const minVal = Number(minPriceInput || 0);
+    if (val < minVal) { setPriceError('Harga maksimum tidak boleh lebih kecil dari harga minimum.'); return; }
+
+    setPriceError(null);
+    setPriceRange([minVal, val]);
+  };
+
   const FilterContent = () => (
     <div className="space-y-6">
       {/* Category */}
@@ -118,11 +163,47 @@ function ProductsContent() {
       {/* Price */}
       <div>
         <h4 className="font-display font-semibold text-sm mb-3">Rentang Harga</h4>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label htmlFor="price-min" className="block text-xs text-muted-foreground mb-1.5">Harga Min</label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">Rp</span>
+              <Input
+                id="price-min"
+                type="text"
+                inputMode="numeric"
+                value={formatThousands(minPriceInput)}
+                onChange={handleMinPriceInput}
+                placeholder="0"
+                className="pl-8"
+              />
+            </div>
+          </div>
+          <div>
+            <label htmlFor="price-max" className="block text-xs text-muted-foreground mb-1.5">Harga Max</label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">Rp</span>
+              <Input
+                id="price-max"
+                type="text"
+                inputMode="numeric"
+                value={formatThousands(maxPriceInput)}
+                onChange={handleMaxPriceInput}
+                placeholder={formatThousands(String(PRICE_MAX))}
+                className="pl-8"
+              />
+            </div>
+          </div>
+        </div>
+
+        {priceError && <p className="text-xs text-red-500 mt-2">{priceError}</p>}
+
         <Slider
           value={priceRange}
-          onValueChange={setPriceRange}
-          min={0}
-          max={500000}
+          onValueChange={handlePriceSliderChange}
+          min={PRICE_MIN}
+          max={PRICE_MAX}
           step={10000}
           className="my-4"
         />
