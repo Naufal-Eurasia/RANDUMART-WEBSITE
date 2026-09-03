@@ -207,12 +207,12 @@ export function Navbar() {
                 ) : (
                   <>
                     <Button variant="ghost" size="sm" className="text-foreground hover:bg-muted" asChild>
-                      <Link href="/login">
+                      <Link href="/login" prefetch={true}>
                         <User className="w-4 h-4 mr-1" /> Login
                       </Link>
                     </Button>
                     <Button size="sm" className="bg-brand-green hover:bg-brand-greenHover text-white" asChild>
-                      <Link href="/register">
+                      <Link href="/register" prefetch={true}>
                         Register
                       </Link>
                     </Button>

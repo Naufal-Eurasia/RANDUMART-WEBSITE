@@ -2,7 +2,7 @@ import { Navbar } from '@/components/layout/navbar';
 import { Footer } from '@/components/layout/footer';
 import { FloatingActions } from '@/components/layout/floating-actions';
 import { MobileNav, BottomNav } from '@/components/layout/mobile-nav';
-import { CartDrawer } from '@/components/cart/cart-drawer';
+import { CartDrawer } from '@/components/cart/cart-drawer-lazy';
 import { WishlistDrawer } from '@/components/wishlist/wishlist-drawer';
 import { SearchDialog } from '@/components/search/search-dialog';
 

@@ -1,7 +1,9 @@
+import { Suspense } from 'react';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
-import { Package, ShoppingCart, Clock, TrendingUp, AlertTriangle, ArrowRight, Tags, CheckCircle2 } from 'lucide-react';
+import { Package, ShoppingCart, Clock, TrendingUp, AlertTriangle, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { formatRupiah } from '@/lib/categories';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const statusColors: Record<string, string> = {
   PENDING: 'bg-brand-gold/20 text-brand-green border-brand-gold/40',
@@ -27,7 +29,42 @@ const statusLabels: Record<string, string> = {
   EXPIRED: 'Kedaluwarsa',
 };
 
-export default async function AdminDashboard() {
+function DashboardSkeleton() {
+  return (
+    <div className="space-y-8">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="bg-white p-5 rounded-2xl border border-border/60 shadow-soft">
+            <div className="flex items-center gap-4">
+              <Skeleton className="w-12 h-12 rounded-full shrink-0" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-3 w-24" />
+                <Skeleton className="h-5 w-16" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 bg-white rounded-3xl border border-border/60 shadow-soft p-6 space-y-3">
+          <Skeleton className="h-5 w-32 mb-3" />
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton key={i} className="h-10 w-full" />
+          ))}
+        </div>
+        <div className="bg-white rounded-3xl border border-border/60 shadow-soft p-6 space-y-3">
+          <Skeleton className="h-5 w-24 mb-3" />
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton key={i} className="h-10 w-full" />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+async function DashboardData() {
   const [totalProducts, pendingOrders, paidOrders, totalRevenue, recentOrders, lowStockProducts, totalOrders] = await Promise.all([
     prisma.product.count(),
     prisma.order.count({ where: { status: 'PENDING' } }),
@@ -52,22 +89,6 @@ export default async function AdminDashboard() {
 
   return (
     <div className="space-y-8">
-      {/* Header & Quick Actions */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-display font-bold">Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Ringkasan aktivitas toko Randumart Anda.</p>
-        </div>
-        <div className="flex gap-2">
-          <Link href="/admin/categories" className="inline-flex items-center justify-center text-sm font-medium transition-colors h-10 px-4 py-2 rounded-xl border border-brand-green/20 text-brand-green hover:bg-brand-cream/30">
-            Tambah Kategori
-          </Link>
-          <Link href="/admin/products" className="inline-flex items-center justify-center text-sm font-medium transition-colors h-10 px-4 py-2 rounded-xl bg-brand-green text-brand-cream hover:bg-brand-greenHover">
-            Tambah Produk
-          </Link>
-        </div>
-      </div>
-
       {/* Stat Cards */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white p-5 rounded-2xl border border-border/60 shadow-soft">
@@ -206,6 +227,32 @@ export default async function AdminDashboard() {
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+export default function AdminDashboard() {
+  return (
+    <div className="space-y-8">
+      {/* Header & Quick Actions — render instan, tidak menunggu query DB */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-display font-bold">Dashboard</h1>
+          <p className="text-muted-foreground mt-1">Ringkasan aktivitas toko Randumart Anda.</p>
+        </div>
+        <div className="flex gap-2">
+          <Link href="/admin/categories" className="inline-flex items-center justify-center text-sm font-medium transition-colors h-10 px-4 py-2 rounded-xl border border-brand-green/20 text-brand-green hover:bg-brand-cream/30">
+            Tambah Kategori
+          </Link>
+          <Link href="/admin/products" className="inline-flex items-center justify-center text-sm font-medium transition-colors h-10 px-4 py-2 rounded-xl bg-brand-green text-brand-cream hover:bg-brand-greenHover">
+            Tambah Produk
+          </Link>
+        </div>
+      </div>
+
+      <Suspense fallback={<DashboardSkeleton />}>
+        <DashboardData />
+      </Suspense>
     </div>
   );
 }

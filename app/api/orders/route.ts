@@ -15,7 +15,8 @@ export async function POST(req: Request) {
     // Kolom guestEmail di schema.prisma bertipe String? (nullable), sehingga ini aman.
     const email: string | null = body.email?.trim() || null;
 
-    // 1. Validasi Input Dasar (email opsional — kolom guestEmail di DB bertipe String?)
+    // 1. Validasi Input Dasar. Email wajib diisi di form checkout (frontend), tapi backend
+    // tetap tidak mewajibkannya di sini karena guestEmail di DB bertipe String? (nullable).
     if (!name || !phone || !address || !items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json({ message: 'Nama, nomor telepon, alamat, dan minimal 1 produk wajib diisi' }, { status: 400 });
     }

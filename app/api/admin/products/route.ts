@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { checkAdminAuth } from '@/lib/auth-utils';
 
@@ -63,6 +64,7 @@ export async function POST(req: Request) {
       }
     });
 
+    revalidateTag('produk');
     return NextResponse.json(newProduct, { status: 201 });
   } catch (error) {
     console.error('API POST Product Error:', error);

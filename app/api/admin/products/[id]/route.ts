@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { checkAdminAuth } from '@/lib/auth-utils';
 
@@ -69,6 +70,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       }
     });
 
+    revalidateTag('produk');
     return NextResponse.json(updatedProduct);
   } catch (error) {
     console.error('API PUT Product Error:', error);
@@ -108,6 +110,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
       prisma.product.delete({ where: { id: params.id } })
     ]);
 
+    revalidateTag('produk');
     return NextResponse.json({ message: 'Product deleted' });
   } catch (error) {
     console.error('API DELETE Product Error:', error);

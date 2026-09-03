@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useStore } from '@/lib/store';
 import { formatRupiah } from '@/lib/categories';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,7 @@ import Image from 'next/image';
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const { data: session } = useSession();
   const { cart, cartTotal, clearCart } = useStore();
 
   // Mounted state untuk menghindari hydration error dari Zustand cart
@@ -33,6 +35,13 @@ export default function CheckoutPage() {
     setMounted(true);
   }, []);
 
+  // Pre-fill email dari akun yang sedang login, biar pelanggan tidak ketik ulang
+  useEffect(() => {
+    if (session?.user?.email) {
+      setFormData((prev) => (prev.email ? prev : { ...prev, email: session.user!.email! }));
+    }
+  }, [session]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -41,8 +50,10 @@ export default function CheckoutPage() {
     e.preventDefault();
     if (cart.length === 0) return toast.error('Keranjang kosong!');
 
-    // Validasi frontend: hanya Nama, Telepon, dan Alamat yang wajib diisi
+    // Validasi frontend: Nama, Email, Telepon, dan Alamat wajib diisi
     if (!formData.name.trim()) return toast.error('Nama Lengkap wajib diisi');
+    if (!formData.email.trim()) return toast.error('Email wajib diisi');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) return toast.error('Format email tidak valid');
     if (!formData.phone.trim()) return toast.error('Nomor Telepon (WA) wajib diisi');
     if (!formData.address.trim()) return toast.error('Alamat Pengiriman wajib diisi');
 
@@ -55,8 +66,6 @@ export default function CheckoutPage() {
         quantity: c.quantity
       }));
 
-      // Email opsional — dikirim apa adanya (string kosong jika tidak diisi).
-      // Kolom guestEmail di DB bertipe String? sehingga aman menerima nilai kosong/null.
       const res = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -147,8 +156,10 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              {/* Field email disembunyikan — tidak wajib diisi pelanggan */}
-              <input type="hidden" name="email" value={formData.email} />
+              <div className="space-y-1.5">
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" name="email" type="email" required value={formData.email} onChange={handleChange} placeholder="nama@email.com" className="rounded-xl" />
+              </div>
 
               <div className="space-y-1.5">
                 <Label htmlFor="address">Alamat Pengiriman Lengkap</Label>

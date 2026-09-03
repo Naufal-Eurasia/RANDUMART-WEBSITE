@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { getCachedProductsList } from '@/lib/product-queries';
 import { mapPrismaProducts } from '@/lib/product-mapper';
 import { getProductSalesMap, sortByPopularity } from '@/lib/product-popularity';
 
-export const revalidate = 15;
+export const revalidate = 3600;
 
 export async function GET(request: Request) {
   try {
@@ -26,13 +26,7 @@ export async function GET(request: Request) {
     // itu sendiri — jadi diambil & diurutkan manual di luar switch orderBy di bawah.
     if (sort === 'popular' || sort === 'most-popular') {
       const [products, salesMap] = await Promise.all([
-        prisma.product.findMany({
-          where,
-          include: {
-            images: true,
-            category: true,
-          },
-        }),
+        getCachedProductsList(where),
         getProductSalesMap(),
       ]);
 
@@ -60,14 +54,7 @@ export async function GET(request: Request) {
         orderBy = { reviewCount: 'desc' };
     }
 
-    const products = await prisma.product.findMany({
-      where,
-      orderBy,
-      include: {
-        images: true,
-        category: true,
-      }
-    });
+    const products = await getCachedProductsList(where, orderBy);
 
     // Lewat mapper, bukan baris Prisma mentah: mapper yang memasang
     // transformasi Cloudinary dan menormalkan Decimal jadi number.

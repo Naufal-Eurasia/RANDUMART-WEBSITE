@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { checkAdminAuth } from '@/lib/auth-utils';
 
@@ -41,6 +42,13 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
         data: { status }
       });
     });
+
+    // Transisi PENDING -> PAID mengurangi stock produk (lihat transaksi di atas),
+    // jadi cache produk ('produk') perlu ikut di-invalidasi supaya stok/badge
+    // out-of-stock di homepage & katalog tidak basi sampai revalidate 3600s habis.
+    if (status === 'PAID' && order.status === 'PENDING') {
+      revalidateTag('produk');
+    }
 
     return NextResponse.json(updatedOrder);
 

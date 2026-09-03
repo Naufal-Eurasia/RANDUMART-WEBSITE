@@ -1,12 +1,11 @@
 import { notFound } from 'next/navigation';
-import { prisma } from '@/lib/prisma';
+import { getCachedProductBySlug, getCachedProductsList } from '@/lib/product-queries';
 import ProductDetailClient from './client-page';
 
+export const revalidate = 3600;
+
 export default async function ProductDetailPage({ params }: { params: { slug: string } }) {
-  const product = await prisma.product.findUnique({
-    where: { slug: params.slug },
-    include: { images: true, category: true }
-  });
+  const product = await getCachedProductBySlug(params.slug);
 
   if (!product || !product.isPublished) {
     notFound();
@@ -22,15 +21,11 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
     tags: product.tags || [],
   };
 
-  const relatedDb = await prisma.product.findMany({
-    where: { 
-      categoryId: product.categoryId, 
-      id: { not: product.id },
-      isPublished: true
-    },
-    include: { images: true, category: true },
-    take: 4
-  });
+  const relatedDb = await getCachedProductsList(
+    { categoryId: product.categoryId, id: { not: product.id }, isPublished: true },
+    undefined,
+    4
+  );
 
   const related = relatedDb.map(r => ({
     ...r,
