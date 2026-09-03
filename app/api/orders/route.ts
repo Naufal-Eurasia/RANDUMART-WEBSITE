@@ -9,7 +9,14 @@ export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
     const body = await req.json();
-    const { name, phone, address, items } = body;
+    const { name, phone, address, items, shippingCost } = body;
+
+    // Ongkir dihitung di frontend lewat RajaOngkir, tapi tetap divalidasi di sini
+    // (jangan trust angka dari frontend selain memastikan formatnya benar)
+    const validatedShippingCost =
+      typeof shippingCost === 'number' && Number.isFinite(shippingCost) && shippingCost >= 0
+        ? shippingCost
+        : 0;
 
     // Normalisasi email: string kosong ("") → null agar tersimpan sebagai NULL di DB
     // Kolom guestEmail di schema.prisma bertipe String? (nullable), sehingga ini aman.
@@ -88,7 +95,7 @@ export async function POST(req: Request) {
         shippingAddress: address,
         status: 'PENDING',
         totalAmount: calculatedTotalAmount, // Terhitung 100% dari Backend
-        shippingCost: 0, // V1: Gratis ongkir
+        shippingCost: validatedShippingCost, // Hasil hitung RajaOngkir dari frontend
         midtransOrderId: uniqueMidtransId, 
         items: {
           create: orderItemsData,

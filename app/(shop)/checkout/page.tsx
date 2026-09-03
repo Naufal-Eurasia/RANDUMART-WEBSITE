@@ -9,11 +9,29 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { toast } from 'sonner';
-import { ArrowLeft, Loader2, CheckCircle2, ShoppingBag } from 'lucide-react';
+import { ArrowLeft, Loader2, CheckCircle2, ShoppingBag, Truck } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Script from 'next/script';
+
+interface WilayahOption {
+  id: string;
+  name: string;
+}
+
+interface ShippingOption {
+  service: string;
+  description: string;
+  cost: number;
+  etd: string;
+}
+
+// Product belum punya field berat di schema, jadi ongkir dihitung pakai estimasi
+// berat per unit produk. Sesuaikan angka ini kalau berat rata-rata produk berubah.
+const DEFAULT_ITEM_WEIGHT_GRAM = 500;
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -32,6 +50,30 @@ export default function CheckoutPage() {
     address: ''
   });
 
+  // Wilayah (cascading dropdown RajaOngkir)
+  const [provinces, setProvinces] = useState<WilayahOption[]>([]);
+  const [cities, setCities] = useState<WilayahOption[]>([]);
+  const [subdistricts, setSubdistricts] = useState<WilayahOption[]>([]);
+
+  const [selectedProvince, setSelectedProvince] = useState('');
+  const [selectedCity, setSelectedCity] = useState('');
+  const [selectedSubdistrict, setSelectedSubdistrict] = useState('');
+
+  const [loadingProvinces, setLoadingProvinces] = useState(false);
+  const [loadingCities, setLoadingCities] = useState(false);
+  const [loadingSubdistricts, setLoadingSubdistricts] = useState(false);
+
+  // Input manual: Kelurahan, RT/RW, Kode Pos
+  const [kelurahan, setKelurahan] = useState('');
+  const [rtRw, setRtRw] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+
+  // Ongkir
+  const [shippingOptions, setShippingOptions] = useState<ShippingOption[]>([]);
+  const [selectedShipping, setSelectedShipping] = useState<ShippingOption | null>(null);
+  const [loadingShipping, setLoadingShipping] = useState(false);
+  const shippingCost = selectedShipping?.cost ?? 0;
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -42,6 +84,128 @@ export default function CheckoutPage() {
       setFormData((prev) => (prev.email ? prev : { ...prev, email: session.user!.email! }));
     }
   }, [session]);
+
+  // 1. Muat daftar provinsi saat halaman dibuka
+  useEffect(() => {
+    const loadProvinces = async () => {
+      setLoadingProvinces(true);
+      try {
+        const res = await fetch('/api/wilayah?type=province');
+        const data = await res.json();
+        if (res.ok) {
+          setProvinces(data);
+        } else {
+          toast.error(data.message || 'Gagal memuat daftar provinsi');
+        }
+      } catch {
+        toast.error('Gagal memuat daftar provinsi');
+      } finally {
+        setLoadingProvinces(false);
+      }
+    };
+    loadProvinces();
+  }, []);
+
+  // 2. Saat provinsi dipilih, muat daftar kota & reset pilihan di bawahnya
+  useEffect(() => {
+    setCities([]);
+    setSelectedCity('');
+    setSubdistricts([]);
+    setSelectedSubdistrict('');
+    setShippingOptions([]);
+    setSelectedShipping(null);
+
+    if (!selectedProvince) return;
+
+    const loadCities = async () => {
+      setLoadingCities(true);
+      try {
+        const res = await fetch(`/api/wilayah?type=city&id=${selectedProvince}`);
+        const data = await res.json();
+        if (res.ok) {
+          setCities(data);
+        } else {
+          toast.error(data.message || 'Gagal memuat daftar kota/kabupaten');
+        }
+      } catch {
+        toast.error('Gagal memuat daftar kota/kabupaten');
+      } finally {
+        setLoadingCities(false);
+      }
+    };
+    loadCities();
+  }, [selectedProvince]);
+
+  // 3. Saat kota dipilih, muat daftar kecamatan & reset pilihan di bawahnya
+  useEffect(() => {
+    setSubdistricts([]);
+    setSelectedSubdistrict('');
+    setShippingOptions([]);
+    setSelectedShipping(null);
+
+    if (!selectedCity) return;
+
+    const loadSubdistricts = async () => {
+      setLoadingSubdistricts(true);
+      try {
+        const res = await fetch(`/api/wilayah?type=subdistrict&id=${selectedCity}`);
+        const data = await res.json();
+        if (res.ok) {
+          setSubdistricts(data);
+        } else {
+          toast.error(data.message || 'Gagal memuat daftar kecamatan');
+        }
+      } catch {
+        toast.error('Gagal memuat daftar kecamatan');
+      } finally {
+        setLoadingSubdistricts(false);
+      }
+    };
+    loadSubdistricts();
+  }, [selectedCity]);
+
+  // 4. Saat kecamatan dipilih, otomatis hitung ongkir ke kota tujuan
+  useEffect(() => {
+    setShippingOptions([]);
+    setSelectedShipping(null);
+
+    if (!selectedSubdistrict || !selectedCity) return;
+
+    const originCityId = process.env.NEXT_PUBLIC_ORIGIN_CITY_ID;
+    if (!originCityId) {
+      toast.error('ID kota asal toko (NEXT_PUBLIC_ORIGIN_CITY_ID) belum diatur di .env');
+      return;
+    }
+
+    const totalWeight = cart.reduce((sum, c) => sum + c.quantity * DEFAULT_ITEM_WEIGHT_GRAM, 0);
+
+    const loadShippingCost = async () => {
+      setLoadingShipping(true);
+      try {
+        const res = await fetch('/api/ongkir', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            origin: originCityId,
+            destination: selectedCity,
+            weight: totalWeight,
+            courier: 'jne',
+          }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setShippingOptions(data.costs || []);
+        } else {
+          toast.error(data.message || 'Gagal menghitung ongkir');
+        }
+      } catch {
+        toast.error('Gagal menghitung ongkir');
+      } finally {
+        setLoadingShipping(false);
+      }
+    };
+    loadShippingCost();
+  }, [selectedSubdistrict, selectedCity, cart]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -56,7 +220,16 @@ export default function CheckoutPage() {
     if (!formData.email.trim()) return toast.error('Email wajib diisi');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) return toast.error('Format email tidak valid');
     if (!formData.phone.trim()) return toast.error('Nomor Telepon (WA) wajib diisi');
-    if (!formData.address.trim()) return toast.error('Alamat Pengiriman wajib diisi');
+    if (!formData.address.trim()) return toast.error('Nama Jalan & Nomor Rumah wajib diisi');
+
+    // Validasi wilayah & ongkir
+    if (!selectedProvince) return toast.error('Provinsi wajib dipilih');
+    if (!selectedCity) return toast.error('Kota/Kabupaten wajib dipilih');
+    if (!selectedSubdistrict) return toast.error('Kecamatan wajib dipilih');
+    if (!kelurahan.trim()) return toast.error('Kelurahan wajib diisi');
+    if (!rtRw.trim()) return toast.error('RT/RW wajib diisi');
+    if (!/^\d{5}$/.test(postalCode.trim())) return toast.error('Kode Pos harus 5 digit angka');
+    if (!selectedShipping) return toast.error('Pilih layanan pengiriman terlebih dahulu');
 
     setLoading(true);
 
@@ -67,10 +240,26 @@ export default function CheckoutPage() {
         quantity: c.quantity
       }));
 
+      const provinceName = provinces.find((p) => p.id === selectedProvince)?.name || '';
+      const cityName = cities.find((c) => c.id === selectedCity)?.name || '';
+      const subdistrictName = subdistricts.find((s) => s.id === selectedSubdistrict)?.name || '';
+
+      // Gabungkan detail jalan + wilayah berjenjang jadi satu alamat lengkap
+      // (kolom shippingAddress di DB tetap satu string, tidak ada perubahan skema)
+      const fullAddress = [
+        formData.address.trim(),
+        `Kel. ${kelurahan.trim()}`,
+        `RT/RW ${rtRw.trim()}`,
+        subdistrictName,
+        cityName,
+        provinceName,
+        postalCode.trim(),
+      ].filter(Boolean).join(', ');
+
       const res = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, items })
+        body: JSON.stringify({ ...formData, address: fullAddress, items, shippingCost })
       });
 
       const data = await res.json();
@@ -204,9 +393,119 @@ export default function CheckoutPage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="address">Alamat Pengiriman Lengkap</Label>
-                <Textarea id="address" name="address" required value={formData.address} onChange={handleChange} placeholder="Jl. Jend. Sudirman No. 10, RT/RW, Kelurahan, Kecamatan, Kota..." className="rounded-xl min-h-[100px]" />
+                <Label htmlFor="address">Nama Jalan & Nomor Rumah</Label>
+                <Textarea id="address" name="address" required value={formData.address} onChange={handleChange} placeholder="Jl. Jend. Sudirman No. 10" className="rounded-xl min-h-[80px]" />
               </div>
+
+              {/* Wilayah berjenjang: Provinsi -> Kota/Kabupaten -> Kecamatan */}
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="province">Provinsi</Label>
+                  <Select value={selectedProvince} onValueChange={setSelectedProvince}>
+                    <SelectTrigger id="province" className="rounded-xl">
+                      <SelectValue placeholder={loadingProvinces ? 'Memuat...' : 'Pilih Provinsi'} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {provinces.map((p) => (
+                        <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="city">Kota/Kabupaten</Label>
+                  <Select value={selectedCity} onValueChange={setSelectedCity} disabled={!selectedProvince}>
+                    <SelectTrigger id="city" className="rounded-xl">
+                      <SelectValue placeholder={loadingCities ? 'Memuat...' : 'Pilih Kota/Kabupaten'} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {cities.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="subdistrict">Kecamatan</Label>
+                  <Select value={selectedSubdistrict} onValueChange={setSelectedSubdistrict} disabled={!selectedCity}>
+                    <SelectTrigger id="subdistrict" className="rounded-xl">
+                      <SelectValue placeholder={loadingSubdistricts ? 'Memuat...' : 'Pilih Kecamatan'} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {subdistricts.map((s) => (
+                        <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="kelurahan">Kelurahan</Label>
+                  <Input id="kelurahan" name="kelurahan" required value={kelurahan} onChange={(e) => setKelurahan(e.target.value)} placeholder="Nama Kelurahan" className="rounded-xl" />
+                </div>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="rtRw">RT/RW</Label>
+                  <Input id="rtRw" name="rtRw" required value={rtRw} onChange={(e) => setRtRw(e.target.value)} placeholder="001/002" className="rounded-xl" />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="postalCode">Kode Pos</Label>
+                  <Input id="postalCode" name="postalCode" required inputMode="numeric" maxLength={5} value={postalCode} onChange={(e) => setPostalCode(e.target.value.replace(/\D/g, ''))} placeholder="12345" className="rounded-xl" />
+                </div>
+              </div>
+
+              {/* Pilihan layanan ongkir, muncul otomatis setelah kecamatan dipilih */}
+              {selectedSubdistrict && (
+                <div className="space-y-2 pt-2">
+                  <Label className="flex items-center gap-1.5">
+                    <Truck className="w-4 h-4" /> Pilihan Pengiriman (JNE)
+                  </Label>
+
+                  {loadingShipping && (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground py-3">
+                      <Loader2 className="w-4 h-4 animate-spin" /> Menghitung ongkir...
+                    </div>
+                  )}
+
+                  {!loadingShipping && shippingOptions.length === 0 && (
+                    <p className="text-sm text-muted-foreground py-2">Ongkir belum tersedia untuk tujuan ini.</p>
+                  )}
+
+                  {!loadingShipping && shippingOptions.length > 0 && (
+                    <RadioGroup
+                      value={selectedShipping?.service || ''}
+                      onValueChange={(value) => {
+                        const option = shippingOptions.find((o) => o.service === value) || null;
+                        setSelectedShipping(option);
+                      }}
+                      className="space-y-2"
+                    >
+                      {shippingOptions.map((option) => (
+                        <label
+                          key={option.service}
+                          htmlFor={`shipping-${option.service}`}
+                          className="flex items-center justify-between gap-3 rounded-xl border border-border/60 px-4 py-3 text-sm cursor-pointer hover:border-brand-green/60 transition-colors has-[[data-state=checked]]:border-brand-green has-[[data-state=checked]]:bg-brand-green/5"
+                        >
+                          <div className="flex items-center gap-3">
+                            <RadioGroupItem value={option.service} id={`shipping-${option.service}`} />
+                            <div>
+                              <p className="font-medium">{option.service} - {option.description}</p>
+                              <p className="text-xs text-muted-foreground">Estimasi {option.etd} hari</p>
+                            </div>
+                          </div>
+                          <span className="font-semibold whitespace-nowrap">{formatRupiah(option.cost)}</span>
+                        </label>
+                      ))}
+                    </RadioGroup>
+                  )}
+                </div>
+              )}
             </form>
           </div>
 
@@ -237,11 +536,13 @@ export default function CheckoutPage() {
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Biaya Kirim</span>
-                <span className="font-medium text-emerald-600">Gratis (Promo v1)</span>
+                <span className="font-medium">
+                  {selectedShipping ? formatRupiah(shippingCost) : 'Pilih kecamatan dahulu'}
+                </span>
               </div>
               <div className="border-t border-border/60 pt-3 flex justify-between items-center">
                 <span className="font-bold font-display text-lg">Total Bayar</span>
-                <span className="font-bold font-display text-xl text-brand-green">{formatRupiah(cartTotal())}</span>
+                <span className="font-bold font-display text-xl text-brand-green">{formatRupiah(cartTotal() + shippingCost)}</span>
               </div>
             </div>
 
