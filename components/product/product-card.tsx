@@ -162,6 +162,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
               </button>
               <Link
                 href={`/products/${product.slug}`}
+                prefetch={true}
                 className="flex items-center justify-center py-2.5 rounded-xl bg-brand-green text-white text-xs font-semibold hover:bg-brand-greenHover active:scale-[0.98] transition-all"
               >
                 Buy Now

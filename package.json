@@ -61,6 +61,7 @@
     "framer-motion": "^12.42.2",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.446.0",
+    "midtrans-client": "^1.4.3",
     "next": "^14.2.35",
     "next-auth": "^4.24.15",
     "next-themes": "^0.3.0",

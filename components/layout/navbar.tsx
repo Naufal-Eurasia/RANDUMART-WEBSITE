@@ -195,23 +195,23 @@ export function Navbar() {
                 </span>
               </button>
 
-              <div className="hidden sm:flex items-center gap-1 ml-1">
+              <div className="hidden sm:flex items-center gap-2 ml-1 shrink-0">
                 {status === 'loading' ? (
-                  <div className="w-[150px] h-9 rounded-md bg-muted/20 animate-pulse"></div>
+                  <div className="w-9 md:w-[150px] h-9 rounded-md bg-muted/20 animate-pulse shrink-0"></div>
                 ) : status === 'authenticated' ? (
-                  <Button size="sm" className="bg-brand-green hover:bg-brand-greenHover text-white" asChild>
+                  <Button size="sm" className="min-w-fit shrink-0 whitespace-nowrap px-4 bg-brand-green hover:bg-brand-greenHover text-white" asChild>
                     <Link href={session?.user?.role === 'ADMIN' ? '/admin' : '/account'}>
-                      <User className="w-4 h-4 mr-1" /> Akun Saya
+                      <User className="w-4 h-4 md:mr-1" /> <span className="hidden md:inline">Akun Saya</span>
                     </Link>
                   </Button>
                 ) : (
                   <>
-                    <Button variant="ghost" size="sm" className="text-foreground hover:bg-muted" asChild>
+                    <Button variant="ghost" size="sm" className="min-w-fit shrink-0 whitespace-nowrap px-4 text-foreground hover:bg-muted" asChild>
                       <Link href="/login" prefetch={true}>
-                        <User className="w-4 h-4 mr-1" /> Login
+                        <User className="w-4 h-4 md:mr-1" /> <span className="hidden md:inline">Login</span>
                       </Link>
                     </Button>
-                    <Button size="sm" className="bg-brand-green hover:bg-brand-greenHover text-white" asChild>
+                    <Button size="sm" className="min-w-fit shrink-0 whitespace-nowrap px-4 bg-brand-green hover:bg-brand-greenHover text-white" asChild>
                       <Link href="/register" prefetch={true}>
                         Register
                       </Link>

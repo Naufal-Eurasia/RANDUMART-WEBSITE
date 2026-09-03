@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import { ArrowLeft, Loader2, CheckCircle2, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import Script from 'next/script';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -80,11 +81,47 @@ export default function CheckoutPage() {
         return;
       }
 
-      // Berhasil
-      toast.success('Pesanan berhasil dibuat!');
-      clearCart();
-      // Redirect ke halaman konfirmasi
-      router.push(`/order-confirmation/${data.orderId}`);
+      // Order berhasil dibuat (status PENDING), lanjut minta Snap Token untuk pembayaran
+      const checkoutRes = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: data.orderId })
+      });
+
+      const checkoutData = await checkoutRes.json();
+
+      if (!checkoutRes.ok || !checkoutData.token) {
+        toast.error(checkoutData.message || 'Gagal memulai pembayaran');
+        setLoading(false);
+        return;
+      }
+
+      if (!window.snap) {
+        toast.error('Modul pembayaran belum siap, silakan coba lagi');
+        setLoading(false);
+        return;
+      }
+
+      window.snap.pay(checkoutData.token, {
+        onSuccess: () => {
+          clearCart();
+          toast.success('Pembayaran berhasil!');
+          router.push(`/order-confirmation/${data.orderId}`);
+        },
+        onPending: () => {
+          clearCart();
+          toast.success('Pesanan dibuat, selesaikan pembayaran sesuai instruksi');
+          router.push(`/order-confirmation/${data.orderId}`);
+        },
+        onError: () => {
+          toast.error('Pembayaran gagal, silakan coba lagi');
+          setLoading(false);
+        },
+        onClose: () => {
+          toast.info('Pembayaran dibatalkan');
+          setLoading(false);
+        },
+      });
 
     } catch (error) {
       console.error(error);
@@ -129,6 +166,11 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen pt-24 lg:pt-28 pb-20 bg-muted/30">
+      <Script
+        src="https://app.sandbox.midtrans.com/snap/snap.js"
+        data-client-key={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY}
+        strategy="afterInteractive"
+      />
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <Link href="/products" className="inline-flex items-center text-sm text-muted-foreground hover:text-brand-green mb-6 transition-colors">
           <ArrowLeft className="w-4 h-4 mr-1" /> Kembali belanja
@@ -209,7 +251,7 @@ export default function CheckoutPage() {
               disabled={loading}
               className="w-full h-14 rounded-2xl mt-8 bg-brand-green hover:bg-brand-greenHover text-white font-semibold text-base shadow-md hover:shadow-lg active:scale-[0.98] transition-all"
             >
-              {loading ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : 'Buat Pesanan Sekarang'}
+              {loading ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : 'Bayar'}
             </Button>
 
             <p className="text-center text-xs text-muted-foreground mt-4 flex items-center justify-center gap-1.5">
