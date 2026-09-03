@@ -28,14 +28,14 @@ export function CategoryShowcase() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {categories.map((cat, i) => (
             <motion.div
               key={cat.slug}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.5, delay: (i % 4) * 0.08 }}
+              transition={{ duration: 0.5, delay: (i % 3) * 0.08 }}
             >
               <Link
                 href={`/products?category=${cat.slug}`}
