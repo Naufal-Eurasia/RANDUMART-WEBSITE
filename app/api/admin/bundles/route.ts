@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { checkAdminAuth } from '@/lib/auth-utils';
 import { BundleType } from '@prisma/client';
@@ -94,6 +95,7 @@ export async function POST(req: Request) {
       },
     });
 
+    revalidateTag('bundles');
     return NextResponse.json(bundle, { status: 201 });
   } catch (error) {
     console.error('POST /api/admin/bundles error:', error);

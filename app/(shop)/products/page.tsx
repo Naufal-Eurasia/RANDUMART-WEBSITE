@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { SlidersHorizontal, X, LayoutGrid, List, Star } from 'lucide-react';
 import { useCategories } from '@/hooks/use-categories';
 import { ProductCard } from '@/components/product/product-card';
+import { ParcelSection } from '@/components/product/parcel-section';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
@@ -244,6 +245,8 @@ function ProductsContent() {
 
   return (
     <div className="pt-24 lg:pt-28 pb-20">
+      <ParcelSection />
+
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-6">
         <nav className="text-sm text-muted-foreground mb-3 flex items-center gap-1.5">
           <Link href="/" className="hover:text-primary">Home</Link>

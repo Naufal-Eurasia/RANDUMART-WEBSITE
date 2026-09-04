@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { checkAdminAuth } from '@/lib/auth-utils';
 import { BundleType } from '@prisma/client';
@@ -100,6 +101,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       }),
     ]);
 
+    revalidateTag('bundles');
     return NextResponse.json(updated);
   } catch (error) {
     console.error('PUT /api/admin/bundles/[id] error:', error);
@@ -113,6 +115,7 @@ export async function DELETE(_req: Request, { params }: { params: { id: string }
 
   try {
     await prisma.bundle.delete({ where: { id: params.id } });
+    revalidateTag('bundles');
     return NextResponse.json({ message: 'Bundle berhasil dihapus' });
   } catch (error) {
     console.error('DELETE /api/admin/bundles/[id] error:', error);
