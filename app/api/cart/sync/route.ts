@@ -49,6 +49,11 @@ export async function POST(req: Request) {
       // Jangan lebih dari stok yang tersedia (cegah eksploitasi)
       const finalQty = Math.min(newQty, product.stock);
 
+      // specification dari cart lokal menang kalau diisi, kalau tidak pertahankan yang di DB
+      const finalSpecification = item.specification !== undefined
+        ? (item.specification || null)
+        : (existingItem?.specification ?? null);
+
       if (finalQty > 0) {
         await prisma.cartItem.upsert({
           where: {
@@ -58,12 +63,14 @@ export async function POST(req: Request) {
             }
           },
           update: {
-            quantity: finalQty
+            quantity: finalQty,
+            specification: finalSpecification
           },
           create: {
             userId,
             productId: item.productId,
-            quantity: finalQty
+            quantity: finalQty,
+            specification: finalSpecification
           }
         });
       }

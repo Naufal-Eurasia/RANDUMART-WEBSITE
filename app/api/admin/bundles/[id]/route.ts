@@ -41,6 +41,9 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       description,
       price,
       details,
+      sku,
+      isPreorder,
+      preorderDays,
       items,
     } = body as {
       name: string;
@@ -49,6 +52,9 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       description?: string;
       price: number | string;
       details?: string;
+      sku?: string;
+      isPreorder?: boolean;
+      preorderDays?: number | string;
       items?: { productId: string; quantity: number }[];
     };
 
@@ -76,6 +82,9 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
           description: description?.trim() || null,
           price: Number(price),
           details: details?.trim() || null,
+          sku: sku?.trim() || null,
+          isPreorder: Boolean(isPreorder),
+          preorderDays: isPreorder ? (Number(preorderDays) || 14) : null,
           items: bundleType === 'BUNDLING' && items
             ? {
                 create: items.map((item) => ({

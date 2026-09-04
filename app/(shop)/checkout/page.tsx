@@ -228,7 +228,6 @@ export default function CheckoutPage() {
     if (!selectedSubdistrict) return toast.error('Kecamatan wajib dipilih');
     if (!kelurahan.trim()) return toast.error('Kelurahan wajib diisi');
     if (!rtRw.trim()) return toast.error('RT/RW wajib diisi');
-    if (!/^\d{5}$/.test(postalCode.trim())) return toast.error('Kode Pos harus 5 digit angka');
     if (!selectedShipping) return toast.error('Pilih layanan pengiriman terlebih dahulu');
 
     setLoading(true);
@@ -456,7 +455,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="postalCode">Kode Pos</Label>
-                  <Input id="postalCode" name="postalCode" required inputMode="numeric" maxLength={5} value={postalCode} onChange={(e) => setPostalCode(e.target.value.replace(/\D/g, ''))} placeholder="12345" className="rounded-xl" />
+                  <Input id="postalCode" name="postalCode" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} placeholder="12345 (opsional)" className="rounded-xl" />
                 </div>
               </div>
 

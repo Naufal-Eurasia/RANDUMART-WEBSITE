@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import {
   Plus, Edit2, Trash2, Loader2, PackageOpen, ShoppingBag, X, Search, Gift, ImagePlus,
@@ -37,6 +38,9 @@ interface Bundle {
   description: string | null;
   price: number | string;
   details: string | null;
+  sku: string | null;
+  isPreorder: boolean;
+  preorderDays: number | null;
   items: BundleItem[];
 }
 
@@ -47,11 +51,15 @@ interface BundleFormData {
   description: string;
   price: string;
   details: string;
+  sku: string;
+  isPreorder: boolean;
+  preorderDays: string;
   items: BundleItemRow[];
 }
 
 const EMPTY_FORM: BundleFormData = {
-  name: '', type: 'BUNDLING', imageUrl: '', description: '', price: '', details: '', items: [],
+  name: '', type: 'BUNDLING', imageUrl: '', description: '', price: '', details: '',
+  sku: '', isPreorder: false, preorderDays: '14', items: [],
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -122,6 +130,9 @@ export default function BundlesAdminPage() {
       description: b.description || '',
       price: String(b.price ?? ''),
       details: b.details || '',
+      sku: b.sku || '',
+      isPreorder: b.isPreorder ?? false,
+      preorderDays: String(b.preorderDays ?? 14),
       items: b.items.map((i) => ({ productId: i.productId, quantity: i.quantity })),
     });
     setProductSearch('');
@@ -191,6 +202,11 @@ export default function BundlesAdminPage() {
         description: formData.description || undefined,
         price: formData.price,
         details: formData.details || undefined,
+        sku: formData.type === 'PARSEL' ? (formData.sku || undefined) : undefined,
+        isPreorder: formData.type === 'PARSEL' ? formData.isPreorder : false,
+        preorderDays: formData.type === 'PARSEL' && formData.isPreorder
+          ? (Number(formData.preorderDays) || 14)
+          : undefined,
         items: formData.type === 'BUNDLING' ? formData.items : undefined,
       };
       const res    = await fetch(url, {
@@ -489,20 +505,65 @@ export default function BundlesAdminPage() {
             </div>
 
             {formData.type === 'PARSEL' ? (
-              /* Detail Isi Parsel */
-              <div className="space-y-2">
-                <Label htmlFor="bundleDetails">Detail Isi Parsel</Label>
-                <Textarea
-                  id="bundleDetails"
-                  rows={3}
-                  placeholder="Contoh: Teh, Minyak, Kopi, Garam, Mie"
-                  value={formData.details}
-                  onChange={(e) => setFormData((p) => ({ ...p, details: e.target.value }))}
-                />
-                <p className="text-xs text-muted-foreground">
-                  Tulis daftar isi parsel yang tidak terhubung ke produk katalog.
-                </p>
-              </div>
+              <>
+                {/* Detail Isi Parsel */}
+                <div className="space-y-2">
+                  <Label htmlFor="bundleDetails">Detail Isi Parsel</Label>
+                  <Textarea
+                    id="bundleDetails"
+                    rows={3}
+                    placeholder="Contoh: Teh, Minyak, Kopi, Garam, Mie"
+                    value={formData.details}
+                    onChange={(e) => setFormData((p) => ({ ...p, details: e.target.value }))}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Tulis daftar isi parsel yang tidak terhubung ke produk katalog.
+                  </p>
+                </div>
+
+                {/* Kode SKU */}
+                <div className="space-y-2">
+                  <Label htmlFor="bundleSku">Kode SKU (opsional)</Label>
+                  <Input
+                    id="bundleSku"
+                    placeholder="Contoh: PRS-LBR-001"
+                    value={formData.sku}
+                    onChange={(e) => setFormData((p) => ({ ...p, sku: e.target.value }))}
+                  />
+                </div>
+
+                {/* Pre-Order */}
+                <div className="space-y-3 rounded-xl border border-border/60 p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label htmlFor="bundlePreorder">Pre-Order (PO)</Label>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Aktifkan jika parsel ini hanya tersedia lewat pre-order.
+                      </p>
+                    </div>
+                    <Switch
+                      id="bundlePreorder"
+                      checked={formData.isPreorder}
+                      onCheckedChange={(checked) => setFormData((p) => ({ ...p, isPreorder: checked }))}
+                    />
+                  </div>
+                  {formData.isPreorder && (
+                    <div className="space-y-2">
+                      <Label htmlFor="bundlePreorderDays">Durasi PO (hari)</Label>
+                      <Input
+                        id="bundlePreorderDays"
+                        type="number"
+                        min="1"
+                        step="1"
+                        placeholder="14"
+                        value={formData.preorderDays}
+                        onChange={(e) => setFormData((p) => ({ ...p, preorderDays: e.target.value }))}
+                        className="w-32"
+                      />
+                    </div>
+                  )}
+                </div>
+              </>
             ) : (
               <>
                 {/* Selected items */}

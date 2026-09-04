@@ -34,7 +34,7 @@ export async function POST(req: Request) {
     const session = await getServerSession(authOptions);
     if (!session?.user) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
 
-    const { productId, quantity } = await req.json();
+    const { productId, quantity, specification } = await req.json();
     const userId = (session.user as any).id;
 
     const product = await prisma.product.findUnique({ where: { id: productId } });
@@ -43,10 +43,12 @@ export async function POST(req: Request) {
     const finalQty = Math.min(quantity, product.stock);
     if (finalQty <= 0) return NextResponse.json({ message: 'Invalid quantity' }, { status: 400 });
 
+    // specification: detail varian/opsi yang dipilih user (mis. warna, ukuran).
+    // Opsional — undefined berarti field tidak ikut diupdate saat quantity saja yang berubah.
     const item = await prisma.cartItem.upsert({
       where: { userId_productId: { userId, productId } },
-      update: { quantity: finalQty },
-      create: { userId, productId, quantity: finalQty }
+      update: { quantity: finalQty, ...(specification !== undefined ? { specification: specification || null } : {}) },
+      create: { userId, productId, quantity: finalQty, specification: specification || null }
     });
 
     return NextResponse.json(item);

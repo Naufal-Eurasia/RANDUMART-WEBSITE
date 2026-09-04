@@ -7,6 +7,9 @@ import { Product } from './types';
 export interface CartItem {
   product: Product;
   quantity: number;
+  // Detail varian/spesifikasi yang dipilih user (mis. warna, ukuran, kode varian).
+  // Opsional — diisi dari UI pemilihan varian di halaman produk, kalau ada.
+  specification?: string;
 }
 
 interface StoreState {
@@ -17,7 +20,7 @@ interface StoreState {
   wishlistOpen: boolean;
   searchOpen: boolean;
   mobileNavOpen: boolean;
-  addToCart: (product: Product, qty?: number) => void;
+  addToCart: (product: Product, qty?: number, specification?: string) => void;
   removeFromCart: (id: string) => void;
   updateQty: (id: string, qty: number) => void;
   clearCart: () => void;
@@ -47,20 +50,20 @@ export const useStore = create<StoreState>()(
       wishlistOpen: false,
       searchOpen: false,
       mobileNavOpen: false,
-      addToCart: async (product, qty = 1) => {
+      addToCart: async (product, qty = 1, specification) => {
         set((s) => {
           const existing = s.cart.find((c) => c.product.id === product.id);
           if (existing) {
             return {
               cart: s.cart.map((c) =>
                 c.product.id === product.id
-                  ? { ...c, quantity: c.quantity + qty }
+                  ? { ...c, quantity: c.quantity + qty, specification: specification ?? c.specification }
                   : c
               ),
               cartOpen: true,
             };
           }
-          return { cart: [...s.cart, { product, quantity: qty }], cartOpen: true };
+          return { cart: [...s.cart, { product, quantity: qty, specification }], cartOpen: true };
         });
 
         // Fire & Forget to API (optimistic update)
@@ -68,7 +71,7 @@ export const useStore = create<StoreState>()(
           const newQty = get().cart.find(c => c.product.id === product.id)?.quantity || qty;
           await fetch('/api/cart', {
             method: 'POST',
-            body: JSON.stringify({ productId: product.id, quantity: newQty }),
+            body: JSON.stringify({ productId: product.id, quantity: newQty, specification }),
             headers: { 'Content-Type': 'application/json' }
           });
         } catch (e) {
@@ -148,7 +151,7 @@ export const useStore = create<StoreState>()(
           const currentCart = get().cart;
           const cartRes = await fetch('/api/cart/sync', {
             method: 'POST',
-            body: JSON.stringify({ localCart: currentCart.map(c => ({ productId: c.product.id, quantity: c.quantity })) }),
+            body: JSON.stringify({ localCart: currentCart.map(c => ({ productId: c.product.id, quantity: c.quantity, specification: c.specification })) }),
             headers: { 'Content-Type': 'application/json' }
           });
 
@@ -157,7 +160,8 @@ export const useStore = create<StoreState>()(
             // Convert from DB format to Store format
             const formattedCart: CartItem[] = mergedCartDb.map((dbItem: any) => ({
               product: dbItem.product,
-              quantity: dbItem.quantity
+              quantity: dbItem.quantity,
+              specification: dbItem.specification ?? undefined
             }));
             set({ cart: formattedCart });
           }

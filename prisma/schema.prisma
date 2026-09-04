@@ -129,14 +129,15 @@ model Account {
 }
 
 model CartItem {
-  id        String   @id @default(cuid())
-  userId    String
-  productId String
-  quantity  Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            String   @id @default(cuid())
+  userId        String
+  productId     String
+  quantity      Int
+  specification String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
   @@index([userId])
@@ -157,16 +158,19 @@ model WishlistItem {
 }
 
 model Bundle {
-  id          String       @id @default(cuid())
-  name        String
-  createdAt   DateTime     @default(now())
-  description String?
-  details     String?
-  imageUrl    String?
-  price       Decimal      @db.Decimal(12, 2)
-  type        BundleType   @default(BUNDLING)
-  updatedAt   DateTime     @updatedAt
-  items       BundleItem[]
+  id           String       @id @default(cuid())
+  name         String
+  createdAt    DateTime     @default(now())
+  description  String?
+  details      String?
+  imageUrl     String?
+  price        Decimal      @db.Decimal(12, 2)
+  type         BundleType   @default(BUNDLING)
+  updatedAt    DateTime     @updatedAt
+  sku          String?
+  isPreorder   Boolean      @default(false)
+  preorderDays Int?         @default(14)
+  items        BundleItem[]
 }
 
 model BundleItem {
