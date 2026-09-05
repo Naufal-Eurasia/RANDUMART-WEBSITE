@@ -4,8 +4,13 @@ import { prisma } from '@/lib/prisma';
 import { cdn } from '@/lib/cloudinary';
 
 export async function PromoBanner() {
+  const now = new Date();
   const banners = await prisma.promoBanner.findMany({
-    where: { isActive: true },
+    where: {
+      isActive: true,
+      // Tampilkan jika endDate belum diset (null) atau belum kadaluarsa
+      OR: [{ endDate: null }, { endDate: { gte: now } }],
+    },
     orderBy: [{ position: 'asc' }, { createdAt: 'desc' }],
   });
 

@@ -18,13 +18,24 @@ import {
 import { Badge } from '@/components/ui/badge';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
+type PromoType = 'FLASH_SALE' | 'DISCOUNT_PERCENT' | 'CUSTOM';
+
 interface PromoBanner {
   id: string;
+  // Field lama
   title: string;
   imageUrl: string;
   linkUrl: string | null;
   position: number | null;
   isActive: boolean;
+  // Field baru
+  description: string | null;
+  type: PromoType;
+  discountValue: number | null;
+  startDate: string | null;
+  endDate: string | null;
+  productIds: string[];
+  layout: string;
 }
 
 const EMPTY_FORM = { title: '', imageUrl: '', linkUrl: '', position: '' };
