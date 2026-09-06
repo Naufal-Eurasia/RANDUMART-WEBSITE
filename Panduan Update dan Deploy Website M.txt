@@ -81,3 +81,146 @@ Karena website telah terhubung dengan GitHub melalui proses deployment, lakukan 
 selengkapnya boleh lihat disini :
 https://youtu.be/035atz9K7J4?si=Ec2LaIIqDtac4Fi2
 menit 12.03 sampai 13.28
+
+Berikut adalah panduan lengkap deployment ke Hostinger berdasarkan isi video YouTube, beserta penyesuaian khusus jika **akun Hostinger dan GitHub Anda berbeda**, serta konfigurasi penting untuk **stack Next.js, Neon Database, Prisma, PostgreSQL, dan Tailwind CSS**.
+
+---
+
+### Bagian 1: Menghubungkan Hostinger & GitHub (Menit 12.03 - 13.28)
+
+Video tersebut menjelaskan cara menghubungkan repository GitHub ke Hostinger Shared Hosting dan mengaktifkan **Auto Deployment** menggunakan Webhook.
+
+#### Langkah A: Generate SSH Key & Hubungkan GitHub
+
+1. **Ambil SSH Key dari Hostinger:**
+* Buka hPanel Hostinger > Masuk ke menu **Hosting** > Pilih Domain Anda.
+* Buka menu **Advanced** > klik **Git**.
+* Di bagian atas, temukan dan **copy SSH Key** yang disediakan oleh Hostinger.
+
+
+2. **Tambahkan Deploy Key ke Repository GitHub:**
+* Buka repository GitHub project Anda.
+* Pergi ke **Settings** > **Deploy keys** (di bilah navigasi kiri).
+* Klik **Add deploy key**.
+* **Title**: Masukkan nama bebas (contoh: `Hostinger Deploy Key`).
+* **Key**: Paste SSH Key dari Hostinger tadi.
+* Centang opsi **Allow write access** (opsional/jika diperlukan).
+* Klik **Add key**.
+
+
+
+#### Langkah B: Clone Repository di Hostinger
+
+1. Kembali ke hPanel Hostinger pada halaman **Git**.
+2. Isi formulir **Create a New Repository**:
+* **Repository SSH URL**: Ambil URL SSH dari GitHub (format: `git@github.com:username/repository.name.git`).
+* **Branch**: Isikan `main` atau `master` sesuai branch target Anda.
+* **Directory**: Biarkan kosong agar ter-deploy langsung ke folder utama `public_html` (pastikan folder `public_html` di File Manager sudah dibersihkan/kosong terlebih dahulu).
+
+
+3. Klik **Create** lalu klik tombol **Deploy**.
+
+#### Langkah C: Mengaktifkan Auto-Deployment (Webhook) (Menit 11.08 - 12.03)
+
+1. Di halaman Git Hostinger, gulir ke bawah ke tabel *Deployed Repositories*.
+2. Klik tombol **Auto Deployment** / **Webhook**.
+3. Copy **Webhook URL** yang muncul.
+4. Buka GitHub > Repository Anda > **Settings** > **Webhooks** > **Add webhook**.
+5. Paste Webhook URL ke kolom **Payload URL**.
+6. Set **Content type** ke `application/json`.
+7. Simpan dengan menekan **Add webhook**.
+*(Sekarang setiap kali Anda `git push` folder build ke branch utama, Hostinger akan otomatis menarik perubahan terbaru)*
+
+---
+
+### Bagian 2: Penyesuaian Beda Akun GitHub dan Hostinger
+
+Jika **Akun GitHub pemilik project** berbeda dengan **Akun Hostinger**:
+
+1. **Deploy Keys per Repository (Paling Direkomendasikan):**
+* Anda **TIDAK perlu** menggabungkan atau menyamakan akun.
+* Ambil SSH Key dari akun Hostinger tempat website disewa, lalu masukkan SSH Key tersebut ke **Settings > Deploy keys** pada repository di akun GitHub pemilik project.
+* Cara ini aman dan langsung bekerja tanpa mengubah akun GitHub utama.
+
+
+2. **Repository Publik vs Privat:**
+* Jika repository diatur ke **Public**, Anda dapat menggunakan HTTP/HTTPS Repository URL langsung di Hostinger tanpa perlu menambahkan SSH Key.
+* Jika repository **Private**, gunakan SSH URL (`git@github.com:...`) dan wajib menambahkan Deploy Key di GitHub.
+
+
+
+---
+
+### Bagian 3: Penyesuaian Khusus Stack Next.js + Neon + Prisma + Tailwind
+
+Video tutorial di atas memperagakan deploy **React/Vite (Static Export)** ke *Shared Hosting* Hostinger. Karena Anda menggunakan Next.js dengan Prisma & Database (Neon/PostgreSQL), ikuti penyesuaian wajib berikut:
+
+#### 1. Konfigurasi Next.js Static Export (`next.config.js` / `next.config.mjs`)
+
+Shared Hosting Hostinger **tidak mendukung Node.js server berjalan terus-menerus** (layanan SSR/Server Side Rendering membutuhkan VPS Server). Oleh karena itu, Next.js harus di-export menjadi file statis (`out` folder):
+
+```javascript
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'export', // Menghasilkan folder 'out' saat npm run build
+  images: {
+    unoptimized: true, // Wajib diaktifkan untuk static export
+  },
+};
+
+module.exports = nextConfig;
+
+```
+
+#### 2. Penyesuaian Prisma & Database Neon
+
+* Karena hasil build berstatus *Static Site*, server-side route bawaan Next.js (`/api/...`) **tidak akan berjalan di Shared Hosting**.
+* **Solusi untuk Database/Prisma:**
+1. Pastikan `npx prisma generate` dan migrasi database Neon sudah dijalankan saat pengembangan lokal/sebelum proses build.
+2. Panggil API Neon secara eksternal (misal lewat Serverless Functions seperti Vercel API / Cloudflare Workers) **ATAU** gunakan paket koneksi langsung via Client-side jika memungkinkan secara arsitektur.
+3. Kelola koneksi string database Neon di environment lokal Anda.
+
+
+
+#### 3. Update Script Build (`package.json`)
+
+Sesuai workflow di VS Code, ubah skrip build agar menghasilkan folder hasil kompilasi:
+
+```json
+"scripts": {
+  "build": "prisma generate && next build"
+}
+
+```
+
+#### 4. Langkah Deploy Folder Build Next.js
+
+Berbeda dengan Vite yang menghasilkan folder `dist`, Next.js dengan `output: 'export'` akan menghasilkan folder **`out`**:
+
+1. Jalankan build di lokal:
+```bash
+npm run build
+
+```
+
+
+2. Masuk ke folder **out**:
+```bash
+cd out
+
+```
+
+
+3. Lakukan inisialisasi Git dan Push dari dalam folder `out`:
+```bash
+git init
+git add .
+git commit -m "Build Next.js Website"
+git branch -M main
+git remote add origin git@github.com:USERNAME/REPO-BUILD.git
+git push -u origin main --force
+
+```
+
+
+4. Arahkan repository Git di Hostinger ke repo/branch yang berisi isi folder `out` tersebut agar file `index.html` terbaca langsung di `public_html` Hostinger.

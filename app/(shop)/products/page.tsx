@@ -141,7 +141,7 @@ function ProductsContent() {
         <h4 className="font-display font-semibold text-sm mb-3">Kategori</h4>
         <div className="space-y-2 max-h-[240px] overflow-y-auto pr-2 custom-scrollbar">
           <button
-            onClick={() => { setCategory('all'); setPage(1); }}
+            onClick={() => { setCategory('all'); setPage(1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             className={cn('block w-full text-left px-3 py-2 rounded-xl text-sm transition-colors', category === 'all' ? 'bg-primary text-white font-semibold' : 'hover:bg-muted')}
           >
             Semua Kategori
@@ -149,7 +149,7 @@ function ProductsContent() {
           {categories.map((c) => (
             <button
               key={c.slug}
-              onClick={() => { setCategory(c.slug); setPage(1); }}
+              onClick={() => { setCategory(c.slug); setPage(1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
               className={cn('flex items-center justify-between w-full text-left px-3 py-2 rounded-xl text-sm transition-colors', category === c.slug ? 'bg-primary text-white font-semibold' : 'hover:bg-muted')}
             >
               <span>{c.name}</span>
@@ -245,7 +245,7 @@ function ProductsContent() {
 
   return (
     <div className="pt-24 lg:pt-28 pb-20">
-      <ParcelSection />
+      {category === 'all' && <ParcelSection />}
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-6">
         <nav className="text-sm text-muted-foreground mb-3 flex items-center gap-1.5">
