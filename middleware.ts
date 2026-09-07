@@ -9,12 +9,17 @@ export default withAuth(
       authorized: ({ req, token }) => {
         if (token?.error === "UserDeleted") return false;
 
-        // Hanya wajibkan token/role khusus untuk path /admin/*
+        // /admin hanya untuk ADMIN
         if (req.nextUrl.pathname.startsWith('/admin')) {
           return token?.role === 'ADMIN';
         }
 
-        // Path lain public atau auth biasa
+        // /account hanya untuk user yang sudah login (role apapun)
+        if (req.nextUrl.pathname.startsWith('/account')) {
+          return !!token;
+        }
+
+        // Path lain publik
         return true;
       }
     }

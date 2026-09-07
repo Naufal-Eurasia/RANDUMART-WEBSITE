@@ -8,6 +8,7 @@ import bcrypt from "bcryptjs";
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as any,
   session: { strategy: "jwt" },
+  useSecureCookies: false, // Ini tetap dipertahankan (biar lancar di localhost)
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "",
@@ -31,13 +32,34 @@ export const authOptions: NextAuthOptions = {
     })
   ],
   callbacks: {
+    // signIn callback: izinkan semua provider masuk.
+    // Return false hanya jika ada kondisi eksplisit yang harus ditolak.
+    async signIn({ user, account }) {
+      // Google provider: pastikan user punya email (requirement Google OAuth)
+      if (account?.provider === 'google') {
+        return !!user.email;
+      }
+      return true;
+    },
+
     async jwt({ token, user, trigger, session }) {
       if (user) {
+        // Selalu set token.id langsung dari objek user sebagai fallback utama,
+        // sebelum DB lookup — mencegah token tanpa id jika query gagal.
         token.id = user.id;
         token.lastChecked = Date.now();
-        const dbUser = await prisma.user.findUnique({ where: { email: user.email! } });
-        if (dbUser) {
-          token.role = dbUser.role;
+
+        // Gunakan user.email jika ada, fallback ke token.email (untuk Google OAuth
+        // yang kadang melewatkan email di objek user pada pemanggilan berikutnya).
+        const emailToLookup = user.email ?? (token.email as string | undefined);
+        if (emailToLookup) {
+          const dbUser = await prisma.user.findUnique({ where: { email: emailToLookup } });
+          if (dbUser) {
+            token.role = dbUser.role;
+            token.id = dbUser.id; // gunakan id dari DB (lebih andal)
+          } else {
+            token.role = 'CUSTOMER';
+          }
         } else {
           token.role = 'CUSTOMER';
         }

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const RAJAONGKIR_BASE_URL = 'https://api.rajaongkir.com/starter';
+const RAJAONGKIR_BASE_URL = 'https://rajaongkir.komerce.id/api/starter';
 
 interface CostDetail {
   value: number;
