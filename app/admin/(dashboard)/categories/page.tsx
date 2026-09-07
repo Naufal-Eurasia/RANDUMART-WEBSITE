@@ -5,11 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { Loader2, Plus, Edit2, Trash2 } from 'lucide-react';
+import { Loader2, Plus, Edit2, Trash2, ArrowUpDown, ChevronUp, ChevronDown } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
 interface Category { id: string; name: string; slug: string; _count?: { products: number }; }
+type SortKey = 'name' | 'products';
 
 export default function CategoriesAdminPage() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -20,6 +21,8 @@ export default function CategoriesAdminPage() {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [catToDelete, setCatToDelete] = useState<Category | null>(null);
   const [formData, setFormData] = useState({ id: '', name: '', slug: '' });
+
+  const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: 'asc' | 'desc' } | null>(null);
 
   const fetchCategories = async () => {
     setLoading(true);
@@ -96,6 +99,34 @@ export default function CategoriesAdminPage() {
     finally { setSubmitting(false); setDeleteOpen(false); setCatToDelete(null); }
   };
 
+  const handleSort = (key: SortKey) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') direction = 'desc';
+    setSortConfig({ key, direction });
+  };
+
+  const getSortedCategories = () => {
+    if (!sortConfig) return categories;
+    return [...categories].sort((a, b) => {
+      if (sortConfig.key === 'name') {
+        return sortConfig.direction === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+      }
+      if (sortConfig.key === 'products') {
+        const countA = a._count?.products || 0;
+        const countB = b._count?.products || 0;
+        return sortConfig.direction === 'asc' ? countA - countB : countB - countA;
+      }
+      return 0;
+    });
+  };
+
+  const SortIcon = ({ columnKey }: { columnKey: SortKey }) => {
+    if (sortConfig?.key !== columnKey) return <ArrowUpDown className="w-3.5 h-3.5 ml-1 opacity-50" />;
+    return sortConfig.direction === 'asc' ? <ChevronUp className="w-3.5 h-3.5 ml-1" /> : <ChevronDown className="w-3.5 h-3.5 ml-1" />;
+  };
+
+  const sortedCategories = getSortedCategories();
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -113,9 +144,13 @@ export default function CategoriesAdminPage() {
           <table className="w-full text-left text-sm">
             <thead className="bg-muted/50 text-muted-foreground border-b border-border/60">
               <tr>
-                <th className="px-6 py-4 font-semibold">Nama Kategori</th>
+                <th className="px-6 py-4 font-semibold cursor-pointer select-none hover:text-foreground" onClick={() => handleSort('name')}>
+                  <div className="flex items-center gap-1">Nama Kategori <SortIcon columnKey="name" /></div>
+                </th>
                 <th className="px-6 py-4 font-semibold">Slug</th>
-                <th className="px-6 py-4 font-semibold text-center">Jml Produk</th>
+                <th className="px-6 py-4 font-semibold cursor-pointer select-none hover:text-foreground text-center" onClick={() => handleSort('products')}>
+                  <div className="flex items-center justify-center gap-1">Jml Produk <SortIcon columnKey="products" /></div>
+                </th>
                 <th className="px-6 py-4 font-semibold text-right">Aksi</th>
               </tr>
             </thead>
@@ -125,7 +160,7 @@ export default function CategoriesAdminPage() {
               ) : categories.length === 0 ? (
                 <tr><td colSpan={4} className="px-6 py-12 text-center text-muted-foreground">Belum ada kategori.</td></tr>
               ) : (
-                categories.map((cat) => (
+                sortedCategories.map((cat) => (
                   <tr key={cat.id} className="hover:bg-muted/30 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">

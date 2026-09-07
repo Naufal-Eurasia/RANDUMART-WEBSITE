@@ -1,3 +1,4 @@
--- Placeholder: migration applied directly to DB. Actual changes already applied via 20260831065931_add_menunggu_ongkir_bayar_status.
+-- AlterEnum: Menambahkan nilai status pesanan baru
+-- IF NOT EXISTS digunakan agar aman jika nilai sudah pernah ditambahkan langsung ke DB
 ALTER TYPE "OrderStatus" ADD VALUE IF NOT EXISTS 'MENUNGGU_ONGKIR';
 ALTER TYPE "OrderStatus" ADD VALUE IF NOT EXISTS 'MENUNGGU_BAYAR';

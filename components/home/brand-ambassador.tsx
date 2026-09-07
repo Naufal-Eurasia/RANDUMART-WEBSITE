@@ -4,11 +4,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect, useCallback } from 'react';
 
-// Daftar 3 foto Nagita Slavina di folder public/images/
+// Daftar 3 foto Nagita Slavina di folder public/images/.
+// Alt ditulis per foto: pembaca layar membacakan ketiganya berurutan saat
+// slider berganti, jadi teks generik yang sama tiga kali tidak memberi info.
 const ambassadorImages = [
-  '/images/NAGITA SLAVINA 1.jpg',
-  '/images/NAGITA SLAVINA 2.jpeg',
-  '/images/NAGITA SLAVINA.jpg',
+  { src: '/images/NAGITA SLAVINA 1.jpg', alt: 'Nagita Slavina, brand ambassador Randumart, berpose mengenakan busana formal' },
+  { src: '/images/NAGITA SLAVINA 2.jpeg', alt: 'Nagita Slavina tersenyum ke kamera dalam sesi pemotretan Randumart' },
+  { src: '/images/NAGITA SLAVINA.jpg', alt: 'Potret Nagita Slavina sebagai wajah rangkaian produk perawatan Randumart' },
 ];
 
 export function BrandAmbassador() {
@@ -34,16 +36,10 @@ export function BrandAmbassador() {
 
   return (
     <section id="ambassador" className="relative py-24 lg:py-32 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop"
-          alt=""
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/90 via-emerald-900/70 to-emerald-900/40" />
-      </div>
+      {/* Latar gradien murni CSS. Versi sebelumnya hotlink foto Unsplash:
+          aset pihak ketiga bisa hilang/berubah kapan saja dan menambah satu
+          permintaan jaringan hanya untuk hiasan yang tertutup overlay 90%. */}
+      <div className="absolute inset-0 bg-gradient-to-r from-brand-green via-brand-green/90 to-brand-greenHover/70" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-10 items-center">
@@ -55,13 +51,15 @@ export function BrandAmbassador() {
             viewport={{ once: true }}
             className="relative order-2 lg:order-1"
           >
-            <div className="relative rounded-3xl overflow-hidden shadow-premium aspect-[4/5] max-w-md mx-auto bg-emerald-950 border-4 border-white/10 group">
+            <div className="relative rounded-3xl overflow-hidden shadow-premium aspect-[4/5] max-w-md mx-auto bg-brand-green border-4 border-white/10 group">
 
               <AnimatePresence mode="wait">
                 <motion.img
                   key={currentIndex}
-                  src={ambassadorImages[currentIndex]}
-                  alt="Nagita Slavina"
+                  src={ambassadorImages[currentIndex].src}
+                  alt={ambassadorImages[currentIndex].alt}
+                  loading="lazy"
+                  decoding="async"
                   initial={{ opacity: 0, scale: 1.05 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
@@ -94,6 +92,8 @@ export function BrandAmbassador() {
                   <button
                     key={i}
                     onClick={() => setCurrentIndex(i)}
+                    aria-label={`Tampilkan foto ke-${i + 1} dari ${ambassadorImages.length}`}
+                    aria-current={i === currentIndex}
                     className={`h-2 rounded-full transition-all duration-300 ${
                       i === currentIndex ? 'w-6 bg-white' : 'w-2 bg-white/40'
                     }`}

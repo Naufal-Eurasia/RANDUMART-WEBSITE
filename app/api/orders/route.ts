@@ -93,10 +93,10 @@ export async function POST(req: Request) {
         guestEmail: email,
         guestPhone: phone,
         shippingAddress: address,
-        status: 'PENDING',
+        status: 'MENUNGGU_ONGKIR',
         totalAmount: calculatedTotalAmount, // Terhitung 100% dari Backend
-        shippingCost: validatedShippingCost, // Hasil hitung RajaOngkir dari frontend
-        midtransOrderId: uniqueMidtransId, 
+        shippingCost: validatedShippingCost, // Hasil hitung RajaOngkir dari frontend (sudah divalidasi server-side)
+        midtransOrderId: uniqueMidtransId,
         items: {
           create: orderItemsData,
         }

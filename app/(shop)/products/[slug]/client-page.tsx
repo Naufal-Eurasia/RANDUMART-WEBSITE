@@ -78,7 +78,13 @@ export default function ProductDetailClient({ product, related }: { product: any
               </div>
               <span className="text-muted-foreground text-sm">({product.reviewCount} ulasan)</span>
               <span className="w-1 h-1 rounded-full bg-border"></span>
-              <span className="text-sm font-medium text-brand-green">Terjual {product.reviewCount * 3}+</span>
+              {/* Angka nyata dari OrderItem. Dulu reviewCount * 3 — produk
+                  yang laku 2 unit tapi 0 ulasan tetap tampil "Terjual 0+". */}
+              <span className="text-sm font-medium text-brand-green">Terjual {product.soldCount ?? 0}</span>
+              <span className="w-1 h-1 rounded-full bg-border"></span>
+              <span className={cn('text-sm font-medium', product.stock > 0 ? 'text-emerald-600' : 'text-destructive')}>
+                {product.stock > 0 ? `Stok ${product.stock}` : 'Stok habis'}
+              </span>
             </div>
           </div>
 

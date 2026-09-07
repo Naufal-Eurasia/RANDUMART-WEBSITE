@@ -1,6 +1,20 @@
 import type { Product, Badge } from './types';
 import { cdn, IMG_CARD, IMG_GALLERY } from './cloudinary';
 
+// Status yang dihitung sebagai "terjual". PENDING & EXPIRED tidak dihitung —
+// pesanan belum dibayar bukan penjualan. CANCELLED juga dikecualikan.
+const SOLD_STATUSES = ['PAID', 'PROCESSING', 'SHIPPED', 'COMPLETED'];
+
+export function countSold(orderItems: any): number {
+  if (!Array.isArray(orderItems)) return 0;
+  return orderItems.reduce((n: number, oi: any) => {
+    // order tidak selalu di-include; kalau tidak ada, jangan hitung
+    // supaya tidak menaikkan angka dari pesanan yang batal/kadaluarsa.
+    if (!oi.order || !SOLD_STATUSES.includes(oi.order.status)) return n;
+    return n + (oi.quantity ?? 0);
+  }, 0);
+}
+
 function deriveBadges(p: any): Badge[] {
   const b: Badge[] = [];
   if (p.isBestSeller) b.push('best-seller');
@@ -31,9 +45,12 @@ export function mapPrismaProduct(p: any): Product {
     benefits: [],        // ponytail: add benefits column when product detail uses DB
     ingredients: '',     // ponytail: add to schema when needed
     usage: '',
+    // Baca kolom asli. Regex atas deskripsi ditolak: /halal/i juga cocok
+    // dengan "belum halal" — itu klaim sertifikasi palsu.
     bpom: p.bpomNo ?? '',
     halal: !!p.halalMui,
     stock: p.stock ?? 0,
+    soldCount: countSold(p.orderItems),
     tags: p.tags ?? [],
     badges: deriveBadges(p),
     reviews: [],         // ponytail: add Review model when reviews come from DB

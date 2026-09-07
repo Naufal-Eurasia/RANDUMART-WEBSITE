@@ -4,30 +4,8 @@ import Link from 'next/link';
 import { Package, ShoppingCart, Clock, TrendingUp, AlertTriangle, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { formatRupiah } from '@/lib/categories';
 import { Skeleton } from '@/components/ui/skeleton';
+import { ORDER_STATUS_COLORS, ORDER_STATUS_LABELS } from "@/lib/order-status";
 
-const statusColors: Record<string, string> = {
-  PENDING: 'bg-brand-gold/20 text-brand-green border-brand-gold/40',
-  MENUNGGU_ONGKIR: 'bg-amber-100 text-amber-700 border-transparent',
-  MENUNGGU_BAYAR: 'bg-brand-gold/20 text-brand-green border-brand-gold/40',
-  PAID: 'bg-brand-green text-brand-cream border-transparent',
-  PROCESSING: 'bg-brand-cream text-brand-green border-brand-green/20',
-  SHIPPED: 'bg-indigo-100 text-indigo-700 border-transparent',
-  COMPLETED: 'bg-green-100 text-green-700 border-transparent',
-  CANCELLED: 'bg-red-600 text-white border-transparent',
-  EXPIRED: 'bg-gray-200 text-gray-700 border-transparent',
-};
-
-const statusLabels: Record<string, string> = {
-  PENDING: 'Belum Bayar',
-  MENUNGGU_ONGKIR: 'Menunggu Ongkir',
-  MENUNGGU_BAYAR: 'Menunggu Pembayaran',
-  PAID: 'Perlu Dikirim',
-  PROCESSING: 'Diproses',
-  SHIPPED: 'Dikirim',
-  COMPLETED: 'Selesai',
-  CANCELLED: 'Dibatalkan',
-  EXPIRED: 'Kedaluwarsa',
-};
 
 function DashboardSkeleton() {
   return (
@@ -177,8 +155,8 @@ async function DashboardData() {
                         <p className="text-xs text-muted-foreground">{formatRupiah(Number(o.totalAmount))}</p>
                       </td>
                       <td className="px-6 py-3">
-                        <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${statusColors[o.status] || 'bg-gray-100'}`}>
-                          {statusLabels[o.status] || o.status}
+                        <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${ORDER_STATUS_COLORS[o.status] || 'bg-gray-100'}`}>
+                          {ORDER_STATUS_LABELS[o.status] || o.status}
                         </span>
                       </td>
                       <td className="px-6 py-3 text-right text-muted-foreground text-xs">

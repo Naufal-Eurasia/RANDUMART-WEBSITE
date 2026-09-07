@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getCachedProductBySlug, getCachedProductsList } from '@/lib/product-queries';
+import { countSold } from '@/lib/product-mapper';
 import ProductDetailClient from './client-page';
 
 export const revalidate = 3600;
@@ -19,6 +20,11 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
     categorySlug: product.category.slug,
     imageGallery: product.images.map(img => img.url),
     tags: product.tags || [],
+    // Halaman ini memetakan sendiri, bukan lewat mapPrismaProduct, jadi
+    // bpomNo/halalMui tidak pernah sampai ke UI yang membaca bpom/halal.
+    bpom: product.bpomNo ?? '',
+    halal: !!product.halalMui,
+    soldCount: countSold(product.orderItems),
   };
 
   const relatedDb = await getCachedProductsList(

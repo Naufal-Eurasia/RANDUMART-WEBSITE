@@ -8,11 +8,13 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
-import { Loader2, Plus, Edit2, Trash2, PowerOff, Image as ImageIcon, X, Search, Filter, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Loader2, Plus, Edit2, Trash2, PowerOff, Image as ImageIcon, X, Search, Filter, Eye, ChevronLeft, ChevronRight, ArrowUpDown, ChevronUp, ChevronDown } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { formatRupiah } from '@/lib/categories';
 import { Badge } from '@/components/ui/badge';
+
+type SortKey = 'name' | 'price' | 'stock' | 'status';
 
 export default function ProductsAdminPage() {
   const [products, setProducts] = useState<any[]>([]);
@@ -23,6 +25,7 @@ export default function ProductsAdminPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('ALL');
   const [filterStatus, setFilterStatus] = useState('ALL');
+  const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: 'asc' | 'desc' } | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
@@ -214,10 +217,46 @@ export default function ProductsAdminPage() {
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
+  const handleSort = (key: SortKey) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') direction = 'desc';
+    setSortConfig({ key, direction });
+  };
+
+  const getSortedProducts = () => {
+    if (!sortConfig) return filteredProducts;
+    return [...filteredProducts].sort((a, b) => {
+      if (sortConfig.key === 'name') {
+        return sortConfig.direction === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+      }
+      if (sortConfig.key === 'price') {
+        const pA = Number(a.price) || 0;
+        const pB = Number(b.price) || 0;
+        return sortConfig.direction === 'asc' ? pA - pB : pB - pA;
+      }
+      if (sortConfig.key === 'stock') {
+        return sortConfig.direction === 'asc' ? a.stock - b.stock : b.stock - a.stock;
+      }
+      if (sortConfig.key === 'status') {
+        const stA = a.isPublished ? 1 : 0;
+        const stB = b.isPublished ? 1 : 0;
+        return sortConfig.direction === 'asc' ? stA - stB : stB - stA;
+      }
+      return 0;
+    });
+  };
+
+  const SortIcon = ({ columnKey }: { columnKey: SortKey }) => {
+    if (sortConfig?.key !== columnKey) return <ArrowUpDown className="w-3.5 h-3.5 ml-1 opacity-50" />;
+    return sortConfig.direction === 'asc' ? <ChevronUp className="w-3.5 h-3.5 ml-1" /> : <ChevronDown className="w-3.5 h-3.5 ml-1" />;
+  };
+
+  const sortedProducts = getSortedProducts();
+
   // Produk yang sedang dibuka di modal detail. Bisa undefined kalau daftar
   // menyusut saat modal terbuka (produk dihapus / filter berubah) — modal
   // menutup sendiri lewat `open={...}` di bawah, jangan render isi yang null.
-  const detailProduct = detailIdx === null ? null : filteredProducts[detailIdx] ?? null;
+  const detailProduct = detailIdx === null ? null : sortedProducts[detailIdx] ?? null;
 
   const gotoDetail = (idx: number) => {
     if (idx < 0 || idx >= filteredProducts.length) return;
@@ -271,17 +310,25 @@ export default function ProductsAdminPage() {
           <table className="w-full text-left text-sm">
             <thead className="bg-muted/30 text-muted-foreground border-b border-border/60">
               <tr>
-                <th className="px-6 py-4 font-semibold">Produk</th>
-                <th className="px-6 py-4 font-semibold">Harga</th>
-                <th className="px-6 py-4 font-semibold text-center">Stok</th>
-                <th className="px-6 py-4 font-semibold text-center">Status</th>
+                <th className="px-6 py-4 font-semibold cursor-pointer select-none hover:text-foreground" onClick={() => handleSort('name')}>
+                  <div className="flex items-center gap-1">Produk <SortIcon columnKey="name" /></div>
+                </th>
+                <th className="px-6 py-4 font-semibold cursor-pointer select-none hover:text-foreground" onClick={() => handleSort('price')}>
+                  <div className="flex items-center gap-1">Harga <SortIcon columnKey="price" /></div>
+                </th>
+                <th className="px-6 py-4 font-semibold cursor-pointer select-none hover:text-foreground text-center" onClick={() => handleSort('stock')}>
+                  <div className="flex items-center justify-center gap-1">Stok <SortIcon columnKey="stock" /></div>
+                </th>
+                <th className="px-6 py-4 font-semibold cursor-pointer select-none hover:text-foreground text-center" onClick={() => handleSort('status')}>
+                  <div className="flex items-center justify-center gap-1">Status <SortIcon columnKey="status" /></div>
+                </th>
                 <th className="px-6 py-4 font-semibold text-right">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60">
               {loading ? <tr><td colSpan={5} className="px-6 py-12 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-brand-green" /></td></tr> :
-                filteredProducts.length === 0 ? <tr><td colSpan={5} className="px-6 py-12 text-center text-muted-foreground">Tidak ada produk ditemukan</td></tr> :
-                filteredProducts.map((p, i) => (
+                sortedProducts.length === 0 ? <tr><td colSpan={5} className="px-6 py-12 text-center text-muted-foreground">Tidak ada produk ditemukan</td></tr> :
+                sortedProducts.map((p, i) => (
                   <tr key={p.id} className="hover:bg-muted/30 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">

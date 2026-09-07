@@ -157,6 +157,7 @@ export default function PromosAdminPage() {
     try {
       const url = modalMode === 'edit' ? `/api/admin/promos/${editingId}` : '/api/admin/promos';
       const method = modalMode === 'edit' ? 'PUT' : 'POST';
+      const posVal = String(formData.position).trim();
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
@@ -164,7 +165,7 @@ export default function PromosAdminPage() {
           title: formData.title,
           imageUrl: formData.imageUrl,
           linkUrl: formData.linkUrl || null,
-          position: formData.position !== '' ? Number(formData.position) : null,
+          position: posVal ? parseInt(posVal, 10) : null,
           description: formData.description || null,
           type: formData.type,
           discountValue: formData.discountValue !== '' ? Number(formData.discountValue) : null,

@@ -133,6 +133,7 @@ export const products: Product[] = seeds.map((s, i) => {
     bpom: s.bpom,
     halal: s.badges.includes('halal'),
     stock: s.stock,
+    soldCount: 0,   // data statis, bukan dari OrderItem
     tags: s.tags,
     badges: s.badges,
     reviews: makeReviews(i + 1, 3),
@@ -264,9 +265,9 @@ export const whyChoose = [
   { icon: 'ShieldCheck', title: 'Produk Terpercaya', desc: 'Mengutamakan produk yang jelas asal-usulnya dan memenuhi ketentuan serta perizinan yang berlaku sesuai kategori produknya.' },
   { icon: 'Truck', title: 'Pengiriman Praktis', desc: 'Pesanan dapat dikirim ke berbagai wilayah Indonesia sehingga Anda tidak perlu repot membawa atau mencari oleh-oleh sendiri.' },
   { icon: 'Headphones', title: 'Dibantu Tim yang Responsif', desc: 'Tim Randumart siap membantu memilih produk, menentukan paket, hingga proses pemesanan dan pengiriman.' },
-  { icon: 'BadgeCheck', title: 'Halal Indonesia', desc: 'Bersertifikat halal MUI untuk ketenangan Anda.' },
-  { icon: 'ShieldCheck', title: 'BPOM Certified', desc: 'Semua produk terdaftar resmi di BPOM Indonesia.' },
-  { icon: 'Users', title: 'Trusted by Thousands', desc: 'Dipercaya ribuan pelanggan di seluruh Indonesia.' },
+  // Kalimat halal sengaja seragam dengan FAQ entri 'Apakah produk Randumart
+  // halal?' — klaim yang sama tidak boleh punya dua versi di halaman berbeda.
+  { icon: 'BadgeCheck', title: 'Halal Indonesia', desc: 'Mengutamakan produk yang memiliki status halal sesuai ketentuan yang berlaku. Sertifikasi dapat diperiksa pada kemasan masing-masing produk.' },
 ];
 
 export const stats = [

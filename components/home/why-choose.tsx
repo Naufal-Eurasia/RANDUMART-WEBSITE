@@ -1,10 +1,10 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Leaf, Landmark, Gift, Package, SlidersHorizontal, ShieldCheck, Truck, Headphones, BadgeCheck, Users } from 'lucide-react';
+import { Leaf, Landmark, Gift, Package, SlidersHorizontal, ShieldCheck, Truck, Headphones, BadgeCheck } from 'lucide-react';
 import { whyChoose } from '@/lib/products';
 
-const icons = { Leaf, Landmark, Gift, Package, SlidersHorizontal, ShieldCheck, Truck, Headphones, BadgeCheck, Users } as const;
+const icons = { Leaf, Landmark, Gift, Package, SlidersHorizontal, ShieldCheck, Truck, Headphones, BadgeCheck } as const;
 
 export function WhyChoose() {
   return (

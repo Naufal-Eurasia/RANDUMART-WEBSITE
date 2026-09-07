@@ -33,8 +33,16 @@ const faqs = [
     a: 'Randumart melayani pengiriman ke berbagai wilayah di Indonesia melalui jasa pengiriman yang tersedia. Estimasi waktu dan biaya pengiriman menyesuaikan tujuan, berat, jumlah pesanan, serta ekspedisi yang digunakan.',
   },
   {
+    q: 'Berapa ongkos kirimnya, apakah ada gratis ongkir?',
+    a: 'Ongkos kirim dihitung manual oleh admin menyesuaikan alamat tujuan agar lebih akurat. Setelah pesanan masuk, admin akan menghubungi Anda via WhatsApp untuk menginformasikan ongkir dan total yang harus dibayar.',
+  },
+  {
     q: 'Bagaimana cara melakukan pemesanan?',
     a: 'Pelanggan dapat memilih produk melalui website, kemudian menghubungi kontak/WhatsApp Randumart untuk melakukan konfirmasi pesanan. Tim Randumart akan membantu proses pemesanan hingga pengiriman.',
+  },
+  {
+    q: 'Bagaimana jika produk yang saya terima rusak atau tidak sesuai?',
+    a: 'Silakan segera hubungi tim Randumart melalui WhatsApp dengan menyertakan foto produk dan kode pesanan Anda. Tim kami akan membantu menindaklanjuti sesuai kondisi produk.',
   },
   {
     q: 'Apakah produk bisa digunakan sebagai oleh-oleh setelah pulang Umrah/Haji?',

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
-import { Loader2, Eye, MapPin, Package, Check, X, MessageCircle, Search } from 'lucide-react';
+import { Loader2, Eye, MapPin, Package, Check, X, MessageCircle, Search, ArrowUpDown, ChevronUp, ChevronDown } from 'lucide-react';
 import { formatRupiah } from '@/lib/categories';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
@@ -16,29 +16,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-const statusColors: Record<string, string> = {
-  PENDING: 'bg-brand-gold/20 text-brand-green border border-brand-gold/40',
-  MENUNGGU_ONGKIR: 'bg-amber-100 text-amber-700',
-  MENUNGGU_BAYAR: 'bg-brand-gold/20 text-brand-green border border-brand-gold/40',
-  PAID: 'bg-brand-green text-brand-cream',
-  PROCESSING: 'bg-brand-cream text-brand-green border border-brand-green/20',
-  SHIPPED: 'bg-indigo-100 text-indigo-700',
-  COMPLETED: 'bg-green-100 text-green-700',
-  CANCELLED: 'bg-red-600 text-white',
-  EXPIRED: 'bg-gray-200 text-gray-700',
-};
+import { ORDER_STATUS_COLORS, ORDER_STATUS_LABELS } from "@/lib/order-status";
+import { buildWaLink, normalizeWaNumber, buildInvoiceMessage } from '@/lib/whatsapp';
 
-const statusLabels: Record<string, string> = {
-  PENDING: 'Belum Bayar',
-  MENUNGGU_ONGKIR: 'Menunggu Ongkir',
-  MENUNGGU_BAYAR: 'Menunggu Pembayaran',
-  PAID: 'Perlu Dikirim',
-  PROCESSING: 'Diproses',
-  SHIPPED: 'Dikirim',
-  COMPLETED: 'Selesai',
-  CANCELLED: 'Dibatalkan',
-  EXPIRED: 'Kedaluwarsa',
-};
+type SortKey = 'date' | 'total';
 
 export default function OrdersAdminPage() {
   const [orders, setOrders] = useState<any[]>([]);
@@ -46,10 +27,12 @@ export default function OrdersAdminPage() {
   const [updating, setUpdating] = useState(false);
   const [activeTab, setActiveTab] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: 'asc' | 'desc' } | null>(null);
 
   // Detail Modal State
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [shippingCostInput, setShippingCostInput] = useState('');
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -65,16 +48,17 @@ export default function OrdersAdminPage() {
 
   const openDetail = (order: any) => {
     setSelectedOrder(order);
+    setShippingCostInput(order.shippingCost?.toString() || '');
     setIsDetailOpen(true);
   };
 
-  const handleUpdateStatus = async (orderId: string, newStatus: string) => {
+  const handleUpdateStatus = async (orderId: string, newStatus: string, extraData?: any) => {
     setUpdating(true);
     try {
       const res = await fetch(`/api/admin/orders/${orderId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus })
+        body: JSON.stringify({ status: newStatus, ...extraData })
       });
       const data = await res.json();
 
@@ -82,7 +66,15 @@ export default function OrdersAdminPage() {
         toast.error(data.message || 'Gagal mengubah status pesanan');
       } else {
         toast.success(`Status berhasil diubah menjadi ${newStatus}`);
-        fetchOrders();
+        // Refetch list, then sync modal with fresh data (includes items)
+        const listRes = await fetch('/api/admin/orders', { cache: 'no-store' });
+        if (listRes.ok) {
+          const fresh = await listRes.json();
+          setOrders(fresh);
+          if (selectedOrder && selectedOrder.id === orderId) {
+            setSelectedOrder(fresh.find((o: any) => o.id === orderId) || null);
+          }
+        }
       }
     } catch (err) {
       toast.error('Kesalahan jaringan saat mengubah status');
@@ -102,6 +94,36 @@ export default function OrdersAdminPage() {
 
     return matchesTab && matchesSearch;
   });
+
+  const handleSort = (key: SortKey) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') direction = 'desc';
+    setSortConfig({ key, direction });
+  };
+
+  const getSortedOrders = () => {
+    if (!sortConfig) return filteredOrders;
+    return [...filteredOrders].sort((a, b) => {
+      if (sortConfig.key === 'date') {
+        return sortConfig.direction === 'asc'
+          ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      }
+      if (sortConfig.key === 'total') {
+        const totalA = Number(a.totalAmount) || 0;
+        const totalB = Number(b.totalAmount) || 0;
+        return sortConfig.direction === 'asc' ? totalA - totalB : totalB - totalA;
+      }
+      return 0;
+    });
+  };
+
+  const SortIcon = ({ columnKey }: { columnKey: SortKey }) => {
+    if (sortConfig?.key !== columnKey) return <ArrowUpDown className="w-3.5 h-3.5 ml-1 opacity-50" />;
+    return sortConfig.direction === 'asc' ? <ChevronUp className="w-3.5 h-3.5 ml-1" /> : <ChevronDown className="w-3.5 h-3.5 ml-1" />;
+  };
+
+  const sortedOrders = getSortedOrders();
 
   return (
     <div className="space-y-6">
@@ -129,7 +151,7 @@ export default function OrdersAdminPage() {
                 : 'bg-white border border-border/60 text-muted-foreground hover:bg-muted'
             }`}
           >
-            {tab === 'ALL' ? 'Semua' : statusLabels[tab]}
+            {tab === 'ALL' ? 'Semua' : ORDER_STATUS_LABELS[tab]}
           </button>
         ))}
       </div>
@@ -140,17 +162,21 @@ export default function OrdersAdminPage() {
             <thead className="bg-muted/50 text-muted-foreground border-b border-border/60">
               <tr>
                 <th className="px-6 py-4 font-semibold">ID Pesanan</th>
-                <th className="px-6 py-4 font-semibold">Waktu</th>
+                <th className="px-6 py-4 font-semibold cursor-pointer select-none hover:text-foreground" onClick={() => handleSort('date')}>
+                  <div className="flex items-center gap-1">Waktu <SortIcon columnKey="date" /></div>
+                </th>
                 <th className="px-6 py-4 font-semibold">Pelanggan</th>
-                <th className="px-6 py-4 font-semibold">Total Pembayaran</th>
+                <th className="px-6 py-4 font-semibold cursor-pointer select-none hover:text-foreground" onClick={() => handleSort('total')}>
+                  <div className="flex items-center gap-1">Total Pembayaran <SortIcon columnKey="total" /></div>
+                </th>
                 <th className="px-6 py-4 font-semibold text-center">Status</th>
                 <th className="px-6 py-4 font-semibold text-right">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60">
               {loading ? <tr><td colSpan={6} className="px-6 py-12 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto" /></td></tr> :
-                filteredOrders.length === 0 ? <tr><td colSpan={6} className="px-6 py-12 text-center text-muted-foreground">Tidak ada pesanan ditemukan</td></tr> :
-                filteredOrders.map((o) => (
+                sortedOrders.length === 0 ? <tr><td colSpan={6} className="px-6 py-12 text-center text-muted-foreground">Tidak ada pesanan ditemukan</td></tr> :
+                sortedOrders.map((o) => (
                   <tr key={o.id} className="hover:bg-muted/30">
                     <td className="px-6 py-4">
                       <button onClick={() => openDetail(o)} className="font-semibold text-brand-green hover:underline flex items-center gap-1.5">
@@ -164,15 +190,15 @@ export default function OrdersAdminPage() {
                     </td>
                     <td className="px-6 py-4 font-medium">{formatRupiah(Number(o.totalAmount))}</td>
                     <td className="px-6 py-4 text-center">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${statusColors[o.status] || 'bg-gray-100'}`}>
-                        {statusLabels[o.status] || o.status}
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${ORDER_STATUS_COLORS[o.status] || 'bg-gray-100'}`}>
+                        {ORDER_STATUS_LABELS[o.status] || o.status}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex justify-end items-center gap-2">
                         {o.status === 'PENDING' && (
                           <a
-                            href={`https://wa.me/${o.guestPhone?.replace(/^0/, '62').replace(/\D/g, '')}?text=Halo%20Kak%20${encodeURIComponent(o.guestName)},%20pesanan%20dengan%20ID%20${o.id.slice(-8)}%20belum%20dibayar.%20Silakan%20lakukan%20pembayaran%20agar%20segera%20diproses.`}
+                            href={buildWaLink(o.guestPhone, `Halo Kak ${o.guestName}, pesanan dengan ID ${o.id.slice(-8)} belum dibayar. Silakan lakukan pembayaran agar segera diproses.`) || '#'}
                             target="_blank"
                             rel="noreferrer"
                             className="inline-flex items-center justify-center h-8 w-8 rounded-lg bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20 transition-colors"
@@ -181,6 +207,7 @@ export default function OrdersAdminPage() {
                             <MessageCircle className="w-4 h-4" />
                           </a>
                         )}
+                        {!['COMPLETED', 'CANCELLED', 'EXPIRED'].includes(o.status) && (
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="outline" size="sm" disabled={updating} className="h-8 rounded-lg text-xs">
@@ -190,24 +217,14 @@ export default function OrdersAdminPage() {
                           <DropdownMenuContent align="end" className="w-40 rounded-2xl">
                             <DropdownMenuLabel className="text-xs text-muted-foreground">Update Status</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            {o.status === 'PENDING' ? (
-                              <>
-                                <DropdownMenuItem onClick={() => handleUpdateStatus(o.id, 'PAID')} className="text-emerald-600 focus:bg-emerald-50 focus:text-emerald-700 cursor-pointer font-medium">
-                                  <Check className="w-4 h-4 mr-2" /> Validasi PAID
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => handleUpdateStatus(o.id, 'CANCELLED')} className="text-red-600 focus:bg-red-50 focus:text-red-700 cursor-pointer font-medium">
-                                  <X className="w-4 h-4 mr-2" /> Batalkan
-                                </DropdownMenuItem>
-                              </>
-                            ) : (
-                              ['PROCESSING', 'SHIPPED', 'COMPLETED'].map(st => (
-                                 <DropdownMenuItem key={st} onClick={() => handleUpdateStatus(o.id, st)} disabled={o.status === st || ['CANCELLED', 'EXPIRED'].includes(o.status)} className="cursor-pointer">
-                                    Tandai {statusLabels[st] || st}
-                                 </DropdownMenuItem>
-                              ))
-                            )}
+                            {['MENUNGGU_BAYAR', 'PAID', 'PROCESSING', 'SHIPPED', 'COMPLETED', 'CANCELLED'].map(st => (
+                               <DropdownMenuItem key={st} onClick={() => handleUpdateStatus(o.id, st)} disabled={o.status === st} className="cursor-pointer">
+                                  Tandai {ORDER_STATUS_LABELS[st] || st}
+                               </DropdownMenuItem>
+                            ))}
                           </DropdownMenuContent>
                         </DropdownMenu>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -237,10 +254,12 @@ export default function OrdersAdminPage() {
                 </div>
                 <div className="p-4 bg-muted/50 rounded-2xl border border-border/50 space-y-2">
                   <h4 className="font-semibold mb-3">Info Transaksi</h4>
-                  <div className="flex justify-between"><span className="text-muted-foreground">Status</span> <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${statusColors[selectedOrder.status]}`}>{statusLabels[selectedOrder.status] || selectedOrder.status}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">Status</span> <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${ORDER_STATUS_COLORS[selectedOrder.status]}`}>{ORDER_STATUS_LABELS[selectedOrder.status] || selectedOrder.status}</span></div>
                   <div className="flex justify-between"><span className="text-muted-foreground">Order ID</span> <span className="font-medium">{selectedOrder.midtransOrderId || selectedOrder.id}</span></div>
                   <div className="flex justify-between"><span className="text-muted-foreground">Waktu</span> <span>{new Date(selectedOrder.createdAt).toLocaleString('id-ID')}</span></div>
-                  <div className="flex justify-between"><span className="text-muted-foreground">Total Bayar</span> <span className="font-bold text-brand-green">{formatRupiah(Number(selectedOrder.totalAmount))}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span> <span>{formatRupiah(Number(selectedOrder.totalAmount) - Number(selectedOrder.shippingCost || 0))}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">Ongkos Kirim</span> <span>{Number(selectedOrder.shippingCost) > 0 ? formatRupiah(Number(selectedOrder.shippingCost)) : '-'}</span></div>
+                  <div className="flex justify-between border-t border-border/50 pt-2 mt-2"><span className="text-muted-foreground font-semibold">Total Bayar</span> <span className="font-bold text-brand-green">{formatRupiah(Number(selectedOrder.totalAmount))}</span></div>
                 </div>
               </div>
 
@@ -258,6 +277,68 @@ export default function OrdersAdminPage() {
                   ))}
                 </div>
               </div>
+
+              {/* Blok Input Ongkir & Invoice */}
+              {(selectedOrder.status === 'MENUNGGU_ONGKIR' || selectedOrder.status === 'MENUNGGU_BAYAR') && (
+                <div className="p-5 bg-brand-gold/10 rounded-2xl border border-brand-gold/30 mt-6">
+                  <h4 className="font-semibold mb-3">Hitung Ongkos Kirim & Invoice</h4>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <div className="flex-1 relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-medium">Rp</span>
+                      <Input
+                        type="number"
+                        placeholder="0"
+                        value={shippingCostInput}
+                        onChange={(e) => setShippingCostInput(e.target.value)}
+                        className="pl-9 bg-white"
+                        disabled={updating}
+                      />
+                    </div>
+                    <Button
+                      onClick={() => handleUpdateStatus(selectedOrder.id, 'MENUNGGU_BAYAR', { shippingCost: Number(shippingCostInput) })}
+                      disabled={updating || !shippingCostInput || Number(shippingCostInput) <= 0}
+                      className="bg-brand-green hover:bg-brand-greenHover text-white"
+                    >
+                      {updating ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Simpan Ongkir'}
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2 mb-4">
+                    Masukkan ongkos kirim manual berdasarkan alamat pelanggan. Menyimpan akan mengupdate total belanja.
+                  </p>
+
+                  {selectedOrder.status === 'MENUNGGU_BAYAR' && (() => {
+                    const invoiceLink = buildWaLink(selectedOrder.guestPhone, buildInvoiceMessage(selectedOrder, `https://randumart.com/order/${selectedOrder.id}`));
+                    return (
+                      <div className="pt-4 border-t border-brand-gold/30">
+                        <p className="text-xs font-semibold mb-2 text-brand-green">Langkah Selanjutnya:</p>
+                        {invoiceLink ? (
+                          <a
+                            href={invoiceLink}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex w-full items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white font-semibold shadow-soft active:scale-[0.98] transition-all"
+                          >
+                            <MessageCircle className="w-5 h-5" />
+                            Kirim Invoice via WhatsApp
+                          </a>
+                        ) : (
+                          <div className="text-center">
+                            <button
+                              disabled
+                              className="flex w-full items-center justify-center gap-2 px-6 py-3 rounded-xl bg-muted text-muted-foreground font-semibold cursor-not-allowed"
+                            >
+                              Nomor WA Tidak Valid
+                            </button>
+                            <p className="text-xs text-muted-foreground mt-2">
+                              Nomor WhatsApp pelanggan kosong atau tidak dikenali. Hubungi pelanggan secara manual.
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
             </div>
           )}
         </DialogContent>
