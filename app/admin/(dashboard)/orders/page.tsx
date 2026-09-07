@@ -161,16 +161,16 @@ export default function OrdersAdminPage() {
           <table className="w-full text-left text-sm whitespace-nowrap">
             <thead className="bg-muted/50 text-muted-foreground border-b border-border/60">
               <tr>
-                <th className="px-6 py-4 font-semibold">ID Pesanan</th>
-                <th className="px-6 py-4 font-semibold cursor-pointer select-none hover:text-foreground" onClick={() => handleSort('date')}>
+                <th className="px-3 py-4 font-semibold">ID Pesanan</th>
+                <th className="px-3 py-4 font-semibold cursor-pointer select-none hover:text-foreground" onClick={() => handleSort('date')}>
                   <div className="flex items-center gap-1">Waktu <SortIcon columnKey="date" /></div>
                 </th>
-                <th className="px-6 py-4 font-semibold">Pelanggan</th>
-                <th className="px-6 py-4 font-semibold cursor-pointer select-none hover:text-foreground" onClick={() => handleSort('total')}>
+                <th className="px-3 py-4 font-semibold">Pelanggan</th>
+                <th className="px-3 py-4 font-semibold cursor-pointer select-none hover:text-foreground whitespace-nowrap" onClick={() => handleSort('total')}>
                   <div className="flex items-center gap-1">Total Pembayaran <SortIcon columnKey="total" /></div>
                 </th>
-                <th className="px-6 py-4 font-semibold text-center">Status</th>
-                <th className="px-6 py-4 font-semibold text-right">Aksi</th>
+                <th className="px-3 py-4 font-semibold text-center sticky right-40 z-20 bg-muted border-l border-border/60">Status</th>
+                <th className="px-3 py-4 font-semibold text-right sticky right-0 z-20 bg-muted border-l border-border/60 w-40">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60">
@@ -178,24 +178,24 @@ export default function OrdersAdminPage() {
                 sortedOrders.length === 0 ? <tr><td colSpan={6} className="px-6 py-12 text-center text-muted-foreground">Tidak ada pesanan ditemukan</td></tr> :
                 sortedOrders.map((o) => (
                   <tr key={o.id} className="hover:bg-muted/30">
-                    <td className="px-6 py-4">
-                      <button onClick={() => openDetail(o)} className="font-semibold text-brand-green hover:underline flex items-center gap-1.5">
-                        <Eye className="w-3.5 h-3.5"/> {o.midtransOrderId || o.id.slice(-8)}
+                    <td className="px-3 py-4 max-w-[140px]">
+                      <button onClick={() => openDetail(o)} className="font-semibold text-brand-green hover:underline flex items-center gap-1.5 min-w-0 max-w-full">
+                        <Eye className="w-3.5 h-3.5 shrink-0"/> <span className="truncate">{o.midtransOrderId || o.id.slice(-8)}</span>
                       </button>
                     </td>
-                    <td className="px-6 py-4 text-muted-foreground">{new Date(o.createdAt).toLocaleString('id-ID')}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 py-4 text-muted-foreground">{new Date(o.createdAt).toLocaleString('id-ID')}</td>
+                    <td className="px-3 py-4">
                       <p className="font-medium">{o.guestName}</p>
                       <p className="text-xs text-muted-foreground">{o.guestPhone}</p>
                     </td>
-                    <td className="px-6 py-4 font-medium">{formatRupiah(Number(o.totalAmount))}</td>
-                    <td className="px-6 py-4 text-center">
+                    <td className="px-3 py-4 font-medium whitespace-nowrap">{formatRupiah(Number(o.totalAmount))}</td>
+                    <td className="px-3 py-4 text-center sticky right-40 z-20 bg-white border-l border-border/60">
                       <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${ORDER_STATUS_COLORS[o.status] || 'bg-gray-100'}`}>
                         {ORDER_STATUS_LABELS[o.status] || o.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex justify-end items-center gap-2">
+                    <td className="px-3 py-4 text-right sticky right-0 z-20 bg-white border-l border-border/60 w-40">
+                      <div className="flex justify-end items-center gap-1">
                         {o.status === 'PENDING' && (
                           <a
                             href={buildWaLink(o.guestPhone, `Halo Kak ${o.guestName}, pesanan dengan ID ${o.id.slice(-8)} belum dibayar. Silakan lakukan pembayaran agar segera diproses.`) || '#'}
@@ -210,7 +210,7 @@ export default function OrdersAdminPage() {
                         {!['COMPLETED', 'CANCELLED', 'EXPIRED'].includes(o.status) && (
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="sm" disabled={updating} className="h-8 rounded-lg text-xs">
+                            <Button variant="outline" size="sm" disabled={updating} className="h-8 px-2 rounded-lg text-xs">
                               Ubah Status
                             </Button>
                           </DropdownMenuTrigger>

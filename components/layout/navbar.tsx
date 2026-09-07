@@ -54,8 +54,8 @@ export function Navbar() {
           scrolled ? 'glass shadow-soft bg-background/95' : 'bg-background/95'
         )}
       >
-        <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 lg:h-20 items-center justify-between gap-4">
+        <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-6">
+          <div className="flex flex-wrap min-h-16 lg:min-h-20 items-center justify-between gap-2 lg:gap-3 py-1">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 shrink-0">
               <Image
@@ -80,7 +80,7 @@ export function Navbar() {
             {/* Desktop nav — 8 link setelah 'Brand Ambassador' dicabut, jadi
                 padding & ukuran teks dilonggarkan dari px-1.5/13px yang dulu
                 dipakai supaya 9 link muat. Sisa ruang di xl masih ~180px. */}
-            <div className="hidden xl:flex items-center gap-0.5">
+            <div className="hidden xl:flex items-center gap-0 shrink">
               {navLinks.map((link) =>
                 link.mega ? (
                   <div
@@ -92,7 +92,7 @@ export function Navbar() {
                   >
                     <button
                       className={cn(
-                        'inline-flex items-center gap-1 whitespace-nowrap px-3 py-2 text-sm font-medium rounded-lg transition-colors',
+                        'inline-flex items-center gap-1 whitespace-nowrap px-2.5 py-2 text-sm font-medium rounded-lg transition-colors',
                         'text-foreground hover:bg-muted'
                       )}
                     >
@@ -145,7 +145,7 @@ export function Navbar() {
                     key={link.label}
                     href={link.href}
                     className={cn(
-                      'whitespace-nowrap px-3 py-2 text-sm font-medium rounded-lg transition-colors',
+                      'whitespace-nowrap px-2.5 py-2 text-sm font-medium rounded-lg transition-colors',
                       'text-foreground hover:bg-muted'
                     )}
                   >
@@ -156,18 +156,18 @@ export function Navbar() {
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-1 sm:gap-2">
+            <div className="flex items-center gap-0.5 sm:gap-1.5 shrink-0">
               <button
                 onClick={() => setSearchOpen(true)}
                 aria-label="Search"
-                className={cn('grid place-items-center w-11 h-11 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
+                className={cn('shrink-0 grid place-items-center w-11 h-11 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
               >
                 <Search className="w-5 h-5" />
               </button>
               <button
                 onClick={() => setWishlistOpen(true)}
                 aria-label="Wishlist"
-                className={cn('group relative grid place-items-center w-11 h-11 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
+                className={cn('group relative shrink-0 grid place-items-center w-11 h-11 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
               >
                 <Heart className="w-5 h-5" />
                 {mounted && wishlist.length > 0 && (
@@ -182,7 +182,7 @@ export function Navbar() {
               <button
                 onClick={() => setCartOpen(true)}
                 aria-label="Cart"
-                className={cn('group relative grid place-items-center w-11 h-11 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
+                className={cn('group relative shrink-0 grid place-items-center w-11 h-11 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
               >
                 <ShoppingBag className="w-5 h-5" />
                 {mounted && cartCount() > 0 && (
@@ -195,23 +195,23 @@ export function Navbar() {
                 </span>
               </button>
 
-              <div className="hidden sm:flex items-center gap-2 ml-1 shrink-0">
+              <div className="hidden sm:flex items-center gap-1.5 ml-0.5 shrink-0">
                 {status === 'loading' ? (
                   <div className="w-9 md:w-[150px] h-9 rounded-md bg-muted/20 animate-pulse shrink-0"></div>
                 ) : status === 'authenticated' ? (
-                  <Button size="sm" className="min-w-fit shrink-0 whitespace-nowrap px-4 bg-brand-green hover:bg-brand-greenHover text-white" asChild>
+                  <Button size="sm" className="min-w-fit shrink-0 whitespace-nowrap px-3 bg-brand-green hover:bg-brand-greenHover text-white" asChild>
                     <Link href={session?.user?.role === 'ADMIN' ? '/admin' : '/account'}>
                       <User className="w-4 h-4 md:mr-1" /> <span className="hidden md:inline">Akun Saya</span>
                     </Link>
                   </Button>
                 ) : (
                   <>
-                    <Button variant="ghost" size="sm" className="min-w-fit shrink-0 whitespace-nowrap px-4 text-foreground hover:bg-muted" asChild>
+                    <Button variant="ghost" size="sm" className="min-w-fit shrink-0 whitespace-nowrap px-3 text-foreground hover:bg-muted" asChild>
                       <Link href="/login" prefetch={true}>
                         <User className="w-4 h-4 md:mr-1" /> <span className="hidden md:inline">Login</span>
                       </Link>
                     </Button>
-                    <Button size="sm" className="min-w-fit shrink-0 whitespace-nowrap px-4 bg-brand-green hover:bg-brand-greenHover text-white" asChild>
+                    <Button size="sm" className="min-w-fit shrink-0 whitespace-nowrap px-3 bg-brand-green hover:bg-brand-greenHover text-white" asChild>
                       <Link href="/register" prefetch={true}>
                         Register
                       </Link>
@@ -223,7 +223,7 @@ export function Navbar() {
               <button
                 onClick={() => setMobileNavOpen(true)}
                 aria-label="Menu"
-                className={cn('xl:hidden grid place-items-center w-11 h-11 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
+                className={cn('xl:hidden shrink-0 grid place-items-center w-11 h-11 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
               >
                 <Menu className="w-5 h-5" />
               </button>
