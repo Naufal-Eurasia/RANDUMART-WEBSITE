@@ -47,6 +47,17 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
           if (result.count === 0) {
             throw new Error(`Stok kurang untuk memvalidasi pesanan ini. Update gagal.`);
           }
+
+          // Tambah reviewCount tiap kali order sukses dibayar, dan isi rating
+          // default sekali saja (kalau masih 0) supaya bintang langsung tampil.
+          await tx.product.update({
+            where: { id: item.productId },
+            data: { reviewCount: { increment: item.quantity } }
+          });
+          await tx.product.updateMany({
+            where: { id: item.productId, rating: 0 },
+            data: { rating: 4.5 }
+          });
         }
       }
 
