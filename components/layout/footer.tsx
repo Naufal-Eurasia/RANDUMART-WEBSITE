@@ -110,7 +110,7 @@ export function Footer() {
           <ul className="space-y-3 text-sm text-muted-foreground">
             <li className="flex items-start gap-2">
               <Phone className="w-4 h-4 mt-0.5 text-brand-green shrink-0" />
-              <span>+62 812 3456 7890 <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 ml-1">WhatsApp Only</span></span>
+              <span>+62 895-3648-63172 <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 ml-1">WhatsApp Only</span></span>
             </li>
             <li className="flex items-start gap-2"><MapPin className="w-4 h-4 mt-0.5 text-brand-green shrink-0" /> Sidoarjo, Indonesia</li>
           </ul>

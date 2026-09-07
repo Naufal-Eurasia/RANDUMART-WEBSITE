@@ -7,7 +7,7 @@ export async function GET() {
   
   try {
     const setting = await prisma.storeSetting.findUnique({ where: { id: 'singleton' } });
-    return NextResponse.json(setting || { id: 'singleton', whatsappNumber: '6281234567890' });
+    return NextResponse.json(setting || { id: 'singleton', whatsappNumber: '62895364863172' });
   } catch (error) {
     return NextResponse.json({ message: 'Error fetching settings' }, { status: 500 });
   }
