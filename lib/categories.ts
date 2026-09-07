@@ -34,7 +34,7 @@ export const concerns: Concern[] = [
 // dipakai apa adanya di pasar lokal.
 export const navLinks = [
   { label: 'Beranda', href: '/' },
-  { label: 'Produk', href: '/products' },
+  { label: 'Produk', href: '/products', productTypes: true },
   { label: 'Kategori', href: '/#categories', mega: true },
   { label: 'Brand Ambassador', href: '/#ambassador' },
   { label: 'Promo', href: '/#promo' },

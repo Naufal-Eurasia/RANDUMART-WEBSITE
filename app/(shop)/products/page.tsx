@@ -36,6 +36,8 @@ function ProductsContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get('category') || 'all';
   const initialConcern = searchParams.get('concern');
+  // Filter jenis produk dari navbar dropdown "Produk": bundle | parcel | single | null (semua)
+  const productType = searchParams.get('type');
 
   const [category, setCategory] = useState(initialCategory);
   const [priceRange, setPriceRange] = useState<number[]>([PRICE_MIN, PRICE_MAX]);
@@ -243,9 +245,31 @@ function ProductsContent() {
     </div>
   );
 
+  // Filter "Bundling" / "Parsel" dari dropdown navbar Produk: hanya data Bundle yang
+  // relevan, jadi sidebar filter & grid produk satuan (field-nya beda: kategori,
+  // rating, stok tidak ada di model Bundle) tidak ikut ditampilkan.
+  if (productType === 'bundle' || productType === 'parcel') {
+    const label = productType === 'bundle' ? 'Bundling' : 'Parsel';
+    return (
+      <div className="pt-24 lg:pt-28 pb-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-6">
+          <nav className="text-sm text-muted-foreground mb-3 flex items-center gap-1.5">
+            <Link href="/" className="hover:text-primary">Home</Link>
+            <span>/</span>
+            <Link href="/products" className="hover:text-primary">Products</Link>
+            <span>/</span>
+            <span className="text-foreground font-medium">{label}</span>
+          </nav>
+          <h1 className="font-display text-2xl sm:text-3xl font-bold">{label}</h1>
+        </div>
+        <ParcelSection typeFilter={productType === 'bundle' ? 'BUNDLING' : 'PARSEL'} />
+      </div>
+    );
+  }
+
   return (
     <div className="pt-24 lg:pt-28 pb-20">
-      {category === 'all' && <ParcelSection />}
+      {category === 'all' && productType !== 'single' && <ParcelSection />}
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-6">
         <nav className="text-sm text-muted-foreground mb-3 flex items-center gap-1.5">
@@ -257,7 +281,7 @@ function ProductsContent() {
         <div className="flex items-end justify-between gap-4 flex-wrap">
           <div>
             <h1 className="font-display text-2xl sm:text-3xl font-bold">
-              {activeCat ? activeCat.name : 'Semua Produk'}
+              {activeCat ? activeCat.name : productType === 'single' ? 'Produk Satuan' : 'Semua Produk'}
             </h1>
             <p className="text-muted-foreground text-sm mt-1">{loading ? 'Memuat produk...' : `${filtered.length} produk ditemukan`}</p>
           </div>

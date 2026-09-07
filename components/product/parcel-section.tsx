@@ -32,7 +32,13 @@ function summarizeContents(bundle: Bundle): string {
   return bundle.description || '-';
 }
 
-export function ParcelSection() {
+interface ParcelSectionProps {
+  // Saat diisi, hanya paket dengan type ini yang ditampilkan (dipakai oleh
+  // filter navbar Produk > Bundling/Parsel). Kosong = tampilkan semua.
+  typeFilter?: BundleType;
+}
+
+export function ParcelSection({ typeFilter }: ParcelSectionProps = {}) {
   const [bundles, setBundles] = useState<Bundle[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -52,18 +58,22 @@ export function ParcelSection() {
     return () => { active = false; };
   }, []);
 
+  const filteredBundles = typeFilter ? bundles.filter((b) => b.type === typeFilter) : bundles;
+
   // Belum ada paket dibuat admin, atau masih loading — jangan tampilkan section kosong.
-  if (loading || bundles.length === 0) return null;
+  if (loading || filteredBundles.length === 0) return null;
+
+  const title = typeFilter === 'PARSEL' ? 'Paket Parsel' : typeFilter === 'BUNDLING' ? 'Paket Bundling' : 'Paket Parsel & Bundling';
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-8">
       <div className="flex items-center gap-2 mb-4">
         <Gift className="w-5 h-5 text-brand-green" />
-        <h2 className="font-display text-xl sm:text-2xl font-bold">Paket Parsel & Bundling</h2>
+        <h2 className="font-display text-xl sm:text-2xl font-bold">{title}</h2>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-        {bundles.map((b) => {
+        {filteredBundles.map((b) => {
           const isParsel = b.type === 'PARSEL';
           return (
             <div

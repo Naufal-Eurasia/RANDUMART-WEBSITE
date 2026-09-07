@@ -19,6 +19,7 @@ export function Navbar() {
   const isHome = pathname === '/';
   const [scrolled, setScrolled] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
+  const [produkOpen, setProdukOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { cartCount, wishlist, setSearchOpen, setCartOpen, setWishlistOpen, setMobileNavOpen } = useStore();
   const { categories } = useCategories();
@@ -82,7 +83,53 @@ export function Navbar() {
                 dipakai supaya 9 link muat. Sisa ruang di xl masih ~180px. */}
             <div className="hidden xl:flex items-center gap-0 shrink">
               {navLinks.map((link) =>
-                link.mega ? (
+                link.productTypes ? (
+                  <div
+                    key={link.label}
+                    className="relative"
+                    onMouseEnter={() => setProdukOpen(true)}
+                    onMouseLeave={() => setProdukOpen(false)}
+                    onClick={() => setProdukOpen(!produkOpen)}
+                  >
+                    <button
+                      className={cn(
+                        'inline-flex items-center gap-1 whitespace-nowrap px-2.5 py-2 text-sm font-medium rounded-lg transition-colors',
+                        'text-foreground hover:bg-muted'
+                      )}
+                    >
+                      {link.label}
+                      <ChevronDown className={cn('w-4 h-4 transition-transform', produkOpen && 'rotate-180')} />
+                    </button>
+                    <AnimatePresence>
+                      {produkOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 12 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 12 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute left-0 top-full pt-3 w-56"
+                        >
+                          <div className="glass rounded-2xl shadow-premium border border-border/60 p-2">
+                            {[
+                              { label: 'Semua Produk', href: '/products' },
+                              { label: 'Bundling', href: '/products?type=bundle' },
+                              { label: 'Parsel', href: '/products?type=parcel' },
+                              { label: 'Produk Satuan', href: '/products?type=single' },
+                            ].map((item) => (
+                              <Link
+                                key={item.href}
+                                href={item.href}
+                                className="block px-3 py-2.5 rounded-xl text-sm font-medium text-foreground hover:bg-muted transition-colors"
+                              >
+                                {item.label}
+                              </Link>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                ) : link.mega ? (
                   <div
                     key={link.label}
                     className="relative"
@@ -106,12 +153,18 @@ export function Navbar() {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: 12 }}
                           transition={{ duration: 0.2 }}
-                          /* left-0, bukan left-1/2: parent-nya tombol (~200px dari tepi kiri),
-                             jadi -translate-x-1/2 atas panel 900px membuang ~250px ke luar viewport. */
-                          className="absolute left-0 top-full pt-3 w-[min(90vw,880px)]"
+                          /* right-0, BUKAN left-1/2 -translate-x-1/2: motion.div ini juga
+                             meng-animasikan `y` lewat inline style transform (Framer Motion),
+                             yang override class Tailwind transform apa pun (termasuk
+                             -translate-x-1/2 — makanya versi "dipusatkan" sebelumnya tetap
+                             meluber ke kanan, translate-x-nya kekalahan spesifisitas).
+                             right-0 tidak butuh transform sama sekali: dropdown menempel ke
+                             tepi kanan tombol dan melebar ke KIRI, jadi tidak akan pernah
+                             keluar tepi kanan viewport di lebar laptop 1366–1440px. */
+                          className="absolute right-0 top-full pt-3 w-[min(90vw,600px)] max-w-[calc(100vw-2rem)] z-50"
                         >
                           <div className="glass rounded-3xl shadow-premium border border-border/60 p-5">
-                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 max-h-[60vh] overflow-y-auto">
+                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 max-h-[70vh] overflow-y-auto">
                               {categories.length === 0 && (
                                 <div className="col-span-full py-6 text-center text-sm text-muted-foreground">
                                   Kategori belum tersedia
@@ -160,9 +213,12 @@ export function Navbar() {
               <button
                 onClick={() => setSearchOpen(true)}
                 aria-label="Search"
-                className={cn('shrink-0 grid place-items-center w-11 h-11 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
+                className={cn('group relative shrink-0 grid place-items-center w-11 h-11 rounded-full transition-colors', 'hover:bg-muted text-foreground')}
               >
                 <Search className="w-5 h-5" />
+                <span className="hidden sm:block pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-2 whitespace-nowrap rounded-md bg-gray-900 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 z-50">
+                  Cari Produk
+                </span>
               </button>
               <button
                 onClick={() => setWishlistOpen(true)}
